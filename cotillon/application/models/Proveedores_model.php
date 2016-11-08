@@ -27,11 +27,11 @@ class Proveedores_model extends CI_Model {
 	public function leer( $id ) {
 		// Sanitizar entrada de datos
 		$id = intval( $id );
-		$this->db->where('id', $id);
+		$this->db->where('id_proveedor', $id);
 		return $this->db->get('proveedores')->result_array();
 	}
 
-	public function actualizar( $id, $nombre, $contacto, $id_localidad  ) {
+	public function actualizar( $id, $nombre, $contacto, $id_localidad ) {
 		// Sanitizar entrada de datos
 		$id = intval( $id );
 		$nombre = htmlentities( $nombre );
@@ -46,7 +46,7 @@ class Proveedores_model extends CI_Model {
 		);
 
 		// Ejecutar consulta
-		$this->db->where( 'id', $id );
+		$this->db->where( 'id_proveedor', $id );
 		$this->db->update( 'proveedores', $data );
 		return boolval( $this->db->affected_rows() );
 	}
@@ -55,7 +55,7 @@ class Proveedores_model extends CI_Model {
 		// Sanitizar entrada de datos
 		$id = intval( $id );
 
-		$this->db->where('id', $id);
+		$this->db->where('id_proveedor', $id);
 		$this->db->delete('proveedores');
 		return boolval( $this->db->affected_rows() );
 	}

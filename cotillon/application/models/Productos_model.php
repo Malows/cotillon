@@ -28,7 +28,7 @@ class Productos_model extends CI_Model {
     // Sanitizar datos
     $id = intval( $id );
 
-    $this->db->where('id', $id);
+    $this->db->where('id_producto', $id);
     $this->db->get('productos');
     return $this->db->get('productos')->result_array();
   }
@@ -51,7 +51,7 @@ class Productos_model extends CI_Model {
     );
 
     // Ejecutar consulta
-		$this->db->where( 'id', $id );
+		$this->db->where( 'id_producto', $id );
 		$this->db->update( 'productos', $data );
 		return boolval( $this->db->affected_rows() );
   }
@@ -60,7 +60,7 @@ class Productos_model extends CI_Model {
     // Sanitizar datos
     $id = intval( $id );
 
-    $this->db->where('id', $id);
+    $this->db->where('id_producto', $id);
 		$this->db->delete('productos');
 		return boolval( $this->db->affected_rows() );
   }
