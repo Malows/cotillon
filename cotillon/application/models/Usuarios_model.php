@@ -61,6 +61,7 @@ class Usuarios_model extends CI_Model {
 		//consultas
 		$this->db->where('id_usuario', $id);
 		$this->db->update('usuarios', $data);
+		return boolval( $this->db->affected_rows() );
 	}
 
 	public function eliminar( $id ) {

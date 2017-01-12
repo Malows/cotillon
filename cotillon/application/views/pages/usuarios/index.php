@@ -5,13 +5,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <hr>
 <table class="table table-striped">
   <thead>
-    <th>
-      <td>Nombre</td>
-      <td>DNI</td>
-      <td>Email</td>
-      <td>Administador</td>
-      <?php if( $es_admin_usuario_logueado ): ?><td>Opciones</td><?php endif; ?>
-    </th>
+    <th>ID</th>
+    <th>Nombre</th>
+    <th>DNI</th>
+    <th>Email</th>
+    <th>Administador</th>
+    <?php if( $es_admin_usuario_logueado ): ?><th>Opciones</th><?php endif; ?>
   </thead>
   <tbody>
     <?php foreach ($usuarios as $user):?>

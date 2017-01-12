@@ -5,7 +5,7 @@
     <div class="alert alert-block alert-success">
       <button type="button" class="close" data-dismiss="alert">&times;</button>
 			<h4>Genial!</h4>
-			Se a creado exitosamente el usuario de <strong>'.$usuario.'</strong> con permisos de tipo <strong>'.$permisos.'</strong>.
+			Se ha creado exitosamente el usuario de <strong>'.$usuario.'</strong> con permisos de tipo <strong>'.$permisos.'</strong>.
 		</div>';
   }
   echo form_open("/usuarios/crear")?>

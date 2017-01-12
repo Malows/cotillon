@@ -7,10 +7,11 @@
 </div>
 <input class="form-control" type="text" placeholder="Filtro">
 <div id="contenedor">
-  <?php foreach ($usuarios as $user) {
-    $innerHTML = $user['nombre']." ".$user['apellido']." DNI: ".$user['dni'];
-    $title = "Ver usuario ".$user['nombre']." ".$user['apellido'];
-    echo anchor( base_url( "usuarios/ver/".$user['id_usuario'] ), $innerHTML, $title);
-  } ?>
+    <?php foreach ($usuarios as $user) {
+      $innerHTML = $user['nombre']." ".$user['apellido']." DNI: ".$user['dni'];
+      $title = "Ver usuario ".$user['nombre']." ".$user['apellido'];
+      echo "<div>" . anchor( base_url( "usuarios/ver/".$user['id_usuario'] ), $innerHTML, $title) . "</div>";
+    } ?>
+
 </div>
 <script src="http://localhost:8080/assets/js/finder.js"></script>
