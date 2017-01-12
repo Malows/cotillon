@@ -128,11 +128,12 @@ class Usuarios extends CI_Controller {
       $this->load->view('includes/header');
       if ( $id == 0 ) {
         //No me paso un ID
-        $data = array(
+        $data = [
+          'accion' => 'ver',
           'usuarios' =>  $this->usuarios_model->lista(),
           'mensaje' => "Esta acción requiere de un usuario válido.
           Seleccione uno por favor."
-        );
+        ];
         $this->load->view('pages/usuarios/id_no_valido', $data);
       } else {
         //Me paso el ID
@@ -142,11 +143,12 @@ class Usuarios extends CI_Controller {
           $this->load->view('pages/usuarios/ver', $data);
         } else {
           //El usuario que se busca no es valido
-          $data = array(
+          $data = [
+            'accion' => 'ver',
             'usuarios' =>  $this->usuarios_model->lista(),
-            'mensaje' => "El usuario que solicitó no existe.
-            Seleccione un usuario válido de la base de datos"
-          );
+            'mensaje' => "Esta acción requiere de un usuario válido.
+            Seleccione uno por favor."
+          ];
           $this->load->view('pages/usuarios/id_no_valido', $data);
         }
       }
@@ -195,8 +197,13 @@ class Usuarios extends CI_Controller {
           $this->load->view('includes/footer');
         } else {
           //El usuario que se busca no es valido
+          $data = [
+            'accion' => 'actualizar',
+            'usuarios' =>  $this->usuarios_model->lista(),
+            'mensaje' => "Esta acción requiere de un usuario válido. Seleccione uno por favor."
+          ];
           $this->load->view('includes/header');
-          $this->load->view('pages/usuarios/id_no_valido');
+          $this->load->view('pages/usuarios/id_no_valido', $data);
           $this->load->view('includes/footer');
         }
       } else {
@@ -230,31 +237,39 @@ class Usuarios extends CI_Controller {
       show_404();
     } else {
       //Logeado
+      $this->form_validation->set_rules('submit', 'Submit', 'required');
+      $this->form_validation->set_message('required', 'Es necesario');
+      $this->form_validation->set_error_delimiters('<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>');
+
       $aux = $this->usuarios_model->leer_por_id( $id );
-      if ( $this->form_validation->run() === FALSE) {
-        //entre por primera vez
-        echo "Entre por primera vez";
+
+      if ( $this->form_validation->run() === FALSE ) {
+        // No envió el formulario aún
+
+
         if ( $aux ) {
-          echo "Salio bien id";
-          $data = array( 'usuario' => $aux );
+          // Tengo el ID
           $this->load->view('includes/header');
-          $this->load->view('pages/usuarios/eliminar', $data);
+          $this->load->view('pages/usuarios/eliminar', ['usuario' => $aux ]);
           $this->load->view('includes/footer');
         } else {
           //El usuario que se busca no es valido
+          $data = [
+            'accion' => 'eliminar',
+            'usuarios' =>  $this->usuarios_model->lista(),
+            'mensaje' => "Esta acción requiere de un usuario válido. Seleccione uno por favor."
+          ];
           $this->load->view('includes/header');
-          $this->load->view('pages/usuarios/id_no_valido');
+          $this->load->view('pages/usuarios/id_no_valido', $data);
           $this->load->view('includes/footer');
         }
 
       } else {
         // Corrió el formulario
-        echo "corrí el formulario";
-        $this->usuarios_model->eliminar($aux['id_usuario']);
+        $this->usuarios_model->eliminar( $aux['id_usuario'] );
 
-        $data = ['exito' => TRUE, 'usuario' => $aux ];
         $this->load->view('includes/header');
-        $this->load->view('pages/usuarios/eliminar', $data);
+        $this->load->view('pages/usuarios/eliminar', ['exito' => TRUE, 'usuario' => $aux ]);
         $this->load->view('includes/footer');
       }
     }

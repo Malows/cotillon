@@ -10,7 +10,7 @@
     <?php foreach ($usuarios as $user) {
       $innerHTML = $user['nombre']." ".$user['apellido']." DNI: ".$user['dni'];
       $title = "Ver usuario ".$user['nombre']." ".$user['apellido'];
-      echo "<div>" . anchor( base_url( "usuarios/ver/".$user['id_usuario'] ), $innerHTML, $title) . "</div>";
+      echo "<div>" . anchor( base_url( "usuarios/".$accion."/".$user['id_usuario'] ), $innerHTML, $title) . "</div>";
     } ?>
 
 </div>
