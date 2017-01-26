@@ -61,6 +61,7 @@ class Proveedores_model extends CI_Model {
 	}
 
 	public function lista() {
+		$this->db->join('localidades', 'localidades.id_localidad = proveedores.id_localidad');
 		return $this->db->get('proveedores')->result_array();
 	}
 }

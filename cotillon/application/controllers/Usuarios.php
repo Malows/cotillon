@@ -55,11 +55,11 @@ class Usuarios extends CI_Controller {
       show_404();
     } else {
       //obtenes datos
-      $data = array(
-        'usuarios' => $this->usuarios_model->lista(),
+      $data = [
+        'usuarios' => $this->usuarios_model->lista_activos(),
         'id_usuario_logueado' => $this->session->userdata('id_usuario'),
         'es_admin_usuario_logueado' => $this->session->userdata('es_admin')
-      );
+      ];
       //paso datos a vista
       $this->load->view('includes/header');
       $this->load->view('pages/usuarios/index', $data);
@@ -126,29 +126,25 @@ class Usuarios extends CI_Controller {
     } else {
       //Logeado
       $this->load->view('includes/header');
+
+      $data = [
+        'accion' => 'ver',
+        'usuarios' =>  $this->usuarios_model->lista_activos(),
+        'mensaje' => "Esta acción requiere de un usuario válido.
+        Seleccione uno por favor."
+      ];
+
       if ( $id == 0 ) {
         //No me paso un ID
-        $data = [
-          'accion' => 'ver',
-          'usuarios' =>  $this->usuarios_model->lista(),
-          'mensaje' => "Esta acción requiere de un usuario válido.
-          Seleccione uno por favor."
-        ];
         $this->load->view('pages/usuarios/id_no_valido', $data);
       } else {
         //Me paso el ID
         $aux = $this->usuarios_model->leer_por_id( $id );
         if ( $aux ) {
-          $data = array( 'usuario' => $aux );
+          $data = [ 'usuario' => $aux ];
           $this->load->view('pages/usuarios/ver', $data);
         } else {
           //El usuario que se busca no es valido
-          $data = [
-            'accion' => 'ver',
-            'usuarios' =>  $this->usuarios_model->lista(),
-            'mensaje' => "Esta acción requiere de un usuario válido.
-            Seleccione uno por favor."
-          ];
           $this->load->view('pages/usuarios/id_no_valido', $data);
         }
       }
@@ -199,9 +195,10 @@ class Usuarios extends CI_Controller {
           //El usuario que se busca no es valido
           $data = [
             'accion' => 'actualizar',
-            'usuarios' =>  $this->usuarios_model->lista(),
+            'usuarios' =>  $this->usuarios_model->lista_activos(),
             'mensaje' => "Esta acción requiere de un usuario válido. Seleccione uno por favor."
           ];
+
           $this->load->view('includes/header');
           $this->load->view('pages/usuarios/id_no_valido', $data);
           $this->load->view('includes/footer');
@@ -244,9 +241,6 @@ class Usuarios extends CI_Controller {
       $aux = $this->usuarios_model->leer_por_id( $id );
 
       if ( $this->form_validation->run() === FALSE ) {
-        // No envió el formulario aún
-
-
         if ( $aux ) {
           // Tengo el ID
           $this->load->view('includes/header');
@@ -256,7 +250,7 @@ class Usuarios extends CI_Controller {
           //El usuario que se busca no es valido
           $data = [
             'accion' => 'eliminar',
-            'usuarios' =>  $this->usuarios_model->lista(),
+            'usuarios' =>  $this->usuarios_model->lista_activos(),
             'mensaje' => "Esta acción requiere de un usuario válido. Seleccione uno por favor."
           ];
           $this->load->view('includes/header');

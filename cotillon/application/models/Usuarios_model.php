@@ -77,6 +77,12 @@ class Usuarios_model extends CI_Model {
 		return $this->db->get('usuarios')->result_array();
 	}
 
+	public function lista_activos()
+	{
+		$this->db->where('fecha_fin', null);
+		return $this->db->get('usuarios')->result_array();
+	}
+
 	public function cotejar( $dni, $contrasenia ) {
 		//sanitizar datos
 		$dni = intval($dni);
