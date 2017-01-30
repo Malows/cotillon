@@ -5,7 +5,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <hr>
 <table class="table table-striped">
   <thead>
-    <th>ID</th>
+    <th>#</th>
     <th>Nombre de proveedor</th>
     <th>Localidad</th>
     <th>Contacto</th>
@@ -15,7 +15,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <?php foreach ($proveedores as $prov):?>
     <tr>
       <td><?php echo $prov['id_proveedor'];?></td>
-      <td><?php echo $prov['nombre_proveedor']." ".$user['apellido'];?></td>
+      <td><?php echo $prov['nombre_proveedor'];?></td>
       <td><?php echo $prov['nombre_localidad'];?></td>
       <td><?php echo $prov['contacto'];?></td>
       <td>

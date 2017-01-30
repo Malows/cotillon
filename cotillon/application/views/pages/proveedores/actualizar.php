@@ -5,24 +5,27 @@
     <div class="alert alert-block alert-success">
       <button type="button" class="close" data-dismiss="alert">&times;</button>
 			<h4>Genial!</h4>
-			Se ha creado exitosamente el proveedor <strong>'.$proveedor.'</strong>.
+			Se ha actualizado exitosamente el proveedor <strong>'.$proveedor['nombre_proveedor'].'</strong>.
 		</div>';
   }
-  echo form_open("/proveedores/crear")?>
+  echo form_open("/proveedores/actualizar/".$proveedor['id_proveedor'])?>
     <div class="form-group">
 
         <label for="nombre_proveedor">Nombre del proveedor<?php echo form_error("nombre_proveedor");?></label>
-        <input type="text" class="form-control" name="nombre_proveedor" placeholder="Nombre">
+        <input type="text" class="form-control" name="nombre_proveedor" placeholder="Nombre" value="<?php echo $proveedor['nombre_proveedor']; ?>">
 
         <label for="localidad">Localidad<?php echo form_error("localidad");?></label>
         <select name="localidad" class="form-control">
           <?php foreach ($localidades as $loc){
-            echo "<option value=\"".$loc['id_localidad']."\">".$loc['nombre_localidad']."</option>\n";
+            $escape = '<option value="' . $loc['id_localidad'];
+            $escape .= ( $proveedor['id_localidad'] === $loc['id_localidad'] ) ? '" selected>' : '">';
+            $escape .= $loc['nombre_localidad'] . "</option>\n";
+            echo $escape;
         }?>
         </select>
 
         <label for="contacto">Contacto<?php echo form_error("contacto");?></label>
-        <textarea name="contacto" class="form-control" maxlength="255" placeholder="Datos de contacto"></textarea>
+        <textarea name="contacto" class="form-control" maxlength="255" placeholder="Datos de contacto"><?php echo $proveedor['contacto']; ?></textarea>
 
         <input type="submit" class="btn btn-default" name="submit" value="Enviar">
     </div>
