@@ -1,7 +1,5 @@
-<?php
-defined('BASEPATH') OR exit('No direct script access allowed');
-?>
-<h2 class="text-center">Usuarios</h2>
+<?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+<h2 class="text-center">Proveedores</h2>
 <hr>
 <table class="table table-striped">
   <thead>
@@ -22,7 +20,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <a href="<?php echo base_url("proveedores/ver/".$prov['id_proveedor']); ?>"><i class="fa fa-eye" aria-hidden="true"></i></a>
         <?php if( $es_admin_usuario_logueado ): ?>
         <a href="<?php echo base_url("proveedores/actualizar/".$prov['id_proveedor']); ?>"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-        <a href="<?php echo base_url("proveedores/eliminar/".$prov['id_proveedor']); ?>"><i class="fa fa-trash" aria-hidden="true"></i></a>
         <?php endif; ?>
       </td>
 
