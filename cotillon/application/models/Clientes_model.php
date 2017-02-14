@@ -15,12 +15,12 @@ class Clientes_model extends CI_Model {
 		$tipo_cliente = htmlentities( $tipo_cliente );
 
 		// Arreglo de datos
-		$data = array(
+		$data = [
 			'nombre_cliente' => $nombre,
 			'contacto' => $contacto,
 			'id_localidad' => $id_localidad,
 			'tipo_cliente' => $tipo_cliente
-		);
+		];
 
 		// Ejecutar consulta
 		$this->db->insert( 'clientes', $data );
@@ -42,12 +42,12 @@ class Clientes_model extends CI_Model {
 		$tipo_cliente = htmlentities( $tipo_cliente );
 
 		// Arreglo de datos
-		$data = array(
+		$data = [
 			'nombre_cliente' => $nombre,
 			'contacto' => $contacto,
 			'id_localidad' => $id_localidad,
 			'tipo_cliente' => $tipo_cliente
-		);
+		];
 
 		// Ejecutar consulta
 		$this->db->where( 'id_cliente', $id );
@@ -66,6 +66,21 @@ class Clientes_model extends CI_Model {
 	}
 
 	public function lista() {
+		return $this->db->get('clientes')->result_array();
+	}
+
+	public function buscar( $campo, $valor ) {
+		// 'id_localidad' // 1
+
+		// www.example.com/localidades/ver_clientes/1
+		// www.example.com/clientes?id_localidad=1 (index de cliente)
+
+		// www.../clientes?tipo_cliente=1 (index de cliente)
+		$campo = htmlentities($campo);
+		$valor = intval($valor);
+		if ( $campo === 'id_localidad' or $campo === 'tipo_cliente' and $valor > 0 ) {
+			$this->db->where($campo, $valor);
+		}
 		return $this->db->get('clientes')->result_array();
 	}
 }

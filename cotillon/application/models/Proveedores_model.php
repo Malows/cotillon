@@ -27,6 +27,7 @@ class Proveedores_model extends CI_Model {
 	public function leer( $id ) {
 		// Sanitizar entrada de datos
 		$id = intval( $id );
+		$this->db->join('localidades', 'localidades.id_localidad = proveedores.id_localidad');
 		$this->db->where('id_proveedor', $id);
 		return $this->db->get('proveedores')->row_array();
 	}
@@ -62,6 +63,15 @@ class Proveedores_model extends CI_Model {
 
 	public function lista() {
 		$this->db->join('localidades', 'localidades.id_localidad = proveedores.id_localidad');
+		return $this->db->get('proveedores')->result_array();
+	}
+
+	public function buscar( $campo, $valor ) {
+		$campo = htmlentities($campo);
+		$valor = intval($valor);
+		if ( $campo === 'id_localidad' and $valor > 0 ) {
+			$this->db->where($campo, $valor);
+		}
 		return $this->db->get('proveedores')->result_array();
 	}
 }
