@@ -142,13 +142,13 @@ class Proveedores extends CI_Controller
     }
   }
 
-  public function eliminar( $id )
+  public function eliminar( $id = 0 )
   {
     if ( ! $this->session->userdata('esta_logeado') ) {
       // No esta logeado, mensaje de error
       show_404();
     } else {
-
+      redirect('/proveedores', 'refresh');
     }
   }
 }
