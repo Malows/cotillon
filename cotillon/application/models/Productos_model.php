@@ -17,11 +17,12 @@ class Productos_model extends CI_Model {
 
     $data = array(
       'id_proveedor' => $id_proveedor,
-      'nombre_producto' => $nombre,
+      'nombre' => $nombre,
       'precio' => $precio,
       'id_categoria' => $id_categoria,
       'descripcion' => $descripcion
     );
+    $this->db->insert('productos', $data);
   }
 
   public function leer( $id ) {
