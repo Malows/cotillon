@@ -102,8 +102,7 @@ class Productos extends CI_Controller {
     }
   }
 
-  public function actualizar( $id )
-  {
+  public function actualizar( $id ) {
     if ( ! $this->session->userdata('esta_logeado') and $this->session->userdata('es_admin') ) {
       show_404();
     } else {
@@ -137,6 +136,10 @@ class Productos extends CI_Controller {
 
         $data['exito'] = TRUE;
         $data['producto']['nombre'] = htmlentities( $this->input->post('nombre'));
+        $data['producto']['precio'] = floatval( $this->input->post('precio'));
+        $data['producto']['id_proveedor'] = intval( $this->input->post('id_proveedor'));
+        $data['producto']['id_categoria'] = intval( $this->input->post('id_categoria'));
+        $data['producto']['descripcion'] = htmlentities( $this->input->post('descripcion'));
 
         $this->load->view('includes/header');
         $this->load->view('pages/productos/actualizar', $data);
@@ -145,8 +148,7 @@ class Productos extends CI_Controller {
     }
   }
 
-  public function ver( $id )
-  {
+  public function ver( $id ) {
     if ( ! $this->session->userdata('esta_logeado') ) {
       show_404();
     } else {

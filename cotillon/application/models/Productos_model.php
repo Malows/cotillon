@@ -31,7 +31,7 @@ class Productos_model extends CI_Model {
 
     $this->db->where('id_producto', $id);
     $this->db->get('productos');
-    return $this->db->get('productos')->result_array();
+    return $this->db->get('productos')->row_array();
   }
 
   public function actualizar( $id, $id_proveedor, $nombre, $precio, $id_categoria, $descripcion ) {
@@ -43,13 +43,13 @@ class Productos_model extends CI_Model {
     $id_categoria = intval( $id_categoria );
     $descripcion = htmlentities( $descripcion );
 
-    $data = array(
+    $data = [
       'id_proveedor' => $id_proveedor,
-      'nombre_producto' => $nombre,
+      'nombre' => $nombre,
       'precio' => $precio,
       'id_categoria' => $id_categoria,
       'descripcion' => $descripcion
-    );
+    ];
 
     // Ejecutar consulta
 		$this->db->where( 'id_producto', $id );
