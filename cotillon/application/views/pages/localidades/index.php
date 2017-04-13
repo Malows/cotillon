@@ -1,6 +1,9 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <h2 class="text-center">Localidades</h2>
 <hr>
+<div class="row">
+  <a href="<?php echo base_url('/localidades/crear');?>" class="btn btn-primary pull-right" title="Agregar una nueva localidad"><i class="fa fa-plus"></i></a>
+</div>
 <table class="table table-striped">
   <thead>
     <th>#</th>

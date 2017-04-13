@@ -62,13 +62,17 @@ class Productos_model extends CI_Model {
     $id = intval( $id );
 
     $this->db->where('id_producto', $id);
-		$this->db->delete('productos');
+    $data = [];
+    $data['soft_delete'] = date('Y-m-d H:i:s');
+    $this->db->update('productos', $data);
+		// $this->db->delete('productos');
 		return boolval( $this->db->affected_rows() );
   }
 
   public function lista() {
     $this->db->join('proveedores', 'proveedores.id_proveedor = productos.id_proveedor');
     $this->db->join('categorias_producto', 'categorias_producto.id_categoria = productos.id_categoria');
+    $this->db->where('soft_delete', null);
     return $this->db->get('productos')->result_array();
   }
 }

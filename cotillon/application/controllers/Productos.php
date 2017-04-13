@@ -166,6 +166,7 @@ class Productos extends CI_Controller {
     if ( ! $this->session->userdata('esta_logeado') and $this->session->userdata('es_admin') ) {
       show_404();
     } else {
+      $this->productos_model->eliminar($id);
       redirect('/productos', 'refresh');
     }
   }

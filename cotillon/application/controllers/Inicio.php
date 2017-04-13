@@ -48,7 +48,7 @@ class Inicio extends CI_Controller {
 
 		} else { // estoy registrado
 			$this->load->view('includes/header');
-			$this->load->view('pages/inicio/prueba');
+			$this->load->view('pages/inicio/index');
 			$this->load->view('includes/footer');
 		}
 	}

@@ -7,6 +7,8 @@
 	echo '<br>';
 	echo anchor( base_url("proveedores/"), "Proveedores", "Proveedores");
 	echo '<br>';
+	echo anchor( base_url("productos/"), "Productos" , "Productos");
+	echo '<br>';
 	echo anchor( base_url("usuarios/"), "Usuarios", "Usuarios");
 	echo '<br><hr>';
 	echo anchor( base_url("inicio/salir"), "Salir", "Salir del sistema");
