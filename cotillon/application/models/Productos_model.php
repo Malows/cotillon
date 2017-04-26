@@ -30,7 +30,6 @@ class Productos_model extends CI_Model {
     $id = intval( $id );
 
     $this->db->where('id_producto', $id);
-    $this->db->get('productos');
     return $this->db->get('productos')->row_array();
   }
 

@@ -119,7 +119,6 @@ class Productos extends CI_Controller {
         'categorias' => $this->categorias_producto_model->lista(),
         'producto' => $this->productos_model->leer($id)
       ];
-
       if ( $this->form_validation->run() === FALSE ) {
         $this->load->view('includes/header');
         $this->load->view('pages/productos/actualizar', $data);
@@ -156,7 +155,7 @@ class Productos extends CI_Controller {
         'producto' => $this->productos_model->leer($id)
       ];
       $this->load->view('includes/header');
-      $this->load->view('pages/productos/actualizar', $data);
+      $this->load->view('pages/productos/ver', $data);
       $this->load->view('includes/footer');
     }
   }

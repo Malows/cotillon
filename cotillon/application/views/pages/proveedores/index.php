@@ -20,10 +20,12 @@
       <td><?php echo $prov['nombre_localidad'];?></td>
       <td><?php echo $prov['contacto'];?></td>
       <td>
-        <a href="<?php echo base_url("proveedores/ver/".$prov['id_proveedor']); ?>"><i class="fa fa-eye" aria-hidden="true"></i></a>
-        <?php if( $es_admin_usuario_logueado ): ?>
-        <a href="<?php echo base_url("proveedores/actualizar/".$prov['id_proveedor']); ?>"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-        <?php endif; ?>
+        <div class="btn-group">
+          <a href="<?php echo base_url("proveedores/ver/".$prov['id_proveedor']); ?>" class="btn btn-primary"><i class="fa fa-eye" aria-hidden="true"></i></a>
+          <?php if( $es_admin_usuario_logueado ): ?>
+          <a href="<?php echo base_url("proveedores/actualizar/".$prov['id_proveedor']); ?>" class="btn btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+          <?php endif; ?>
+        </div>
       </td>
 
     </tr>

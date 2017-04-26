@@ -4,8 +4,8 @@
 <ul>
   <?php foreach ($clientes as $cliente) {
     $url = base_url('clientes/ver/'.$cliente['id_cliente']);
-    $ape_y_nom = $cliente['apellido'].", ".$cliente['nombre'];
-    
-    echo "<li><a href=\"$url\">$ape_y_nom</a></li>\n";
+    $nom = $cliente['nombre_cliente'];
+
+    echo "<li><a href=\"$url\">$nom</a></li>\n";
   } ?>
 </ul>

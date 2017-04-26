@@ -8,7 +8,7 @@
   <tbody>
     <?php foreach ($productos as $prod):?>
     <tr>
-      <td><a href="<?php echo base_url('productos/ver/'.$prod['id_producto'] );?>"><?php echo $prod['nombre_producto'];?></a></td>
+      <td><a href="<?php echo base_url('productos/ver/'.$prod['id_producto'] );?>"><?php echo $prod['nombre'];?></a></td>
     </tr>
     <?php endforeach;?>
   </tbody>

@@ -25,11 +25,13 @@
       <td>$<?php echo $prod['precio'];?></td>
       <td><?php echo $prod['descripcion'];?></td>
       <td>
-        <a href="<?php echo base_url("productos/ver/".$prod['id_producto']); ?>"><i class="fa fa-eye" aria-hidden="true"></i></a>
-        <?php if( $es_admin_usuario_logueado ): ?>
-        <a href="<?php echo base_url("productos/actualizar/".$prod['id_producto']); ?>"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-        <button type="button" data-toggle="modal" data-target="#modal-eliminar-<?php echo $prod['id_producto']; ?>"><i class="fa fa-trash" aria-hidden="true"></i></button>
-        <?php endif; ?>
+        <div class="btn-group">
+          <a href="<?php echo base_url("productos/ver/".$prod['id_producto']); ?>" class="btn btn-primary"><i class="fa fa-eye" aria-hidden="true"></i></a>
+          <?php if( $es_admin_usuario_logueado ): ?>
+          <a href="<?php echo base_url("productos/actualizar/".$prod['id_producto']); ?>" class="btn btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+          <button type="button" data-toggle="modal" data-target="#modal-eliminar-<?php echo $prod['id_producto']; ?>" class="btn btn-primary"><i class="fa fa-trash" aria-hidden="true"></i></button>
+          <?php endif; ?>
+        </div>
       </td>
     </tr>
     <?php endforeach;?>

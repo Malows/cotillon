@@ -30,7 +30,7 @@ class Clientes_model extends CI_Model {
 		// Sanitizar entrada de datos
 		$id = intval( $id );
 		$this->db->where('id_cliente', $id);
-		return $this->db->get('clientes')->result_array();
+		return $this->db->get('clientes')->row_array();
 	}
 
 	public function actualizar( $id, $nombre, $contacto, $id_localidad, $tipo_cliente  ) {
@@ -66,6 +66,7 @@ class Clientes_model extends CI_Model {
 	}
 
 	public function lista() {
+		$this->db->join('localidades', 'localidades.id_localidad = clientes.id_localidad');
 		return $this->db->get('clientes')->result_array();
 	}
 
