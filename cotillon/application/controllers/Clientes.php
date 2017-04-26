@@ -136,16 +136,22 @@ class Clientes extends CI_Controller {
     if (! $this->session->userdata('esta_logeado') ) {
       show_404();
     } else {
-
+      $data = [
+        'cliente' => $this->clientes_model->leer($id),
+        'ops' => ['to', 'do', 'this', 'foo', ' bar'] // TODO
+      ];
+      $this->load->view('includes/header');
+      $this->load->view('pages/clientes/ver', $data);
+      $this->load->view('includes/footer');
     }
   }
 
-  public function eliminar( $id )
+  public function eliminar( $id = 0 )
   {
     if (! $this->session->userdata('esta_logeado') and $this->session->userdata('es_admin') ) {
       show_404();
     } else {
-
+      redirect( base_url('/clientes'), 'refresh' );
     }
   }
 }
