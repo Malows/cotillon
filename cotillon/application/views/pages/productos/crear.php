@@ -31,6 +31,18 @@
           }?>
         </select>
 
+        <label for="unidad">Unidad<?php echo form_error('unidad');?></label>
+        <select class="form-control" name="unidad" placeholder="Seleccione una unidad para el producto">
+          <option value="unidades">Unidades (u)</option>
+          <option value="decenas">Decenas (dec)</option>
+          <option value="docenas">Docenas (doc)</option>
+          <option value="gramos">Gramos (gr)</option>
+          <option value="kilogramos">Kilogramos (Kg)</option>
+          <option value="litros">Litros (L)</option>
+          <option value="metro">Metro (M)</option>
+          <option value="centimetro">Centimetro (cm)</option>
+        </select>
+
         <label for="descripcion">Descripción<?php echo form_error("descripcion");?></label>
         <textarea name="descripcion" class="form-control" maxlength="255" placeholder="Datos de contacto"></textarea>
 

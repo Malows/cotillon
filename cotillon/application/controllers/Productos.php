@@ -31,13 +31,18 @@ class Productos extends CI_Controller {
           'field' => 'descripcion',
           'label' => 'Descripción',
           'rules' => ''
+        ], [
+          'field' => 'unidad',
+          'label' => 'Unidades',
+          'rules' => 'required|alpha'
         ]
       ];
 
       $this->mensajes_validacion = [
         'required' => "<strong>%s</strong> es un campo obligatorio.",
         'is_natural_no_zero' => "<strong>%s</strong> no puede ser procesado correctamente.",
-        'numeric' => "<strong>%s</strong> es un campo unicamente numérico."
+        'numeric' => "<strong>%s</strong> es un campo unicamente numérico.",
+        'alpha' => '<strong>%s</strong> error de validación'
       ];
 
       $this->error_delimiter = [
@@ -89,7 +94,8 @@ class Productos extends CI_Controller {
           $this->security->xss_clean( $this->input->post('nombre')),
           $this->security->xss_clean( $this->input->post('precio')),
           $this->security->xss_clean( $this->input->post('id_categoria')),
-          $this->security->xss_clean( $this->input->post('descripcion'))
+          $this->security->xss_clean( $this->input->post('descripcion')),
+          $this->security->xss_clean( $this->input->post('unidad'))
         );
 
         $data['exito'] = TRUE;
@@ -130,7 +136,8 @@ class Productos extends CI_Controller {
           $this->security->xss_clean( $this->input->post('nombre')),
           $this->security->xss_clean( $this->input->post('precio')),
           $this->security->xss_clean( $this->input->post('id_categoria')),
-          $this->security->xss_clean( $this->input->post('descripcion'))
+          $this->security->xss_clean( $this->input->post('descripcion')),
+          $this->security->xss_clean( $this->input->post('unidad'))
         );
 
         $data['exito'] = TRUE;
@@ -154,6 +161,7 @@ class Productos extends CI_Controller {
       $data = [
         'producto' => $this->productos_model->leer($id)
       ];
+
       $this->load->view('includes/header');
       $this->load->view('pages/productos/ver', $data);
       $this->load->view('includes/footer');
@@ -167,6 +175,33 @@ class Productos extends CI_Controller {
     } else {
       $this->productos_model->eliminar($id);
       redirect('/productos', 'refresh');
+    }
+  }
+
+  public function stock( $id = 0 )
+  {
+    if ( ! $this->session->userdata('esta_logeado') ) {
+      show_404();
+    } else {
+      $this->form_validation->set_rules('cantidad', 'Cantidad', 'required|numeric');
+
+     $this->form_validation->set_message('required', '<strong>%s</strong> es un campo obligatio');
+     $this->form_validation->set_message('numeric', '<strong>%s</strong>ingresado incorrectamente');
+
+     $this->form_validation->set_error_delimiters($this->error_delimiter[0],$this->error_delimiter[1]);
+
+      if ( $this->form_validation->run() === FALSE ) {
+        // redirect( base_url("/productos"), 'refresh' );
+      } else {
+        if( boolval( $this->input->post('incrementar') ) ) {
+          $this->productos_model->incrementar( $id, $this->input->post('cantidad') );
+        } else {
+          if( boolval( $this->input->post('reducir') ) ) {
+            $this->productos_model->reducir( $id, $this->input->post('cantidad') );
+          }
+        }
+        // redirect( base_url("/productos"), 'refresh' );
+      }
     }
   }
 }
