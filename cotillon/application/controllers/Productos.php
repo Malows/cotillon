@@ -184,23 +184,23 @@ class Productos extends CI_Controller {
       show_404();
     } else {
       $this->form_validation->set_rules('cantidad', 'Cantidad', 'required|numeric');
-
-     $this->form_validation->set_message('required', '<strong>%s</strong> es un campo obligatio');
-     $this->form_validation->set_message('numeric', '<strong>%s</strong>ingresado incorrectamente');
-
-     $this->form_validation->set_error_delimiters($this->error_delimiter[0],$this->error_delimiter[1]);
+      $this->form_validation->set_rules('opcion', 'Opción', 'required|in_list[incrementar,reducir]');
+      $this->form_validation->set_message('required', '<strong>%s</strong> es un campo obligatio');
+      $this->form_validation->set_message('numeric', '<strong>%s</strong> ingresado incorrectamente');
+      $this->form_validation->set_message('in_list', '<strong>%s</strong> ingresado incorrectamente');
+      $this->form_validation->set_error_delimiters($this->error_delimiter[0],$this->error_delimiter[1]);
 
       if ( $this->form_validation->run() === FALSE ) {
-        // redirect( base_url("/productos"), 'refresh' );
+        redirect( base_url("/productos"), 'refresh' );
       } else {
-        if( boolval( $this->input->post('incrementar') ) ) {
-          $this->productos_model->incrementar( $id, $this->input->post('cantidad') );
+        if( $this->input->post('opcion') == 'reducir' ) {
+          $this->productos_model->reducir( $id, $this->input->post('cantidad') );
         } else {
-          if( boolval( $this->input->post('reducir') ) ) {
-            $this->productos_model->reducir( $id, $this->input->post('cantidad') );
+          if( $this->input->post('opcion') == 'incrementar' ) {
+            $this->productos_model->incrementar( $id, $this->input->post('cantidad') );
           }
         }
-        // redirect( base_url("/productos"), 'refresh' );
+        redirect( base_url("/productos"), 'refresh' );
       }
     }
   }

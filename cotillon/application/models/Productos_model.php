@@ -81,28 +81,27 @@ class Productos_model extends CI_Model {
 
   public function incrementar( $id_producto, $cantidad ) {
     $id_producto = intval($id_producto);
-    $cantidad = abs(floatval($cantidad));
-    $cantidad = $cantidad ? $cantidad : 0.0;
     $this->db->where('id_producto', $id_producto);
-    $aux = $this->db->get('productos')->row();
-    $cantidad += $aux->cantidad;
+    $aux = $this->db->get('productos')->row_array();
+    $aux['cantidad'] += abs(floatval($cantidad)) ;
+    unset($aux['id_producto']);
 
-    $aux->cantidad = $cantidad;
-    $this->db->where('id_producto', $aux->id_producto);
+    $this->db->where('id_producto', $id_producto);
     return $this->db->update('productos',$aux);
   }
 
   public function reducir( $id_producto, $cantidad ) {
     $id_producto = intval($id_producto);
-    $cantidad = abs(floatval($cantidad));
-    $cantidad = $cantidad ? $cantidad : 0.0;
     $this->db->where('id_producto', $id_producto);
-    $aux = $this->db->get('productos')->row();
-    if ( $aux->cantidad >= $cantidad ) {
-      $cantidad -= $aux->cantidad;
+    $aux = $this->db->get('productos')->row_array();
 
-      $aux->cantidad = $cantidad;
-      $this->db->where('id_producto', $aux->id_producto);
+    $cantidad = abs(floatval($cantidad));
+
+    if ( $aux['cantidad'] >= $cantidad ) {
+      $aux['cantidad'] -= $cantidad;
+      unset( $aux['id_producto'] );
+
+      $this->db->where('id_producto', $id_producto);
       return $this->db->update('productos',$aux);
     } else return FALSE;
   }

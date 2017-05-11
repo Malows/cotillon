@@ -52,10 +52,10 @@
           <div class="form-group">
             <div class="btn-group" data-toggle="buttons">
               <label class="btn btn-primary active">
-                <input type="radio" name="incrementar" value="true" id="incrementar"> Incrementar
+                <input type="radio" name="opcion" value="incrementar" id="incrementar" autocomplete="off" checked> Incrementar
               </label>
               <label class="btn btn-primary">
-                <input type="radio" name="reducir" value="true" id="reducir"> Reducir
+                <input type="radio" name="opcion" value="reducir" id="reducir" autocomplete="off"> Reducir
               </label>
             </div>
           </div>
