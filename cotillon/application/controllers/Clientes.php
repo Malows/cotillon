@@ -151,6 +151,7 @@ class Clientes extends CI_Controller {
     if (! $this->session->userdata('esta_logeado') and $this->session->userdata('es_admin') ) {
       show_404();
     } else {
+      $this->clientes_model->eliminar($id);
       redirect( base_url('/clientes'), 'refresh' );
     }
   }

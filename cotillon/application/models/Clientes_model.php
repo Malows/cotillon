@@ -61,13 +61,15 @@ class Clientes_model extends CI_Model {
 		$id = intval( $id );
 
 		$this->db->where('id_cliente', $id);
-		$this->db->delete('clientes');
-
+		$data = [];
+    $data['soft_delete'] = date('Y-m-d H:i:s');
+		$this->db->update('clientes', $data);
 		return boolval( $this->db->affected_rows() );
 	}
 
 	public function lista() {
 		$this->db->join('localidades', 'localidades.id_localidad = clientes.id_localidad');
+		$this->db->where('soft_delete', null);
 		return $this->db->get('clientes')->result_array();
 	}
 
