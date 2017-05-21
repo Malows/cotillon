@@ -97,6 +97,7 @@ class Productos extends CI_Controller {
           $this->security->xss_clean( $this->input->post('descripcion')),
           $this->security->xss_clean( $this->input->post('unidad'))
         );
+        log_message('info', 'El usuario `'.$this->session->userdata('usuario').'` <ID:'.$this->session->userdata('id_usuario').'> creó un nuevo producto `'. $this->input->post('nombre') .'`.');
 
         $data['exito'] = TRUE;
         $data['producto'] = htmlentities( $this->input->post('nombre'));

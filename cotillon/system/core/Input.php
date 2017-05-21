@@ -159,7 +159,7 @@ class CI_Input {
 			$this->security->csrf_verify();
 		}
 
-		log_message('info', 'Input Class Initialized');
+		log_message('debug', 'Input Class Initialized');
 	}
 
 	// --------------------------------------------------------------------

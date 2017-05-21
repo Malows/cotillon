@@ -110,7 +110,7 @@ class CI_Profiler {
 		}
 
 		$this->set_sections($config);
-		log_message('info', 'Profiler Class Initialized');
+		log_message('debug', 'Profiler Class Initialized');
 	}
 
 	// --------------------------------------------------------------------

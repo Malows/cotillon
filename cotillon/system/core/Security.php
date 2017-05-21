@@ -192,7 +192,7 @@ class CI_Security {
 
 		$this->charset = strtoupper(config_item('charset'));
 
-		log_message('info', 'Security Class Initialized');
+		log_message('debug', 'Security Class Initialized');
 	}
 
 	// --------------------------------------------------------------------
@@ -244,7 +244,7 @@ class CI_Security {
 		$this->_csrf_set_hash();
 		$this->csrf_set_cookie();
 
-		log_message('info', 'CSRF token verified');
+		log_message('debug', 'CSRF token verified');
 		return $this;
 	}
 
@@ -275,7 +275,7 @@ class CI_Security {
 			$secure_cookie,
 			config_item('cookie_httponly')
 		);
-		log_message('info', 'CSRF cookie sent');
+		log_message('debug', 'CSRF cookie sent');
 
 		return $this;
 	}

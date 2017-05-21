@@ -390,7 +390,7 @@ class CI_Email {
 		$this->initialize($config);
 		$this->_safe_mode = ( ! is_php('5.4') && ini_get('safe_mode'));
 
-		log_message('info', 'Email Class Initialized');
+		log_message('debug', 'Email Class Initialized');
 	}
 
 	// --------------------------------------------------------------------

@@ -139,7 +139,7 @@ class CI_Router {
 			empty($routing['function'])   OR $this->set_method($routing['function']);
 		}
 
-		log_message('info', 'Router Class Initialized');
+		log_message('debug', 'Router Class Initialized');
 	}
 
 	// --------------------------------------------------------------------

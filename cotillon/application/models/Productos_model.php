@@ -15,15 +15,16 @@ class Productos_model extends CI_Model {
     $id_categoria = intval( $id_categoria );
     $descripcion = htmlentities( $descripcion );
     $unidad = htmlentities( $unidad );
-    $data = array(
+    $data = [
       'id_proveedor' => $id_proveedor,
       'nombre' => $nombre,
       'precio' => $precio,
       'id_categoria' => $id_categoria,
       'descripcion' => $descripcion,
       'unidad' => $unidad
-    );
+    ];
     $this->db->insert('productos', $data);
+    return boolval( $this->db->affected_rows() );
   }
 
   public function leer( $id ) {
