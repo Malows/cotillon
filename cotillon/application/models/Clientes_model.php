@@ -7,17 +7,21 @@ class Clientes_model extends CI_Model {
 		parent::__construct();
 	}
 
-	public function crear( $nombre, $contacto, $id_localidad, $tipo_cliente ) {
+	public function crear( $nombre, $telefono, $email, $id_localidad, $direccion, $tipo_cliente ) {
 		// Sanitizar entrada de datos
 		$nombre = htmlentities( $nombre );
-		$contacto = htmlentities( $contacto );
+		$telefono = htmlentities( $telefono );
+		$email = htmlentities( $email );
+		$direccion = htmlentities( $direccion );
 		$id_localidad = intval( $id_localidad );
 		$tipo_cliente = htmlentities( $tipo_cliente );
 
 		// Arreglo de datos
 		$data = [
 			'nombre_cliente' => $nombre,
-			'contacto' => $contacto,
+			'telefono' => $telefono,
+			'direccion' => $direccion,
+			'email' => $email,
 			'id_localidad' => $id_localidad,
 			'tipo_cliente' => $tipo_cliente
 		];
@@ -34,18 +38,22 @@ class Clientes_model extends CI_Model {
 		return $this->db->get('clientes')->row_array();
 	}
 
-	public function actualizar( $id, $nombre, $contacto, $id_localidad, $tipo_cliente  ) {
+	public function actualizar( $id, $nombre, $telefono, $email, $id_localidad, $direccion, $tipo_cliente  ) {
 		// Sanitizar entrada de datos
 		$id = intval( $id );
 		$nombre = htmlentities( $nombre );
-		$contacto = htmlentities( $contacto );
+		$telefono = htmlentities( $telefono );
+		$email = htmlentities( $email );
+		$direccion = htmlentities( $direccion );
 		$id_localidad = intval( $id_localidad );
 		$tipo_cliente = htmlentities( $tipo_cliente );
 
 		// Arreglo de datos
 		$data = [
 			'nombre_cliente' => $nombre,
-			'contacto' => $contacto,
+			'telefono' => $telefono,
+			'direccion' => $direccion,
+			'email' => $email,
 			'id_localidad' => $id_localidad,
 			'tipo_cliente' => $tipo_cliente
 		];

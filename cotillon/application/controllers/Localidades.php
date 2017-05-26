@@ -11,10 +11,15 @@ class Localidades extends CI_Controller {
     $this->load->model('localidades_model');
 
     $this->config_validacion = [
-      [
-        'field' => 'nombre_localidad',
-        'label' => 'nombre_localidad',
-        'rules' => 'required|alpha_numeric_spaces']
+        [
+          'field' => 'nombre_localidad',
+          'label' => 'nombre_localidad',
+          'rules' => 'required'
+        ], [
+          'field' => 'barrio',
+          'label' => 'Barrio',
+          'rules' => 'required'
+        ]
       ];
 
     }
@@ -45,7 +50,6 @@ class Localidades extends CI_Controller {
         $this->form_validation->set_rules($this->config_validacion);
         //mesajes de validaciones
         $this->form_validation->set_message('required', "<strong>%s</strong> es un campo obligatorio. " );
-        $this->form_validation->set_message('alpha_numeric_spaces', "<strong>%s</strong> solo se admite caracteres alfabéticos." );
         //delimitadores de errores
         $this->form_validation->set_error_delimiters('<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button> ', '</div>');
 
@@ -59,11 +63,13 @@ class Localidades extends CI_Controller {
         } else {
           // Envié el formulario
           $this->localidades_model->crear(
-          $this->security->xss_clean( $this->input->post('nombre_localidad') )
+          $this->security->xss_clean( $this->input->post('nombre_localidad') ),
+          $this->security->xss_clean( $this->input->post('barrio') )
         );
 
         $data['exito']=TRUE;
-        $data['localidad']=htmlentities($this->input->post('nombre_localidad'));
+        $data['localidad']['nombre_localidad']=htmlentities($this->input->post('nombre_localidad'));
+        $data['localidad']['barrio']=htmlentities($this->input->post('barrio'));
 
         $this->load->view('includes/header');
         $this->load->view('pages/localidades/crear', $data);
@@ -81,7 +87,6 @@ class Localidades extends CI_Controller {
         $this->form_validation->set_rules($this->config_validacion);
         //mesajes de validaciones
         $this->form_validation->set_message('required', "<strong>%s</strong> es un campo obligatorio. " );
-        $this->form_validation->set_message('alpha_numeric_spaces', "<strong>%s</strong> solo se admite caracteres alfabéticos." );
         //delimitadores de errores
         $this->form_validation->set_error_delimiters('<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button> ', '</div>');
 
@@ -95,11 +100,13 @@ class Localidades extends CI_Controller {
         } else {
           // Envié el formulario
           $data['exito']=TRUE;
-          $data['localidad']['nombre_localidad'] = htmlentities($this->input->post('nombre_localidad'));
+          $data['localidad']['nombre_localidad']=htmlentities($this->input->post('nombre_localidad'));
+          $data['localidad']['barrio']=htmlentities($this->input->post('barrio'));
 
           $this->localidades_model->actualizar(
           $id,
-          $this->security->xss_clean( $this->input->post('nombre_localidad') )
+          $this->security->xss_clean( $this->input->post('nombre_localidad') ),
+          $this->security->xss_clean( $this->input->post('barrio') )
         );
 
         $this->load->view('includes/header');

@@ -7,13 +7,15 @@
 
 <table class="table table-striped">
   <thead>
-    <th>#</th>
-    <th>Nombre</th>
-    <th>Proveedor</th>
-    <th>Categoría</th>
-    <th>Precio</th>
-    <th>Descripción</th>
-    <th>Opciones</th>
+    <tr>
+      <th>#</th>
+      <th>Nombre</th>
+      <th>Proveedor</th>
+      <th>Categoría</th>
+      <th>Precio</th>
+      <th>Descripción</th>
+      <th>Opciones</th>
+    </tr>
   </thead>
   <tbody>
     <?php foreach ($productos as $prod):?>

@@ -112,6 +112,18 @@ class Categorias extends CI_Controller {
       }
     }
 
+    public function eliminar( $id = 0 ) {
+      if ( ! $this->session->userdata('esta_logeado') && $this->session->userdata('es_admin') ) {
+        // No esta logeado y es admin, mensaje de error
+        show_404();
+      } else {
+        if ( $id !== 0 ) {
+          $this->Categorias_producto_model->eliminar( $id );
+        }
+        redirect( base_url('/categorias'), 'refresh' );
+      }
+    }
+
     public function ver_productos( $id ) {
       if ( ! $this->session->userdata('esta_logeado') ) {
         // No esta logeado, mensaje de error

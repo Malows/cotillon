@@ -8,6 +8,7 @@
   <thead>
     <th>#</th>
     <th>Nombre de localidad</th>
+    <th>Barrio</th>
     <th>Opciones</th>
   </thead>
   <tbody>
@@ -15,6 +16,7 @@
     <tr>
       <td><?php echo $loc['id_localidad'];?></td>
       <td><?php echo $loc['nombre_localidad'];?></td>
+      <td><?php echo $loc['barrio']; ?></td>
       <td>
         <a href="<?php echo base_url("localidades/ver_clientes/".$loc['id_localidad']); ?>" class="btn btn-primary" title="Ver los clientes correspondientes a esta localidad">Clientes <i class="fa fa-address-book" aria-hidden="true"></i></a>
         <a href="<?php echo base_url("localidades/ver_proveedores/".$loc['id_localidad']); ?>" class="btn btn-primary" title="Ver los proveedores correspondientes a esta localidad"> Proveedores <i class="fa fa-id-card" aria-hidden="true"></i></a>

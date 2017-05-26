@@ -8,6 +8,7 @@ class Categorias_producto_model extends CI_Model {
 	}
 
 	public function lista() {
+		$this->db->where('soft_delete',null);
 		return $this->db->get('categorias_producto')->result_array();
 	}
 
@@ -33,8 +34,9 @@ class Categorias_producto_model extends CI_Model {
 
 	public function eliminar( $id ) {
 		$id = intval($id);
-
-		$this->db->delete('categorias_producto', ['id_categoria' => $id]);
+		$this->db->where('id_categoria',$id);
+		$data['soft_delete'] = date('Y-m-d H:i:s');
+		$this->db->update('categorias_producto', $data);
 		return boolval( $this->db->affected_rows() );
 	}
 
@@ -51,6 +53,7 @@ class Categorias_producto_model extends CI_Model {
 		$id = intval($id);
 
 		$this->db->where('id_categoria', $id);
+		$this->db->where('soft_delete',null);
 		return $this->db->get('productos')->result_array();
 	}
 }

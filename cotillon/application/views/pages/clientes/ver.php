@@ -4,8 +4,11 @@
   <hr>
   <h4>Datos del cliente</h4>
   <p>Localidad: <strong><?php echo $cliente['nombre_localidad']; ?></strong></p>
+  <p>Barrio: <strong><?php echo $cliente['barrio']; ?></strong></p>
+  <p>Dirección: <strong><?php echo $cliente['direccion']; ?></strong></p>
+  <p>Correo Electrónico: <strong><?php echo $cliente['email']; ?></strong></p>
+  <p>Teléfono: <strong><?php echo $cliente['telefono'] ?></strong></p>
   <p>Tipo de cliente: <strong><?php echo $cliente['tipo_cliente']; ?></strong></p>
-  <p>Contacto: <strong><?php echo $cliente['contacto'] ?></strong></p>
   <hr>
   <h4>Operaciones realizadas</h4>
   <ul>

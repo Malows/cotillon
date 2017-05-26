@@ -14,6 +14,9 @@
         <label for="nombre_cliente">Nombre<?php echo form_error("nombre_cliente");?></label>
         <input type="text" class="form-control" name="nombre_cliente" placeholder="Ingrese el nombre del cliente">
 
+        <label for="">Correo Electrónico<?php echo form_error("email");?></label>
+        <input type="email" class="form-control" name="email" value="" placeholder="ejemplo@email.com">
+
         <label for="tipo_cliente">Tipo de cliente<?php echo form_error("tipo_cliente");?></label>
         <select name="tipo_cliente" class="form-control" placeholder="Seleccione un tipo de cliente">
           <option value="Minorista">Minorista</option>
@@ -23,14 +26,19 @@
         <label for="id_localidad">Localidad<?php echo form_error("id_localidad");?></label>
         <select name="id_localidad" class="form-control" placeholder="Ingrese el nombre del cliente">
           <?php foreach ($localidades as $loc){
-            echo "<option value=\"".$loc['id_localidad']."\">".$loc['nombre_localidad']."</option>\n";
+            echo "<option value=\"".$loc['id_localidad']."\">".$loc['nombre_localidad'] .' - '. $loc['barrio']."</option>\n";
           }?>
         </select>
 
-        <label for="contacto">Contacto<?php echo form_error("contacto");?></label>
-        <textarea name="contacto" class="form-control" maxlength="255" placeholder="Datos de contacto"></textarea>
+        <label for="">Dirección<?php echo form_error("direccion");?></label>
+        <input type="text" class="form-control" name="direccion" value="" placeholder="Calle altura">
 
+        <label for="contacto">Teléfono<?php echo form_error("telefono");?></label>
+        <input type="tel" name="telefono" value="" class="form-control" placeholder="(código de area) - número de telefono">
+
+      </div>
+      <div class="form-group">
         <input type="submit" class="btn btn-default" name="submit" value="Enviar">
-    </div>
+      </div>
   <?php echo form_close(); ?>
 </div>

@@ -9,7 +9,9 @@
     <th>#</th>
     <th>Nombre de cliente</th>
     <th>Localidad</th>
-    <th>Contacto</th>
+    <th>Dirección</th>
+    <th>Correo Electrónico</th>
+    <th>Teléfono</th>
     <th>Tipo de cliente</th>
     <th>Opciones</th>
   </thead>
@@ -18,8 +20,10 @@
     <tr>
       <td><?php echo $c['id_cliente'];?></td>
       <td><?php echo $c['nombre_cliente'];?></td>
-      <td><?php echo $c['nombre_localidad'];?></td>
-      <td><?php echo $c['contacto'];?></td>
+      <td><?php echo $c['nombre_localidad']. ' - '.$c['barrio'];?></td>
+      <td><?php echo $c['direccion'];?></td>
+      <td><?php echo $c['email'];?></td>
+      <td><?php echo $c['telefono'];?></td>
       <td><?php echo $c['tipo_cliente'];?></td>
       <td>
         <div class="btn-group">

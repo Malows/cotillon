@@ -1,5 +1,5 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<h2 class="text-center">Clientes radicados en <?php echo $localidad['nombre_localidad']; ?></h2>
+<h2 class="text-center">Clientes radicados en <?php echo $localidad['nombre_localidad'].', '.$localidad['barrio']; ?></h2>
 <hr>
 <ul>
   <?php foreach ($clientes as $cliente) {

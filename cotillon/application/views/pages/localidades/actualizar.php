@@ -5,13 +5,19 @@
   <div class="alert alert-block alert-success">
     <button type="button" class="close" data-dismiss="alert">&times;</button>
           <h4>Genial!</h4>
-          Se ha actualizado exitosamente la localidad <strong>'.$localidad['nombre_localidad'].
+          Se ha actualizado exitosamente la localidad <strong>'.$localidad['nombre_localidad']. ' - '.$localidad['barrio'].
       '</div>';
   }
   echo form_open("/localidades/actualizar/".$localidad['id_localidad'])?>
     <div class="form-group">
         <label for="nombre_localidad">Nombre de localidad<?php echo form_error("nombre_localidad");?></label>
         <input type="text" class="form-control" name="nombre_localidad" placeholder="Nombre de localidad" value="<?php echo $localidad['nombre_localidad']; ?>">
+    </div>
+    <div class="form-group">
+        <label for="barrio">Barrio<?php echo form_error("barrio");?></label>
+        <input type="text" class="form-control" name="barrio" placeholder="Nombre de barrio" value="<?php echo $localidad['barrio']; ?>">
+    </div>
+    <div class="form-group">
         <input type="submit" class="btn btn-default" name="submit" value="Enviar">
     </div>
   <?php echo form_close() ?>
