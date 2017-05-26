@@ -1,9 +1,11 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <h2 class="text-center">Proveedores</h2>
 <hr>
+<?php if($es_admin_usuario_logueado): ?>
 <div class="row">
   <a href="<?php echo base_url('/proveedores/crear');?>" class="btn btn-primary pull-right" title="Agregar un nuevo proveedor"><i class="fa fa-plus"></i></a>
 </div>
+<?php endif; ?>
 <table class="table table-striped">
   <thead>
     <th>#</th>

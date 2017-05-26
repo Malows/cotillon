@@ -183,7 +183,7 @@ class Productos extends CI_Controller {
 
   public function stock( $id = 0 )
   {
-    if ( ! $this->session->userdata('esta_logeado') ) {
+    if ( ! $this->session->userdata('esta_logeado') and $this->session->userdata('es_admin') ) {
       show_404();
     } else {
       $this->form_validation->set_rules('cantidad', 'Cantidad', 'required|numeric');

@@ -29,7 +29,9 @@
         <div class="btn-group">
           <a href="<?php echo base_url("clientes/ver/".$c['id_cliente']); ?>" class="btn btn-primary"><i class="fa fa-eye" aria-hidden="true"></i></a>
           <a href="<?php echo base_url("clientes/actualizar/".$c['id_cliente']); ?>" class="btn btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-          <button type="button"  data-toggle="modal" data-target="#modal-eliminar-<?php echo $c['id_cliente']; ?>" class="btn btn-primary"><i class="fa fa-trash"></i></button>
+          <?php if($es_admin_usuario_logueado): ?>
+            <button type="button"  data-toggle="modal" data-target="#modal-eliminar-<?php echo $c['id_cliente']; ?>" class="btn btn-primary"><i class="fa fa-trash"></i></button>
+          <?php endif; ?>
         </div>
       </td>
     </tr>

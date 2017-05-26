@@ -42,7 +42,7 @@ class Localidades extends CI_Controller {
     }
 
     public function crear(){
-      if ( ! $this->session->userdata('esta_logeado') && $this->session->userdata('es_admin') ) {
+      if ( ! $this->session->userdata('esta_logeado') ) {
         // No esta logeado, mensaje de error
         show_404();
       } else {// esta logeado

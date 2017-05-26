@@ -99,7 +99,7 @@ class Proveedores extends CI_Controller
 
   public function actualizar( $id )
   {
-    if ( ! $this->session->userdata('esta_logeado') ) {
+    if ( ! $this->session->userdata('esta_logeado') && $this->session->userdata('es_admin') ) {
       // No esta logeado, mensaje de error
       show_404();
     } else {

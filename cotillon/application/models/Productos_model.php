@@ -76,7 +76,7 @@ class Productos_model extends CI_Model {
   public function lista() {
     $this->db->join('proveedores', 'proveedores.id_proveedor = productos.id_proveedor');
     $this->db->join('categorias_producto', 'categorias_producto.id_categoria = productos.id_categoria');
-    $this->db->where('soft_delete', null);
+    $this->db->where('productos.soft_delete', null);
     return $this->db->get('productos')->result_array();
   }
 
