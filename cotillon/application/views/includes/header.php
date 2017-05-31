@@ -15,9 +15,9 @@
 					<div class="navbar-header">
 						<button type="button" class="collapsed navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-6" aria-expanded="false">
 							<span class="sr-only">Toggle navigation</span>
-							<span class="icon-bar">A</span>
-							<span class="icon-bar">B</span>
-							<span class="icon-bar">C</span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
 						</button>
 						<a href="<?php echo base_url(); ?>" class="navbar-brand">Cotillon</a>
 					</div>
