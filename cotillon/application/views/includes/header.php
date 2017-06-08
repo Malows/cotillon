@@ -5,6 +5,7 @@
 		<meta charset="utf-8">
 		<link rel="stylesheet" href="http://localhost:8080/assets/css/bootstrap.css">
 		<link rel="stylesheet" href="http://localhost:8080/assets/css/font-awesome.min.css">
+		<link rel="stylesheet" href="http://localhost:8080/assets/css/style.css">
 		<title>Cotillon FTW</title>
 	</head>
 	<body>

@@ -7,6 +7,14 @@ class Productos_model extends CI_Model {
     parent::__construct();
   }
 
+public function lista_limpia()
+{
+  $this->db->where('soft_delete',null);
+  return $this->db
+    ->select('id_producto AS `id`, nombre, cantidad AS `stock`, precio')
+    ->get('productos')->result_array();
+}
+
   public function crear( $id_proveedor, $nombre, $precio, $id_categoria, $descripcion, $unidad ) {
     // Sanitizar datos
     $id_proveedor = intval( $id_proveedor );

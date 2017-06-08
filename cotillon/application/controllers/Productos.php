@@ -176,7 +176,7 @@ class Productos extends CI_Controller {
       show_404();
     } else {
       $this->productos_model->eliminar($id);
-      log_message('info', 'El usuario `'.$this->session->userdata('usuario').'` <ID:'.$this->session->userdata('id_usuario').'> eliminó el producto `'. $this->input->post('nombre') .'`.');
+      log_message('info', 'El usuario `'.$this->session->userdata('usuario').'` <ID:'.$this->session->userdata('id_usuario').'> eliminó el producto <ID_PRODUCTO:'.$id.'>.');
       redirect('/productos', 'refresh');
     }
   }
@@ -198,11 +198,11 @@ class Productos extends CI_Controller {
       } else {
         if( $this->input->post('opcion') == 'reducir' ) {
           $this->productos_model->reducir( $id, $this->input->post('cantidad') );
-          log_message('info', 'El usuario `'.$this->session->userdata('usuario').'` <ID:'.$this->session->userdata('id_usuario')."> redujo el stock del producto <ID:$id> en ". abs($this->input->post('cantidad')).'.');
+          log_message('info', 'El usuario `'.$this->session->userdata('usuario').'` <ID:'.$this->session->userdata('id_usuario')."> redujo el stock del producto <ID_PRODUCTO:$id> en ". abs($this->input->post('cantidad')).'.');
         } else {
           if( $this->input->post('opcion') == 'incrementar' ) {
             $this->productos_model->incrementar( $id, $this->input->post('cantidad') );
-            log_message('info', 'El usuario `'.$this->session->userdata('usuario').'` <ID:'.$this->session->userdata('id_usuario')."> incrementó el stock del producto <ID:$id> en ". abs($this->input->post('cantidad')).'.');
+            log_message('info', 'El usuario `'.$this->session->userdata('usuario').'` <ID:'.$this->session->userdata('id_usuario')."> incrementó el stock del producto <ID_PRODUCTO:$id> en ". abs($this->input->post('cantidad')).'.');
 
           }
         }
