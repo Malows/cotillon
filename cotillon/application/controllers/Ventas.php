@@ -16,8 +16,11 @@ class Ventas extends CI_Controller {
       show_404();
     } else {
       $this->load->model("productos_model");
-
-      $data = ['productos' => $this->productos_model->lista_limpia()];
+      $this->load->model("clientes_model");
+      $data = [
+        'productos' => $this->productos_model->lista_limpia(),
+        'clientes' => $this->clientes_model->lista_limpia()
+      ];
       for ($i=0; $i < count( $data['productos'] ); $i++) {
         $data['productos'][$i]['nombre'] = html_entity_decode($data['productos'][$i]['nombre']);
       }

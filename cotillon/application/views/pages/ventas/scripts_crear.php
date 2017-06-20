@@ -1,9 +1,18 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+<script src="https://unpkg.com/vue-select@latest"></script>
 <script>
+  Vue.component('v-select', VueSelect.VueSelect);
+
   var vue = new Vue({
     el: '#root',
 
     data: {
+      clientes: [
+        <?php foreach ($clientes as $cliente) {
+          echo json_encode($cliente).",\n";
+        } ?>
+      ],
+      cliente_seleccionado: '',
       cantidad: '',
       productos: [
         <?php foreach ($productos as $value) {
@@ -19,14 +28,17 @@
     methods: {
       agregarProducto() {
         // Si ingreso por id el producto, asigno el elemento seleccionado para proseguir
-        if ( this.id_producto_seleccionado && !this.producto_seleccionado )
+        if ( this.id_producto_seleccionado && !this.producto_seleccionado ) {
           // filter devuelve un array, de logitud 1, porque solo un id coincide
-          this.producto_seleccionado = this.productos.filter( elem => elem.id == this.id_producto_seleccionado )[0]
+          let aux = this.productos.filter( elem => elem.id == this.id_producto_seleccionado )[0]
+          this.producto_seleccionado = {label: aux.nombre, value: aux}
+        }
+
         // Blanqueo los errores
         this.errors = []
 
-        if ( this.producto_seleccionado  && this.cantidad && this.cantidad <= this.producto_seleccionado.stock ) {
-          var aux = this.producto_seleccionado
+        if ( this.producto_seleccionado  && this.cantidad && this.cantidad <= this.producto_seleccionado.value.stock ) {
+          var aux = this.producto_seleccionado.value
           // Nos fijamos si ya está
           let resultado = this.productos_agregados.filter( elem => elem.id === aux.id )[0]
           // Si el resultado es undefined(no fue agregado previamente) asigno null al indice
@@ -47,7 +59,7 @@
           if ( ! this.producto_seleccionado ) this.errors.push('Debe seleccionar un producto.')
           if ( this.cantidad === '' ) this.errors.push('Debe ingresar una cantidad de producto.')
           if ( !parseFloat(this.cantidad) ) this.errors.push('La cantidad ingresada debe ser solo numérica.')
-          if ( this.cantidad > this.producto_seleccionado.stock ) this.errors.push('La cantidad ingresada es mayor a la existencia de stock')
+          if ( this.cantidad > this.producto_seleccionado.value.stock ) this.errors.push('La cantidad ingresada es mayor a la existencia de stock')
         }
       },
 
@@ -58,6 +70,17 @@
 
       totalDeVenta() {
         return this.productos_agregados.reduce((prev, curr) => { return prev + curr.precio * curr.cantidad }, 0)
+      },
+      confirmarVenta() {
+        alert('vendí')
+      }
+    },
+    computed: {
+      productosParaSelect() {
+        return this.productos.map(elem => {return {value: elem, label: elem.nombre}})
+      },
+      clientesParaSelect() {
+        return this.clientes.map(elem => {return {value: elem.id, label: elem.nombre}})
       }
     }
   })

@@ -29,6 +29,7 @@
 							<li><?php echo anchor( base_url("clientes/"), "Clientes"); ?></li>
 							<li><?php echo anchor( base_url("proveedores/"), "Proveedores"); ?></li>
 							<li><?php echo anchor( base_url("productos/"), "Productos"); ?></li>
+							<li><?php echo anchor( base_url("ventas/"), "Ventas"); ?></li>
 						<?php if($this->session->userdata('es_admin')): ?>
 							<li><?php echo anchor( base_url("usuarios/"), "Usuarios"); ?></li>
 						<?php endif; ?>

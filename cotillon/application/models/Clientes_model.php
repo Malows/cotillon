@@ -95,4 +95,11 @@ class Clientes_model extends CI_Model {
 		}
 		return $this->db->get('clientes')->result_array();
 	}
+
+	public function lista_limpia() {
+		$this->db->where('soft_delete',null);
+	  return $this->db
+	    ->select('id_cliente AS `id`, nombre_cliente AS `nombre`')
+	    ->get('clientes')->result_array();
+	}
 }
