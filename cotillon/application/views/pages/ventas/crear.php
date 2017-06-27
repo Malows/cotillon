@@ -45,4 +45,29 @@
     <p v-show="cliente_seleccionado">Cliente: <strong>{{cliente_seleccionado.label}}</strong></p>
   </div>
   <button type="button" v-show="totalDeVenta()" v-on:click="confirmarVenta" name="button" class="btn btn-warning">Realizar venta</button>
+<!-- Modal de bulma -->
+  <div class="modal" v-bind:class="{ 'is-active': showModal }">
+    <div class="modal-background" v-on:click="cerrarModal"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Modal title</p>
+        <button class="delete" v-on:click="cerrarModal"></button>
+      </header>
+      <section class="modal-card-body">
+        <p>Cliente: <strong>{{cliente_seleccionado.label}}</strong></p>
+        <hr>
+        <ul>
+          <li v-for="prod in productos_agregados">
+            {{prod.nombre}} - cantidad: {{prod.cantidad}}
+          </li>
+        </ul>
+        <hr>
+        <p>subtotal: <strong>${{totalDeVenta()}}</strong></p>
+      </section>
+      <footer class="modal-card-foot">
+        <a class="btn btn-success" v-on:click="emitirVenta">Vender</a>
+        <a class="btn btn-default" v-on:click="cerrarModal">Cerrar</a>
+      </footer>
+    </div>
+  </div>
 </div>

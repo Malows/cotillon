@@ -23,6 +23,7 @@
       producto_seleccionado: '',
       id_producto_seleccionado: '',
       errors: [],
+      showModal: false,
     },
 
     methods: {
@@ -72,7 +73,33 @@
         return this.productos_agregados.reduce((prev, curr) => { return prev + curr.precio * curr.cantidad }, 0)
       },
       confirmarVenta() {
-        alert('vendí')
+        this.showModal = true
+      },
+      emitirVenta() {
+        const payload = {
+          'cliente': {
+            'id': this.cliente_seleccionado.value,
+            'nombre': this.cliente_seleccionado.label
+          },
+          'productos': this.productos_agregados
+        }
+        $.ajax({
+          url: '<?php echo base_url('ventas/api_emitir_venta'); ?>',
+          type: 'GET',
+          data: payload
+        })
+        .done(this.wipeDatosDeVenta())
+      },
+      cerrarModal() {
+        this.showModal = false;
+      },
+      wipeDatosDeVenta() {
+        this.cerrarModal()
+        this.cantidad = ''
+        this.producto_seleccionado = ''
+        this.id_producto_seleccionado = ''
+        this.cliente_seleccionado = ''
+        this.productos_agregados = []
       }
     },
     computed: {

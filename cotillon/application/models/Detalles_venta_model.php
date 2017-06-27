@@ -7,26 +7,33 @@ class Detalles_venta_model extends CI_Model {
 		parent::__construct();
 	}
 
-	public function crear( $id_venta, $id_producto, $cantidad ) {
+	public function crear( $id_venta, $id_producto, $cantidad, $precio_unitario ) {
 		// Sanitizar entrada de datos
 		$id_venta = intval( $id_venta );
 		$id_producto = intval( $id_producto );
 		$cantidad = intval( $cantidad );
+		$precio_unitario = floatval( $precio_unitario );
 
     // Consulta de precio del producto
-    $this->db->where('id_producto', $id_producto);
-    $aux_producto = $this->db->get('productos')->row_array();
+    // $this->db->where('id_producto', $id_producto);
+    // $aux_producto = $this->db->get('productos')->row_array();
+		// Paso yo los datos
 
     // Array de datos
-		$data = array(
+		$data = [
 			'id_venta' => $id_venta,
 			'id_producto' => $id_producto,
 			'cantidad' => $cantidad,
-			'precio_unitario' => $aux_producto['precio_unitario']
-		);
+			'precio_unitario' => $precio_unitario
+		];
 
 		// Ejecutar consulta
 		$this->db->insert( 'detalles_venta', $data );
+	}
+
+	public function batch_insertion( $lineas )
+	{
+		return $this->db->insert_batch('detalles_venta', $lineas);
 	}
 
 	public function leer( $id_venta, $id_producto ) {

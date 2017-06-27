@@ -7,18 +7,19 @@ class Ventas_model extends CI_Model {
 		parent::__construct();
 	}
 
-	public function crear( $id_cliente ) {
+	public function crear( $id_cliente, $total ) {
 		// Sanitizar entrada de datos
 		$id_cliente = intval( $id_cliente );
+		$total = floatval($total);
 
 		// Arreglo de datos
-		$data = array(
+		$data = [
 			'id_cliente' => $id_cliente,
-			'total' => 0.0
-		);
+			'total' => $total
+		];
 
 		// Ejecutar consulta
-		$this->db->insert( 'ventas', $data );
+		return $this->db->insert( 'ventas', $data );
 	}
 
 	public function leer( $id ) {
@@ -64,5 +65,9 @@ class Ventas_model extends CI_Model {
     $this->db->order_by('fecha', 'DESC');
     $this->db->limit( 100, $desde ); // $hasta - $desde = 1*100 = 100 siempre
 		return $this->db->get('ventas')->result_array();
+	}
+
+	public function last_id() {
+		return intval( $this->db->query('SELECT LAST_INSERT_ID();')->row_array()['LAST_INSERT_ID()'] );
 	}
 }
