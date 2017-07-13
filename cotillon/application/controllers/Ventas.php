@@ -9,9 +9,22 @@ class Ventas extends CI_Controller {
     $this->load->model('detalles_venta_model');
   }
 
-  public function index() {
+  public function index($pagina = 0) {
+    if ( ! $this->session->userdata('esta_logeado') ) {
+      show_404();
+    } else {
+      $unaSemanaAtras = new DateTime();
+      $unaSemanaAtras->setTimeZone(new DateTimeZone('America/Argentina/Buenos_Aires'));
+      $unaSemanaAtras->modify('-7days');
+      $data = [];
+      if( $pagina > 0 ) $data['ventas'] = $this->ventas_model->lista($pagina);
+      else $data['ventas'] = $this->ventas_model->hasta($unaSemanaAtras);
 
+      $this->load->view('includes/header');
+      $this->load->view('pages/ventas/index', $data);
+      $this->load->view('includes/footer');
   }
+}
 
   public function crear() {
     if ( ! $this->session->userdata('esta_logeado') ) {
@@ -19,6 +32,7 @@ class Ventas extends CI_Controller {
     } else {
       $this->load->model("productos_model");
       $this->load->model("clientes_model");
+
       $data = [
         'productos' => $this->productos_model->lista_limpia(),
         'clientes' => $this->clientes_model->lista_limpia()
@@ -26,7 +40,7 @@ class Ventas extends CI_Controller {
       for ($i=0; $i < count( $data['productos'] ); $i++) {
         $data['productos'][$i]['nombre'] = html_entity_decode($data['productos'][$i]['nombre']);
       }
-      $this->load->view('includes/header');
+      $this->load->view('includes/header_modal');
       $this->load->view('pages/ventas/crear');
       $this->load->view('includes/footer_vue1');
       $this->load->view('pages/ventas/scripts_crear', $data);
@@ -38,13 +52,15 @@ class Ventas extends CI_Controller {
     if ( ! $this->session->userdata('esta_logeado') ) {
       show_404();
     } else {
-
+      $this->load->model('productos_model');
       $cliente = $this->input->get('cliente');
+      var_dump($cliente['id']);
       $productos = $this->input->get('productos');
       $total_de_venta = 0;
 
       // Inserto la venta con total 0 y el id del cliente
-      $this->ventas_model->crear($cliente['id'], $total_de_venta);
+      // Inicio transacción
+      $this->ventas_model->crear(intval($cliente['id']), $total_de_venta);
 
       // Obtengo el id de la ultima venta grabada en disco (total 0)
       $ultimo_id = $this->ventas_model->last_id();
@@ -66,9 +82,13 @@ class Ventas extends CI_Controller {
       }
       // var_dump($productos);
       // insercion en bloque de todas las lineas de la venta
-      $aux = $this->detalles_venta_model->batch_insertion($productos);
-      // var_dump($aux);
+      $this->detalles_venta_model->batch_insertion($productos);
+      // actualizo stocks en productos
+      foreach ($productos as $producto) {
+        $this->productos_model->reducir($producto['id_producto'],$producto['cantidad']);
+      }
       // actualizo la venta con el nuevo total de venta
+      // Finalizo transacción
       $this->ventas_model->actualizar($ultimo_id, $cliente['id'], $total_de_venta);
 
 

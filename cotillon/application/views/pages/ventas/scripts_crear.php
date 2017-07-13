@@ -1,5 +1,5 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<script src="https://unpkg.com/vue-select@latest"></script>
+<script src="http://localhost:8080/assets/js/vue-select-2.2.0.js"></script>
 <script>
   Vue.component('v-select', VueSelect.VueSelect);
 
@@ -83,6 +83,7 @@
           },
           'productos': this.productos_agregados
         }
+        console.log(payload);
         $.ajax({
           url: '<?php echo base_url('ventas/api_emitir_venta'); ?>',
           type: 'GET',

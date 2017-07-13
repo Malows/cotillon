@@ -7,7 +7,15 @@ class Ventas_model extends CI_Model {
 		parent::__construct();
 	}
 
+	public function leer( $id ) {
+		// Sanitizar entrada de datos
+		$id = intval( $id );
+		$this->db->where('id_venta', $id);
+		return $this->db->get('ventas')->result_array();
+	}
+
 	public function crear( $id_cliente, $total ) {
+		$this->db->trans_start();
 		// Sanitizar entrada de datos
 		$id_cliente = intval( $id_cliente );
 		$total = floatval($total);
@@ -20,13 +28,6 @@ class Ventas_model extends CI_Model {
 
 		// Ejecutar consulta
 		return $this->db->insert( 'ventas', $data );
-	}
-
-	public function leer( $id ) {
-		// Sanitizar entrada de datos
-		$id = intval( $id );
-		$this->db->where('id_venta', $id);
-		return $this->db->get('ventas')->result_array();
 	}
 
 	public function actualizar( $id, $id_cliente, $total ) {
@@ -44,6 +45,9 @@ class Ventas_model extends CI_Model {
 		// Ejecutar consulta
 		$this->db->where( 'id_venta', $id );
 		$this->db->update( 'ventas', $data );
+		// Completo transacción
+		$this->db->trans_complete();
+		// retorno de true o false por si actualicé
 		return boolval( $this->db->affected_rows() );
 	}
 
@@ -63,8 +67,19 @@ class Ventas_model extends CI_Model {
     // $hasta = $paginacion * 100; REDUNDANTE
 
     $this->db->order_by('fecha', 'DESC');
+		$this->db->join('clientes', 'clientes.id_cliente = ventas.id_cliente');
     $this->db->limit( 100, $desde ); // $hasta - $desde = 1*100 = 100 siempre
 		return $this->db->get('ventas')->result_array();
+	}
+
+	public function hasta($fecha = '')
+	{
+		if ( $fecha ) {
+			$this->db->order_by('fecha', 'DESC');
+			$this->db->join('clientes', 'clientes.id_cliente = ventas.id_cliente');
+			$this->db->where( 'fecha >=', $fecha->format('Y-m-d H:i:S') ); // $hasta - $desde = 1*100 = 100 siempre
+			return $this->db->get('ventas')->result_array();
+		} else return $this->lista();
 	}
 
 	public function last_id() {

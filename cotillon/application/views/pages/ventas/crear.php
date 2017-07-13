@@ -50,8 +50,8 @@
     <div class="modal-background" v-on:click="cerrarModal"></div>
     <div class="modal-card">
       <header class="modal-card-head">
-        <p class="modal-card-title">Modal title</p>
-        <button class="delete" v-on:click="cerrarModal"></button>
+        <p class="modal-card-title">Confirmar venta</p>
+        <button class="btn btn-default" v-on:click="cerrarModal"><i class="fa fa-remove"></i></button>
       </header>
       <section class="modal-card-body">
         <p>Cliente: <strong>{{cliente_seleccionado.label}}</strong></p>
@@ -65,8 +65,8 @@
         <p>subtotal: <strong>${{totalDeVenta()}}</strong></p>
       </section>
       <footer class="modal-card-foot">
-        <a class="btn btn-success" v-on:click="emitirVenta">Vender</a>
-        <a class="btn btn-default" v-on:click="cerrarModal">Cerrar</a>
+          <button class="btn btn-success" v-on:click="emitirVenta">Vender</button>
+          <button class="btn btn-default" v-on:click="cerrarModal">Cerrar</button>
       </footer>
     </div>
   </div>
