@@ -9,14 +9,18 @@ class Ventas extends CI_Controller {
     $this->load->model('detalles_venta_model');
   }
 
-  public function index($pagina = 0) {
+  public function index() {
     if ( ! $this->session->userdata('esta_logeado') ) {
       show_404();
     } else {
+      $pagina = intval( $this->input->get('pagina') );
+
       $unaSemanaAtras = new DateTime();
       $unaSemanaAtras->setTimeZone(new DateTimeZone('America/Argentina/Buenos_Aires'));
       $unaSemanaAtras->modify('-7days');
       $data = [];
+      $data['cantidadTotalDeVentas'] = $this->ventas_model->contar_total();
+      $data['paginaActual'] = $pagina;
       if( $pagina > 0 ) $data['ventas'] = $this->ventas_model->lista($pagina);
       else $data['ventas'] = $this->ventas_model->hasta($unaSemanaAtras);
 
@@ -96,5 +100,12 @@ class Ventas extends CI_Controller {
     }
   }
 
+public function ver($id) {
+  if ( ! $this->session->userdata('esta_logeado') ) {
+    show_404();
+  } else {
+    
+  }
+}
 
 }

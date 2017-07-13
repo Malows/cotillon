@@ -72,8 +72,7 @@ class Ventas_model extends CI_Model {
 		return $this->db->get('ventas')->result_array();
 	}
 
-	public function hasta($fecha = '')
-	{
+	public function hasta($fecha = '') {
 		if ( $fecha ) {
 			$this->db->order_by('fecha', 'DESC');
 			$this->db->join('clientes', 'clientes.id_cliente = ventas.id_cliente');
@@ -84,5 +83,10 @@ class Ventas_model extends CI_Model {
 
 	public function last_id() {
 		return intval( $this->db->query('SELECT LAST_INSERT_ID();')->row_array()['LAST_INSERT_ID()'] );
+	}
+
+	public function contar_total()
+	{
+		return $this->db->query('SELECT * FROM ventas')->num_rows();
 	}
 }
