@@ -7,6 +7,13 @@ class Productos_model extends CI_Model {
     parent::__construct();
   }
 
+public function lista_alertas()
+{
+  $this->db->where('alerta >= cantidad');
+  $this->db->where('soft_delete',null);
+  return $this->db->get('productos')->result();
+}
+
 public function lista_limpia()
 {
   $this->db->where('soft_delete',null);

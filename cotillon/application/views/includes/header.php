@@ -3,8 +3,10 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<link rel="stylesheet" href="http://localhost:8080/assets/css/bootstrap.min.css">
-		<link rel="stylesheet" href="http://localhost:8080/assets/css/font-awesome.min.css">
+		<?php $replacement = '/cotillon/index.php'; ?>
+		<link rel="stylesheet" href="<?php echo str_replace($replacement, '', base_url('assets/css/bootstrap.min.css'));?>">
+		<link rel="stylesheet" href="<?php echo str_replace($replacement, '', base_url('assets/css/font-awesome.min.css'));?>">
+		<link rel="stylesheet" href="<?php echo str_replace($replacement, '', base_url('assets/css/style.css'));?>">
 		<title>Cotillon FTW</title>
 	</head>
 	<body>

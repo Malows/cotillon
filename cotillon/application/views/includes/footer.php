@@ -1,6 +1,7 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 		</div>
-		<script src="http://localhost:8080/assets/js/jquery-3.1.1.min.js"></script>
-		<script src="http://localhost:8080/assets/js/bootstrap.min.js"></script>
+		<?php $replacement = '/cotillon/index.php'; ?>
+		<script src="<?php echo str_replace($replacement, '', base_url('/assets/js/jquery-3.1.1.min.js'));?>"></script>
+		<script src="<?php echo str_replace($replacement, '', base_url('/assets/js/bootstrap.min.js'));?>"></script>
 	</body>
 </html>

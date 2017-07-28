@@ -1,4 +1,17 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+
+  <?php if ( count($alertas) ): ?>
+    <div class="alert alert-warning alert-dismissible" role="alert" >
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <strong>Alerta de poco stock!</strong> Revise el stock de los siguientes productos.
+      <hr>
+      <ul class="stock-lista">
+        <?php foreach ($alertas as $producto) {
+          echo "<li>$producto->nombre</li>\n";
+        } ?>
+      </ul>
+    </div>
+  <?php endif; ?>
 <h2 class="text-center">Productos</h2>
 <hr>
 <?php if($es_admin_usuario_logueado): ?>

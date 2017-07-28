@@ -58,6 +58,7 @@ class Productos extends CI_Controller {
     } else {
       $data = [
         'productos' => $this->productos_model->lista(),
+        'alertas' => $this->productos_model->lista_alertas(),
         'es_admin_usuario_logueado' => $this->session->userdata('es_admin')
       ];
 

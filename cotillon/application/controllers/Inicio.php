@@ -47,8 +47,10 @@ class Inicio extends CI_Controller {
 			}
 
 		} else { // estoy registrado
+			$this->load->model('productos_model');
+			$data = [ 'alertas' => $this->productos_model->lista_alertas() ];
 			$this->load->view('includes/header');
-			$this->load->view('pages/inicio/index');
+			$this->load->view('pages/inicio/index', $data);
 			$this->load->view('includes/footer');
 		}
 	}
