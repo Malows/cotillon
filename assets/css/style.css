@@ -2,6 +2,7 @@
 	display: none;
 }
 
+
 .stock-lista {
 	display: grid;
 	grid-template-columns: 1fr;
@@ -12,6 +13,12 @@
 	grid-template-columns: 1fr;
 }
 
+.contenedor-de-graficos {
+	display: grid;
+	grid-template-columns: 1fr;
+	grid-row-gap: 1em;
+}
+
 @media (min-width: 700px) {
 	.stock-lista {
 		grid-template-columns: 1fr 1fr;
@@ -20,5 +27,18 @@
 		grid-template-columns:  1fr auto;
 		grid-column-gap: 10px;
 		/*grid-auto-flow: row;*/
+	}
+	.contenedor-de-graficos {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		grid-row-gap: 1em;
+	}
+}
+
+@media (min-width: 1200px) {
+	.contenedor-de-graficos {
+		display: grid;
+		grid-template-columns: 1fr 1fr 1fr;
+		grid-row-gap: 1em;
 	}
 }

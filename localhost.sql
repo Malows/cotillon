@@ -19,6 +19,7 @@ SET time_zone = "+00:00";
 --
 -- Database: `cotillon`
 --
+DROP DATABASE IF EXISTS `cotillon`;
 CREATE DATABASE IF NOT EXISTS `cotillon` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 USE `cotillon`;
 
@@ -28,7 +29,6 @@ USE `cotillon`;
 -- Table structure for table `categorias_producto`
 --
 
-DROP TABLE IF EXISTS `categorias_producto`;
 CREATE TABLE `categorias_producto` (
   `id_categoria` int(11) NOT NULL,
   `nombre_categoria` varchar(45) DEFAULT NULL,
@@ -52,7 +52,6 @@ INSERT INTO `categorias_producto` (`id_categoria`, `nombre_categoria`, `soft_del
 -- Table structure for table `clientes`
 --
 
-DROP TABLE IF EXISTS `clientes`;
 CREATE TABLE `clientes` (
   `id_cliente` int(11) NOT NULL,
   `nombre_cliente` varchar(45) DEFAULT NULL,
@@ -80,7 +79,6 @@ INSERT INTO `clientes` (`id_cliente`, `nombre_cliente`, `telefono`, `email`, `di
 -- Table structure for table `detalles_venta`
 --
 
-DROP TABLE IF EXISTS `detalles_venta`;
 CREATE TABLE `detalles_venta` (
   `id_producto` int(11) NOT NULL,
   `id_venta` int(11) NOT NULL,
@@ -125,7 +123,6 @@ CREATE TABLE `detalles_venta` (
 -- Table structure for table `localidades`
 --
 
-DROP TABLE IF EXISTS `localidades`;
 CREATE TABLE `localidades` (
   `id_localidad` int(11) NOT NULL,
   `nombre_localidad` varchar(45) DEFAULT NULL,
@@ -148,7 +145,6 @@ INSERT INTO `localidades` (`id_localidad`, `nombre_localidad`, `barrio`) VALUES
 -- Table structure for table `productos`
 --
 
-DROP TABLE IF EXISTS `productos`;
 CREATE TABLE `productos` (
   `id_producto` int(11) NOT NULL,
   `id_proveedor` int(11) NOT NULL,
@@ -181,7 +177,6 @@ INSERT INTO `productos` (`id_producto`, `id_proveedor`, `nombre`, `precio`, `id_
 -- Table structure for table `proveedores`
 --
 
-DROP TABLE IF EXISTS `proveedores`;
 CREATE TABLE `proveedores` (
   `id_proveedor` int(11) NOT NULL,
   `nombre_proveedor` varchar(45) DEFAULT NULL,
@@ -203,7 +198,6 @@ INSERT INTO `proveedores` (`id_proveedor`, `nombre_proveedor`, `id_localidad`, `
 -- Table structure for table `usuarios`
 --
 
-DROP TABLE IF EXISTS `usuarios`;
 CREATE TABLE `usuarios` (
   `id_usuario` int(11) NOT NULL,
   `nombre` varchar(50) CHARACTER SET utf16 NOT NULL,
@@ -233,7 +227,6 @@ INSERT INTO `usuarios` (`id_usuario`, `nombre`, `apellido`, `dni`, `email`, `pas
 -- Table structure for table `ventas`
 --
 
-DROP TABLE IF EXISTS `ventas`;
 CREATE TABLE `ventas` (
   `id_venta` int(11) NOT NULL,
   `id_cliente` int(11) NOT NULL,
@@ -328,7 +321,7 @@ ALTER TABLE `ventas`
 -- AUTO_INCREMENT for table `categorias_producto`
 --
 ALTER TABLE `categorias_producto`
-  MODIFY `id_categoria` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_categoria` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 --
 -- AUTO_INCREMENT for table `clientes`
 --
@@ -358,7 +351,7 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT for table `ventas`
 --
 ALTER TABLE `ventas`
-  MODIFY `id_venta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id_venta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 --
 -- Constraints for dumped tables
 --

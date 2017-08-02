@@ -5,6 +5,50 @@ class Inicio extends CI_Controller {
 
 	public function __construct() {
 		parent::__construct();
+		$this->load->model('usuarios_model');
+		$this->load->model('productos_model');
+		$this->load->model('ventas_model');
+		date_default_timezone_set ( 'America/Argentina/Buenos_Aires' );
+		setlocale(LC_ALL, "es_AR");
+	}
+
+	protected function entreFechas($fecha, $desde, $hasta) {
+		return $fecha >= $desde && $fecha < $hasta;
+	}
+
+	protected function sumatoria (Array $input) {
+		return array_reduce($input, function($car, $cur){return $car + $cur['total'];}, 0);
+	}
+
+	protected function treeShaking (Array $input) {
+		$aux = [];
+		for ($i=0, $j=1 ; $i < 12; $i++, $j++) {
+			$push_array = [];
+			$desde = new DateTime('now', new DateTimeZone('America/Argentina/Buenos_Aires'));
+			$hasta = new DateTime('now', new DateTimeZone('America/Argentina/Buenos_Aires'));
+			$desde->modify("-$j month");
+			$desde->setDate( intval( $desde->format('Y') ), intval( $desde->format('m') ), 1 );
+			$desde->setTime(0,0,0);
+
+			$hasta->modify("-$i month");
+			$hasta->setDate( intval( $hasta->format('Y') ), intval( $hasta->format('m') ), 1 );
+			$hasta->setTime(0,0,0);
+
+			foreach ($input as $key => $venta) {
+				$fecha_venta =  DateTime::createFromFormat('Y-m-d H:i:s', $venta['fecha']);
+
+				if ( $this->entreFechas($fecha_venta, $desde, $hasta) ) {
+					$push_array[] = $venta;
+					unset( $input[$key] );
+				}
+			}
+
+			$aux[] = [
+				'fecha' => $desde,
+				'total' => $this->sumatoria($push_array)
+			];
+		}
+		return $aux;
 	}
 
 	public function index() {
@@ -22,7 +66,7 @@ class Inicio extends CI_Controller {
 				$usuario = $this->security->xss_clean( $this->input->post('usuario') );
 				$pass = /*$this->security->xss_clean( */$this->input->post('contrasenia') /*)*/;
 
-				$this->load->model('usuarios_model');
+
 				$aux = $this->usuarios_model->cotejar($usuario, $pass);
 
 				if ( $aux !== FALSE ) {
@@ -47,8 +91,17 @@ class Inicio extends CI_Controller {
 			}
 
 		} else { // estoy registrado
-			$this->load->model('productos_model');
-			$data = [ 'alertas' => $this->productos_model->lista_alertas() ];
+
+			$unAnioAtras = new DateTime('now', new DateTimeZone('America/Argentina/Buenos_Aires'));
+      $unAnioAtras->modify('-1year');
+			$unAnioAtras->setDate( intval( $unAnioAtras->format('Y') ), intval( $unAnioAtras->format('m') ), 1 );
+			$unAnioAtras->setTime(0,0,0);
+			$ventas = $this->treeShaking( $this->ventas_model->hasta($unAnioAtras) );
+
+			$data = [
+				'alertas' => $this->productos_model->lista_alertas(),
+				'ventas' => array_reverse($ventas)
+			 ];
 			$this->load->view('includes/header');
 			$this->load->view('pages/inicio/index', $data);
 			$this->load->view('includes/footer');
