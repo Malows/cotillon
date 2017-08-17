@@ -11,7 +11,8 @@ class Ventas_model extends CI_Model {
 		// Sanitizar entrada de datos
 		$id = intval( $id );
 		$this->db->where('id_venta', $id);
-		return $this->db->get('ventas')->result_array();
+		$this->db->join('clientes', 'clientes.id_cliente = ventas.id_cliente');
+		return $this->db->get('ventas')->row_array();
 	}
 
 	public function crear( $id_cliente, $total ) {

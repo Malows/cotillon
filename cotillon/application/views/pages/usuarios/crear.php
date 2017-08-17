@@ -57,4 +57,5 @@
     </div>
   <?php echo form_close(); ?>
 </div>
-<script src='http://localhost:8080/assets/js/password-show.js'></script>
+<?php $replacement = '/cotillon/index.php'; ?>
+<script src="<?php echo str_replace($replacement, '', base_url('/assets/js/password-show.js'));?>"></script>

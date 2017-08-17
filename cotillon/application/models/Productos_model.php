@@ -121,4 +121,11 @@ public function lista_limpia()
       return $this->db->update('productos',$aux);
     } else return FALSE;
   }
+
+  public function productos_de_proveedor($id)
+  {
+    $this->db->where('id_proveedor', intval($id));
+    $this->db->where('soft_delete', null);
+    return $this->db->get('productos')->result_array();
+  }
 }

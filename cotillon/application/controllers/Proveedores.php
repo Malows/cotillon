@@ -93,7 +93,14 @@ class Proveedores extends CI_Controller
       // No esta logeado, mensaje de error
       show_404();
     } else {
-
+      $this->load->model('productos_model');
+      $data = [
+        'proveedor' => $this->proveedores_model->leer($id),
+        'productos' => $this->productos_model->productos_de_proveedor($id)
+      ];
+        $this->load->view('includes/header');
+        $this->load->view('pages/proveedores/ver', $data);
+        $this->load->view('includes/footer');
     }
   }
 

@@ -104,7 +104,13 @@ public function ver($id) {
   if ( ! $this->session->userdata('esta_logeado') ) {
     show_404();
   } else {
-    
+    $data = [
+      'venta' => $this->ventas_model->leer($id),
+      'detalles' => $this->detalles_venta_model->buscar_por_venta($id)
+    ];
+    $this->load->view('includes/header');
+    $this->load->view('pages/ventas/ver', $data);
+    $this->load->view('includes/footer');
   }
 }
 

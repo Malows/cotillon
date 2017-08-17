@@ -87,6 +87,7 @@ class Detalles_venta_model extends CI_Model {
   public function buscar_por_venta( $id_venta ) {
     $id_venta = intval( $id_venta );
     $this->db->where('id_venta', $id_venta);
+		$this->db->join('productos', 'productos.id_producto = detalles_venta.id_producto');
 		return $this->db->get('detalles_venta')->result_array();
 	}
 }

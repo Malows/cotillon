@@ -8,9 +8,11 @@
 <?php endif; ?>
 <table class="table table-striped">
   <thead>
-    <th>#</th>
-    <th>Nombre de categoría</th>
-    <th>Opciones</th>
+    <tr>
+      <th>#</th>
+      <th>Nombre de categoría</th>
+      <th>Opciones</th>
+    </tr>
   </thead>
   <tbody>
     <?php foreach ($categorias as $cat):?>

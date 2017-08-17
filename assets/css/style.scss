@@ -1,3 +1,8 @@
+//colors
+$color_athens_gray_approx: #ecf0f1;
+$color_oslo_gray_approx: #7f8c8d;
+$color_submarine_approx: #bdc3c7;
+
 [v-cloak] {
   display: none;
 }
@@ -10,62 +15,66 @@
 }
 
 .cabecera-factura {
-	display: grid;
-	grid-template-areas: "fecha fecha" "nombre tipo-cliente";
+  display: grid;
+  grid-template-areas: "fecha fecha" "nombre tipo-cliente";
 }
 
 .venta {
-	font-size: 1.1em;
-  padding: 2vh 5vw;
+  font-size: 1.1em;
+  padding: 5¡2vh 5vw;
   display: flex;
   flex-direction: column;
-	border-left: solid .5em #ecf0f1;
+  border-left: solid 0.5em $color_athens_gray_approx;
 }
 
 .alineador-venta {
-	padding: 1em 0;
-	display: grid;
-	grid-template-columns: 5fr 1fr 1fr;
-	height: 3.5em;
-}
+  padding: 1em 0;
+  display: grid;
+  grid-template-columns: 5fr 1fr 1fr;
+  height: 3.5em;
 
-.alineador-venta p {
-	padding: 0 2em;
+  p {
+    padding: 0 2em;
+  }
 }
 
 .titulo-venta {
   font-weight: bolder;
-}
-.titulo-venta * {
-	text-transform: uppercase;
+
+  * {
+    text-transform: uppercase;
+  }
 }
 
 .resumen-venta {
-	border-top: solid 0.4em #7f8c8d;
+  border-top: solid 0.4em $color_oslo_gray_approx;
   font-weight: 900;
-}
-.resumen-venta * {
-	text-transform: uppercase;
+
+  * {
+    text-transform: uppercase;
+  }
 }
 
 .detalle-venta {
   display: grid;
   grid-template-columns: 1fr;
-	grid-template-rows: 4em;
-}
+  grid-template-rows: 4em;
 
-.detalle-venta div:nth-child(2n + 1) {
-  background-color: #ecf0f1;
-  border-top: solid 1px #bdc3c7;
-  border-bottom: solid 1px #bdc3c7;
-}
+  div {
+    &:nth-child(2n + 1) {
+      background-color: $color_athens_gray_approx;
+      border-top: solid 1px $color_submarine_approx;
+      border-bottom: solid 1px $color_submarine_approx;
+    }
 
-.detalle-venta div:first-child {
-  border-top: none;
-}
+    &:first-child {
+      border-top: none;
+    }
 
-.detalle-venta div:last-child {
-  border-bottom: none;
+    &:last-child {
+      border-bottom: none;
+    }
+  }
 }
 
 .stock-lista {
@@ -84,23 +93,23 @@
   grid-template-columns: 1fr;
   grid-row-gap: 1em;
 }
-
-@media (min-width: 700px) {
+@media(min-width: 700px) {
   .stock-lista {
     grid-template-columns: 1fr 1fr;
   }
+
   .contenedor-de-alertas {
     grid-template-columns: 1fr auto;
     grid-column-gap: 10px;
   }
+
   .contenedor-de-graficos {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-row-gap: 1em;
   }
 }
-
-@media (min-width: 1200px) {
+@media(min-width: 1200px) {
   .contenedor-de-graficos {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;

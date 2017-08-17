@@ -12,7 +12,7 @@ class Inicio extends CI_Controller {
 		setlocale(LC_ALL, "es_AR");
 	}
 
-	protected function entreFechas($fecha, $desde, $hasta) {
+	protected function entreFechas ($fecha, $desde, $hasta) {
 		return $fecha >= $desde && $fecha < $hasta;
 	}
 

@@ -1,5 +1,6 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<script src="http://localhost:8080/assets/js/vue-select-2.2.0.js"></script>
+<?php $replacement = '/cotillon/index.php'; ?>
+<script src="<?php echo str_replace($replacement, '', base_url('/assets/js/vue-select-2.2.0.js'));?>"></script>
 <script>
   Vue.component('v-select', VueSelect.VueSelect);
 
