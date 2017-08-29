@@ -1,5 +1,4 @@
-<?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+<?php defined('BASEPATH') || exit('No direct script access allowed');
 
 class Productos_model extends CI_Model {
 
@@ -7,20 +6,26 @@ class Productos_model extends CI_Model {
     parent::__construct();
   }
 
-public function lista_alertas()
-{
-  $this->db->where('alerta >= cantidad');
-  $this->db->where('soft_delete',null);
-  return $this->db->get('productos')->result();
-}
+  public function lista_alertas()
+  {
+    $categoriasHabilitadas = $this->db->where('soft_delete', null)->select('id_categoria')->get('categorias_producto')->result_array();
+    $categoriasHabilitadas = array_map( function ($elem) { return intval($elem['id_categoria']); },$categoriasHabilitadas);
+    $this->db->where_in('productos.id_categoria', $categoriasHabilitadas);
+    $this->db->where('alerta >= cantidad');
+    $this->db->where('soft_delete',null);
+    return $this->db->get('productos')->result();
+  }
 
-public function lista_limpia()
-{
-  $this->db->where('soft_delete',null);
-  return $this->db
-    ->select('id_producto AS `id`, nombre, cantidad AS `stock`, precio')
-    ->get('productos')->result_array();
-}
+  public function lista_limpia()
+  {
+    $categoriasHabilitadas = $this->db->where('soft_delete', null)->select('id_categoria')->get('categorias_producto')->result_array();
+    $categoriasHabilitadas = array_map( function ($elem) { return intval($elem['id_categoria']); }, $categoriasHabilitadas);
+    $this->db->where_in('productos.id_categoria', $categoriasHabilitadas);
+    $this->db->where('soft_delete',null);
+    return $this->db
+      ->select('id_producto AS `id`, nombre, cantidad AS `stock`, precio')
+      ->get('productos')->result_array();
+  }
 
   public function crear( $id_proveedor, $nombre, $precio, $id_categoria, $descripcion, $unidad ) {
     // Sanitizar datos
@@ -89,6 +94,9 @@ public function lista_limpia()
   }
 
   public function lista() {
+    $categoriasHabilitadas = $this->db->where('soft_delete', null)->select('id_categoria')->get('categorias_producto')->result_array();
+    $categoriasHabilitadas = array_map( function ($elem) { return intval($elem['id_categoria']); },$categoriasHabilitadas);
+    $this->db->where_in('productos.id_categoria', $categoriasHabilitadas);
     $this->db->join('proveedores', 'proveedores.id_proveedor = productos.id_proveedor');
     $this->db->join('categorias_producto', 'categorias_producto.id_categoria = productos.id_categoria');
     $this->db->where('productos.soft_delete', null);
