@@ -53,7 +53,7 @@
     <th>#</th>
     <th>Fecha</th>
     <th>Cliente</th>
-    <th class="text-center">Cantidad</th>
+    <th class="text-center">Monto</th>
     <th class="text-center">Ver detalle</th>
   </thead>
   <tbody>

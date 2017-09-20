@@ -75,12 +75,13 @@
       },
       confirmarVenta() {
         this.showModal = true
+        this.cliente_seleccionado = this.cliente_seleccionado || { value: 1, label: 'Consumidor final' }
       },
       emitirVenta() {
         const payload = {
           'cliente': {
-            'id': this.cliente_seleccionado.value,
-            'nombre': this.cliente_seleccionado.label
+            'id': this.cliente_seleccionado.value || 1,
+            'nombre': this.cliente_seleccionado.label || 'Consumidor final'
           },
           'productos': this.productos_agregados
         }

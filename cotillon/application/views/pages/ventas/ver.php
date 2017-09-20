@@ -16,8 +16,8 @@
     <?php foreach( $detalles as $detalle): ?>
       <div class="alineador-venta">
         <p><?= $detalle['nombre']; ?></p>
-        <p><?= $detalle['cantidad']?></p>
-        <p><?= $detalle['cantidad'] * $detalle['precio_unitario']; ?></p>
+        <p><?= $detalle['cantidad_venta']?></p>
+        <p>$<?= $detalle['cantidad_venta'] * $detalle['precio_unitario']; ?></p>
       </div>
     <?php endforeach; ?>
     <?php
@@ -30,6 +30,6 @@
   <div class="resumen-venta alineador-venta">
     <p>Total</p>
     <p></p> <!-- spacer -->
-    <p><?php echo array_reduce($detalles, function($carry, $elem) {return $carry + ($elem['precio'] * $elem['cantidad']);}, 0);?></p>
+    <p>$<?php echo array_reduce($detalles, function($carry, $elem) {return $carry + ($elem['precio_unitario'] * $elem['cantidad_venta']);}, 0);?></p>
   </div>
 </div>

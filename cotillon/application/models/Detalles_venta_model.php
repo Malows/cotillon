@@ -23,7 +23,7 @@ class Detalles_venta_model extends CI_Model {
 		$data = [
 			'id_venta' => $id_venta,
 			'id_producto' => $id_producto,
-			'cantidad' => $cantidad,
+			'cantidad_venta' => $cantidad,
 			'precio_unitario' => $precio_unitario
 		];
 
@@ -57,7 +57,7 @@ class Detalles_venta_model extends CI_Model {
     $data = array(
 			'id_venta' => $id_venta,
 			'id_producto' => $id_producto,
-			'cantidad' => $cantidad,
+			'cantidad_venta' => $cantidad,
 			'precio_unitario' => $precio_unitario
 		);
 
@@ -87,6 +87,7 @@ class Detalles_venta_model extends CI_Model {
   public function buscar_por_venta( $id_venta ) {
     $id_venta = intval( $id_venta );
     $this->db->where('id_venta', $id_venta);
+		$this->db->select('detalles_venta.id_producto, detalles_venta.id_venta, detalles_venta.cantidad_venta, detalles_venta.precio_unitario, productos.nombre');
 		$this->db->join('productos', 'productos.id_producto = detalles_venta.id_producto');
 		return $this->db->get('detalles_venta')->result_array();
 	}

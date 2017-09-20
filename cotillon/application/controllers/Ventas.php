@@ -58,7 +58,7 @@ class Ventas extends CI_Controller {
     } else {
       $this->load->model('productos_model');
       $cliente = $this->input->get('cliente');
-      var_dump($cliente['id']);
+      $cliente['id'] = $cliente['id'] ? $cliente['id'] : 1;
       $productos = $this->input->get('productos');
       $total_de_venta = 0;
 
@@ -71,25 +71,27 @@ class Ventas extends CI_Controller {
 
       // Parseo el array para hacer un insert_batch
       for($i= 0; $i < count($productos); $i++) {
-        $productos[$i]['cantidad'] = floatval( $productos[$i]['cantidad'] );
+        $productos[$i]['cantidad_venta'] = floatval( $productos[$i]['cantidad'] );
         $productos[$i]['precio_unitario'] = floatval( $productos[$i]['precio'] );
         $productos[$i]['id_producto'] = intval( $productos[$i]['id'] );
         $productos[$i]['id_venta'] = $ultimo_id;
         //voy sumando el total de venta
-        $total_de_venta += $productos[$i]['cantidad'] * $productos[$i]['precio_unitario'];
+        $total_de_venta += $productos[$i]['cantidad_venta'] * $productos[$i]['precio_unitario'];
         //elimino claves innecesarias
         unset(
           $productos[$i]['precio'],
           $productos[$i]['nombre'],
           $productos[$i]['id'],
-          $productos[$i]['stock'] );
+          $productos[$i]['stock'],
+          $productos[$i]['cantidad']
+         );
       }
       // var_dump($productos);
       // insercion en bloque de todas las lineas de la venta
       $this->detalles_venta_model->batch_insertion($productos);
       // actualizo stocks en productos
       foreach ($productos as $producto) {
-        $this->productos_model->reducir($producto['id_producto'],$producto['cantidad']);
+        $this->productos_model->reducir($producto['id_producto'],$producto['cantidad_venta']);
       }
       // actualizo la venta con el nuevo total de venta
       // Finalizo transacción
