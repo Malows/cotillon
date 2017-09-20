@@ -155,6 +155,8 @@ class Proveedores extends CI_Controller
       // No esta logeado, mensaje de error
       show_404();
     } else {
+      $this->proveedores_model->eliminar($id);
+      log_message('info', 'El usuario `'.$this->session->userdata('usuario').'` <ID:'.$this->session->userdata('id_usuario').'> eliminó el proveedor <ID_PROVEEDOR:'.$id.'>.');
       redirect('/proveedores', 'refresh');
     }
   }
