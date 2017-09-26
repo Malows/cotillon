@@ -88,7 +88,7 @@ class Clientes extends CI_Controller {
         $data['cliente']['direccion'] = $this->security->xss_clean( $this->input->post('direccion') );
         $data['cliente']['id_localidad'] = $this->security->xss_clean( $this->input->post('id_localidad') );
         $data['cliente']['tipo_cliente'] = $this->security->xss_clean( $this->input->post('tipo_cliente') );
-        $this->clientes_model->crear(
+        $last_id = $this->clientes_model->crear(
           $data['cliente']['nombre_cliente'],
           $data['cliente']['telefono'],
           $data['cliente']['email'],
@@ -97,6 +97,7 @@ class Clientes extends CI_Controller {
           $data['cliente']['tipo_cliente']
         );
         $data['exito'] = TRUE;
+        if ($last_id) $this->registro->registrar($this->session->userdata('id_usuario'), 14, 'clientes', $last_id);
       } else {
         unset($data['exito'], $data['cliente']);
       }
@@ -140,6 +141,7 @@ class Clientes extends CI_Controller {
           $data['cliente']['tipo_cliente']
         );
         $data['exito'] = TRUE;
+        if ($id) $this->registro->registrar($this->session->userdata('id_usuario'), 15, 'clientes', $id);
       } else {
         unset($data['exito']);
       }
@@ -170,6 +172,7 @@ class Clientes extends CI_Controller {
       show_404();
     } else {
       $this->clientes_model->eliminar($id);
+      if ($id) $this->registro->registrar($this->session->userdata('id_usuario'), 16, 'clientes', $id);
       redirect( base_url('/clientes'), 'refresh' );
     }
   }

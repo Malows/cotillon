@@ -90,7 +90,7 @@ class Productos extends CI_Controller {
         $this->load->view('pages/productos/crear', $data);
         $this->load->view('includes/footer');
       } else {
-        $this->productos_model->crear(
+        $last_id = $this->productos_model->crear(
           $this->security->xss_clean( $this->input->post('id_proveedor')),
           $this->security->xss_clean( $this->input->post('nombre')),
           $this->security->xss_clean( $this->input->post('precio')),
@@ -98,7 +98,7 @@ class Productos extends CI_Controller {
           $this->security->xss_clean( $this->input->post('descripcion')),
           $this->security->xss_clean( $this->input->post('unidad'))
         );
-        log_message('info', 'El usuario `'.$this->session->userdata('usuario').'` <ID:'.$this->session->userdata('id_usuario').'> creó un nuevo producto `'. $this->input->post('nombre') .'`.');
+        if ($last_id) $this->registro->registrar($this->session->userdata('id_usuario'), 11, 'productos', $last_id);
 
         $data['exito'] = TRUE;
         $data['producto'] = htmlentities( $this->input->post('nombre'));
@@ -141,7 +141,7 @@ class Productos extends CI_Controller {
           $this->security->xss_clean( $this->input->post('descripcion')),
           $this->security->xss_clean( $this->input->post('unidad'))
         );
-        log_message('info', 'El usuario `'.$this->session->userdata('usuario').'` <ID:'.$this->session->userdata('id_usuario').'> modificó los datos de un producto `'. $this->input->post('nombre') .'`.');
+        if ($id) $this->registro->registrar($this->session->userdata('id_usuario'), 12, 'productos', $id);
 
         $data['exito'] = TRUE;
         $data['producto']['nombre'] = htmlentities( $this->input->post('nombre'));
@@ -177,7 +177,7 @@ class Productos extends CI_Controller {
       show_404();
     } else {
       $this->productos_model->eliminar($id);
-      log_message('info', 'El usuario `'.$this->session->userdata('usuario').'` <ID:'.$this->session->userdata('id_usuario').'> eliminó el producto <ID_PRODUCTO:'.$id.'>.');
+      if ($id) $this->registro->registrar($this->session->userdata('id_usuario'), 13, 'productos', $id);
       redirect('/productos', 'refresh');
     }
   }
@@ -199,11 +199,11 @@ class Productos extends CI_Controller {
       } else {
         if( $this->input->post('opcion') == 'reducir' ) {
           $this->productos_model->reducir( $id, $this->input->post('cantidad') );
-          log_message('info', 'El usuario `'.$this->session->userdata('usuario').'` <ID:'.$this->session->userdata('id_usuario')."> redujo el stock del producto <ID_PRODUCTO:$id> en ". abs($this->input->post('cantidad')).'.');
+          if ($id) $this->registro->registrar($this->session->userdata('id_usuario'), 21, 'productos', $id);
         } else {
           if( $this->input->post('opcion') == 'incrementar' ) {
             $this->productos_model->incrementar( $id, $this->input->post('cantidad') );
-            log_message('info', 'El usuario `'.$this->session->userdata('usuario').'` <ID:'.$this->session->userdata('id_usuario')."> incrementó el stock del producto <ID_PRODUCTO:$id> en ". abs($this->input->post('cantidad')).'.');
+            if ($id) $this->registro->registrar($this->session->userdata('id_usuario'), 20, 'productos', $id);
 
           }
         }

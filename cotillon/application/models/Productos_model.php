@@ -55,8 +55,8 @@ class Productos_model extends CI_Model {
       'descripcion' => $descripcion,
       'unidad' => $unidad
     ];
-    $this->db->insert('productos', $data);
-    return boolval( $this->db->affected_rows() );
+    $retorno = $this->db->insert('productos', $data);
+    return $retorno ? $this->db->insert_id() : false;
   }
 
   public function leer( $id ) {

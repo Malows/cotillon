@@ -98,7 +98,7 @@ class Ventas extends CI_Controller {
       $this->ventas_model->actualizar($ultimo_id, $cliente['id'], $total_de_venta);
 
 
-      log_message('info', 'Se vendió al cliente '.$cliente['nombre']."<ID:".$cliente['id']."> los productos listados en la venta <ID:$ultimo_id> por un total de $$total_de_venta");
+      if ($ultimo_id) $this->registro->registrar($this->session->userdata('id_usuario'), 1, 'ventas', $ultimo_id);
     }
   }
 

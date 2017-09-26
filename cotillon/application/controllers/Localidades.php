@@ -62,11 +62,12 @@ class Localidades extends CI_Controller {
           $this->load->view('includes/footer');
         } else {
           // Envié el formulario
-          $this->localidades_model->crear(
+          $last_id = $this->localidades_model->crear(
           $this->security->xss_clean( $this->input->post('nombre_localidad') ),
           $this->security->xss_clean( $this->input->post('barrio') )
         );
 
+        if ($last_id) $this->registro->registrar($this->session->userdata('id_usuario'), 17, 'localidades', $last_id);
         $data['exito']=TRUE;
         $data['localidad']['nombre_localidad']=htmlentities($this->input->post('nombre_localidad'));
         $data['localidad']['barrio']=htmlentities($this->input->post('barrio'));
@@ -108,6 +109,7 @@ class Localidades extends CI_Controller {
           $this->security->xss_clean( $this->input->post('nombre_localidad') ),
           $this->security->xss_clean( $this->input->post('barrio') )
         );
+        if ($id) $this->registro->registrar($this->session->userdata('id_usuario'), 18, 'localidades', $id);
 
         $this->load->view('includes/header');
         $this->load->view('pages/localidades/actualizar', $data);

@@ -95,7 +95,7 @@ class Usuarios extends CI_Controller {
 				$this->load->view('includes/footer');
 			} else {
         // Envié el formulario
-        $this->usuarios_model->crear(
+        $last_id = $this->usuarios_model->crear(
           $this->security->xss_clean( $this->input->post('nombre') ),
           $this->security->xss_clean( $this->input->post('apellido') ),
           $this->security->xss_clean( $this->input->post('email') ),
@@ -105,6 +105,8 @@ class Usuarios extends CI_Controller {
         );
 
         $permiso = $this->security->xss_clean( $this->input->post('es_admin') ) == "1" ? "Administrador" : "No Administrador";
+
+        if ($last_id) $this->registro->registrar($this->session->userdata('id_usuario'), 2, 'usuarios', $last_id);
 
         $data = array(
           'exito' => TRUE,
@@ -220,6 +222,8 @@ class Usuarios extends CI_Controller {
           $aux['es_admin']
         );
 
+        if ($id) $this->registro->registrar($this->session->userdata('id_usuario'), 3, 'usuarios', $id);
+
         $data = [ 'exito' => TRUE, 'usuario' => $aux ];
         $this->load->view('includes/header');
         $this->load->view('pages/usuarios/actualizar', $data);
@@ -261,6 +265,8 @@ class Usuarios extends CI_Controller {
       } else {
         // Corrió el formulario
         $this->usuarios_model->eliminar( $aux['id_usuario'] );
+
+        if ($aux['id_usuario']) $this->registro->registrar($this->session->userdata('id_usuario'), 4, 'usuarios', $aux['id_usuario']);
 
         $this->load->view('includes/header');
         $this->load->view('pages/usuarios/eliminar', ['exito' => TRUE, 'usuario' => $aux ]);

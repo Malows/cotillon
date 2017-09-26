@@ -27,7 +27,8 @@ class Clientes_model extends CI_Model {
 		];
 
 		// Ejecutar consulta
-		$this->db->insert( 'clientes', $data );
+		$retorno = $this->db->insert( 'clientes', $data );
+		return $retorno ? $this->db->insert_id() : false;
 	}
 
 	public function leer( $id ) {

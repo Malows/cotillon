@@ -27,7 +27,8 @@ class Usuarios_model extends CI_Model {
 		);
 
 		// inserción de los datos
-		$this->db->insert( 'usuarios', $data );
+		$retorno =$this->db->insert( 'usuarios', $data );
+		return $retorno ? $this->db->insert_id() : false;
 	}
 
 	public function leer_por_id( $id ) {

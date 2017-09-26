@@ -28,7 +28,8 @@ class Ventas_model extends CI_Model {
 		];
 
 		// Ejecutar consulta
-		return $this->db->insert( 'ventas', $data );
+		$retorno = $this->db->insert( 'ventas', $data );
+		return $retorno ? $this->db->insert_id() : false;
 	}
 
 	public function actualizar( $id, $id_cliente, $total ) {

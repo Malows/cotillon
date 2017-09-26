@@ -17,8 +17,8 @@ class Localidades_model extends CI_Model {
 
 		$data = ['nombre_localidad' => $nombre, 'barrio' => $barrio];
 
-		$this->db->insert('localidades', $data);
-		return boolval( $this->db->affected_rows() );
+		$retorno = $this->db->insert('localidades', $data);
+		return $retorno ? $this->db->insert_id() : false;
 	}
 
 	public function leer( $id ) {

@@ -21,7 +21,8 @@ class Proveedores_model extends CI_Model {
 		);
 
 		// Ejecutar consulta
-		$this->db->insert( 'proveedores', $data );
+		$retorno = $this->db->insert( 'proveedores', $data );
+		return $retorno ? $this->db->insert_id() : false;
 	}
 
 	public function leer( $id ) {

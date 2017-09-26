@@ -69,11 +69,13 @@ class Proveedores extends CI_Controller
         $this->load->view('includes/footer');
       } else {
 
-        $this->proveedores_model->crear(
+        $last_id = $this->proveedores_model->crear(
           $this->security->xss_clean( $this->input->post('nombre_proveedor')),
           $this->security->xss_clean( $this->input->post('contacto')),
           $this->security->xss_clean( $this->input->post('localidad'))
         );
+
+        if ($last_id) $this->registro->registrar($this->session->userdata('id_usuario'), 5, 'proveedores', $last_id);
 
         $data['exito'] = TRUE;
         $data['proveedor'] = htmlentities($this->input->post('nombre_proveedor'));
@@ -142,6 +144,8 @@ class Proveedores extends CI_Controller
           $data['proveedor']['id_localidad']
         );
 
+        if ($id) $this->registro->registrar($this->session->userdata('id_usuario'), 6, 'proveedores', $id);
+
         $this->load->view('includes/header');
         $this->load->view('pages/proveedores/actualizar', $data);
         $this->load->view('includes/footer');
@@ -156,7 +160,7 @@ class Proveedores extends CI_Controller
       show_404();
     } else {
       $this->proveedores_model->eliminar($id);
-      log_message('info', 'El usuario `'.$this->session->userdata('usuario').'` <ID:'.$this->session->userdata('id_usuario').'> eliminó el proveedor <ID_PROVEEDOR:'.$id.'>.');
+      if ($id) $this->registro->registrar($this->session->userdata('id_usuario'), 7, 'proveedores', $id);
       redirect('/proveedores', 'refresh');
     }
   }

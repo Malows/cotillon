@@ -15,7 +15,8 @@ class Categorias_producto_model extends CI_Model {
 	public function crear( $nombre ) {
 		$nombre = htmlentities($nombre);
 
-		$this->db->insert('categorias_producto', ['nombre_categoria' => $nombre]);
+		$retorno = $this->db->insert('categorias_producto', ['nombre_categoria' => $nombre]);
+		return $retorno ? $this->db->insert_id() : false;
 	}
 
 	public function leer( $id ) {
