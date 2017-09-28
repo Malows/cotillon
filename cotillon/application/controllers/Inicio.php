@@ -100,7 +100,8 @@ class Inicio extends CI_Controller {
 
 			$data = [
 				'alertas' => $this->productos_model->lista_alertas(),
-				'ventas' => array_reverse($ventas)
+				'ventas' => array_reverse($ventas),
+				'caja' => $this->caja->lista_cajas_abiertas()
 			 ];
 			$this->load->view('includes/header');
 			$this->load->view('pages/inicio/index', $data);
