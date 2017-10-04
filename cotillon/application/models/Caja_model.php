@@ -14,6 +14,20 @@ class Caja_model extends CI_Model {
     return $this->db->get('ventas')->result_array();
   }
 
+  public function lista ($pagina = 1)
+  {
+    $desde = ($pagina - 1) * 100;
+
+    $this->db->order_by('fecha_apertura', 'DESC');
+    $this->db->limit( 100, $desde );
+		return $this->db->get('caja')->result_array();
+  }
+
+  public function contar_total ()
+  {
+    return $this->db->count_all('caja');
+  }
+
   public function lista_cajas_abiertas() {
     $this->db->where('fecha_cierre', null);
     return $this->db->get('caja')->result_array();

@@ -89,6 +89,6 @@ class Ventas_model extends CI_Model {
 
 	public function contar_total()
 	{
-		return $this->db->query('SELECT * FROM ventas')->num_rows();
+		return $this->db->count_all('ventas');
 	}
 }

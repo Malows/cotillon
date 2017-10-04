@@ -12,7 +12,7 @@
     if ($minuto > 900) {
       $alert['estado'] = 'danger';
       $alert['mensaje'] = '<strong>Una caja de fecha anterior se encuentra aún abierta. Por favor cierrela antes de iniciar las actividades comerciales</strong>';
-      $alert['mensaje'] .= '<hr>' . anchor( base_url('#'), "Cerrar caja");
+      $alert['mensaje'] .= '<hr>' . anchor( base_url('arqueos/'), "Cerrar caja");
     } else {
       $alert['estado'] = 'success';
       $alert['mensaje'] = "La caja se encuentra abierta con fecha de $fechaDeCaja->format('d/m/Y') y un monto de $" . $caja[0]['monto_apertura'];
@@ -20,7 +20,7 @@
   } else {
     $alert['estado'] = 'warning';
     $alert['mensaje'] = '<strong>No tiene la caja abierta. Por favor proceda a abrir la caja antes de empezar las actividades comerciales</strong>';
-    $alert['mensaje'] .= '<hr>' . anchor( base_url('#'), "Abrir caja");
+    $alert['mensaje'] .= '<hr>' . anchor( base_url('arqueos/'), "Abrir caja");
   }
   ?>
 

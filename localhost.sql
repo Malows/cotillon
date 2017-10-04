@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3307
--- Tiempo de generación: 27-09-2017 a las 22:40:11
+-- Tiempo de generación: 04-10-2017 a las 16:05:04
 -- Versión del servidor: 5.6.33
 -- Versión de PHP: 5.6.26
 
@@ -87,6 +87,27 @@ INSERT INTO `clientes` (`id_cliente`, `nombre_cliente`, `telefono`, `email`, `di
 (3, 'Betty Boobies', '(0342)-4550055', 'perez@algo.com', 'Direcci&oacute;n 789', 1, 'Minorista', NULL),
 (4, 'Guadalupe Guadalupe', '(0342)-4555555', 'guadalupe@elnombre.com', 'Javier de la Rosa 650', 3, 'Minorista', NULL),
 (5, 'Cliente de Prueba', '(0342)-4550055', 'prueba_cliente@prueba.com', 'Siempre viva 225', 1, 'Minorista', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `detalles_pedidos`
+--
+
+CREATE TABLE `detalles_pedidos` (
+  `id_pedido` int(11) NOT NULL,
+  `id_productos` int(11) NOT NULL,
+  `cantidad` float NOT NULL,
+  `precio_unitario` float NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `detalles_pedidos`
+--
+
+INSERT INTO `detalles_pedidos` (`id_pedido`, `id_productos`, `cantidad`, `precio_unitario`) VALUES
+(1, 3, 2, 1),
+(1, 4, 5, 4);
 
 -- --------------------------------------------------------
 
@@ -197,6 +218,21 @@ INSERT INTO `localidades` (`id_localidad`, `nombre_localidad`, `barrio`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `pedidos`
+--
+
+CREATE TABLE `pedidos` (
+  `id_pedido` int(11) NOT NULL,
+  `id_proveedor` int(11) NOT NULL,
+  `fecha_creacion` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `fecha_recepcion` datetime DEFAULT NULL,
+  `precio_total` float NOT NULL,
+  `soft_delete` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `productos`
 --
 
@@ -263,6 +299,14 @@ CREATE TABLE `registros` (
   `tabla` char(24) NOT NULL COMMENT 'campo polimorfico de tablas',
   `fecha` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `registros`
+--
+
+INSERT INTO `registros` (`id_registro`, `id_usuario`, `id_evento`, `id_objetivo`, `tabla`, `fecha`) VALUES
+(1, 1, 14, 5, 'clientes', '2017-09-26 01:26:41'),
+(2, 1, 2, 6, 'usuarios', '2017-09-26 01:43:13');
 
 -- --------------------------------------------------------
 
@@ -351,6 +395,12 @@ ALTER TABLE `clientes`
   ADD KEY `idlocalidad` (`id_localidad`);
 
 --
+-- Indices de la tabla `detalles_pedidos`
+--
+ALTER TABLE `detalles_pedidos`
+  ADD PRIMARY KEY (`id_pedido`,`id_productos`);
+
+--
 -- Indices de la tabla `detalles_venta`
 --
 ALTER TABLE `detalles_venta`
@@ -370,6 +420,12 @@ ALTER TABLE `localidades`
   ADD PRIMARY KEY (`id_localidad`),
   ADD UNIQUE KEY `nombre_localidad_2` (`nombre_localidad`,`barrio`),
   ADD KEY `nombre_localidad` (`nombre_localidad`,`barrio`);
+
+--
+-- Indices de la tabla `pedidos`
+--
+ALTER TABLE `pedidos`
+  ADD PRIMARY KEY (`id_pedido`);
 
 --
 -- Indices de la tabla `productos`
@@ -437,6 +493,11 @@ ALTER TABLE `eventos`
 ALTER TABLE `localidades`
   MODIFY `id_localidad` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 --
+-- AUTO_INCREMENT de la tabla `pedidos`
+--
+ALTER TABLE `pedidos`
+  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT;
+--
 -- AUTO_INCREMENT de la tabla `productos`
 --
 ALTER TABLE `productos`
@@ -450,7 +511,7 @@ ALTER TABLE `proveedores`
 -- AUTO_INCREMENT de la tabla `registros`
 --
 ALTER TABLE `registros`
-  MODIFY `id_registro` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+  MODIFY `id_registro` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
