@@ -29,6 +29,7 @@
       <th>Categoría</th>
       <th>Precio</th>
       <th>Stock</th>
+      <th>Stock Min</th>
       <th>Opciones</th>
     </tr>
   </thead>
@@ -41,6 +42,7 @@
       <td><?php echo $prod['nombre_categoria'];?></td>
       <td>$<?php echo $prod['precio'];?></td>
       <td><?php echo $prod['cantidad'].' '.$prod['unidad'];?></td>
+      <td><?php echo $prod['alerta'];?></td>
       <td>
         <?php if( $es_admin_usuario_logueado ): ?>
           <button class="btn btn-primary" data-toggle="modal" data-target="#stock-producto-<?php echo $prod['id_producto'];?>"><i class="fa fa-cart-plus fa-lg"></i></button>

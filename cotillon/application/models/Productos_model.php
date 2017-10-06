@@ -67,7 +67,7 @@ class Productos_model extends CI_Model {
       ->get('productos')->result_array();
   }
 
-  public function crear( $id_proveedor, $nombre, $precio, $id_categoria, $descripcion, $unidad ) {
+  public function crear( $id_proveedor, $nombre, $precio, $id_categoria, $descripcion, $alerta, $unidad, $cantidad ) {
     // Sanitizar datos
     $id_proveedor = intval( $id_proveedor );
     $nombre = htmlentities( $nombre );
@@ -75,13 +75,17 @@ class Productos_model extends CI_Model {
     $id_categoria = intval( $id_categoria );
     $descripcion = htmlentities( $descripcion );
     $unidad = htmlentities( $unidad );
+    $alerta = floatval( $alerta );
+	$cantidad = abs(floatval( $cantidad ));
     $data = [
       'id_proveedor' => $id_proveedor,
       'nombre' => $nombre,
       'precio' => $precio,
       'id_categoria' => $id_categoria,
       'descripcion' => $descripcion,
-      'unidad' => $unidad
+      'unidad' => $unidad,
+      'alerta' => $alerta,
+      'cantidad' => $cantidad
     ];
     $retorno = $this->db->insert('productos', $data);
     return $retorno ? $this->db->insert_id() : false;
@@ -96,7 +100,7 @@ class Productos_model extends CI_Model {
     return $this->db->get('productos')->row_array();
   }
 
-  public function actualizar( $id, $id_proveedor, $nombre, $precio, $id_categoria, $descripcion, $unidad ) {
+  public function actualizar( $id, $id_proveedor, $nombre, $precio, $id_categoria, $descripcion, $alerta, $unidad, $cantidad ) {
     // Sanitizar datos
     $id = intval( $id );
     $id_proveedor = intval( $id_proveedor );
@@ -104,6 +108,8 @@ class Productos_model extends CI_Model {
     $precio = floatval( $precio );
     $id_categoria = intval( $id_categoria );
     $descripcion = htmlentities( $descripcion );
+    $alerta = floatval( $alerta );
+    $cantidad = abs(floatval( $cantidad ));
     $unidad = htmlentities( $unidad );
 
     $data = [
@@ -112,7 +118,9 @@ class Productos_model extends CI_Model {
       'precio' => $precio,
       'id_categoria' => $id_categoria,
       'descripcion' => $descripcion,
-      'unidad' => $unidad
+      'alerta' => $alerta,
+      'unidad' => $unidad,
+      'cantidad' => $cantidad
     ];
 
     // Ejecutar consulta

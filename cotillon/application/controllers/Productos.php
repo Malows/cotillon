@@ -96,7 +96,9 @@ class Productos extends CI_Controller {
           $this->security->xss_clean( $this->input->post('precio')),
           $this->security->xss_clean( $this->input->post('id_categoria')),
           $this->security->xss_clean( $this->input->post('descripcion')),
-          $this->security->xss_clean( $this->input->post('unidad'))
+          $this->security->xss_clean( $this->input->post('alerta')),
+          $this->security->xss_clean( $this->input->post('unidad')),
+          $this->security->xss_clean( $this->input->post('cantidad'))
         );
         if ($last_id) $this->registro->registrar($this->session->userdata('id_usuario'), 11, 'productos', $last_id);
 
@@ -139,7 +141,9 @@ class Productos extends CI_Controller {
           $this->security->xss_clean( $this->input->post('precio')),
           $this->security->xss_clean( $this->input->post('id_categoria')),
           $this->security->xss_clean( $this->input->post('descripcion')),
-          $this->security->xss_clean( $this->input->post('unidad'))
+          $this->security->xss_clean( $this->input->post('alerta')),
+          $this->security->xss_clean( $this->input->post('unidad')),
+          $this->security->xss_clean( $this->input->post('cantidad'))
         );
         if ($id) $this->registro->registrar($this->session->userdata('id_usuario'), 12, 'productos', $id);
 
@@ -149,6 +153,10 @@ class Productos extends CI_Controller {
         $data['producto']['id_proveedor'] = intval( $this->input->post('id_proveedor'));
         $data['producto']['id_categoria'] = intval( $this->input->post('id_categoria'));
         $data['producto']['descripcion'] = htmlentities( $this->input->post('descripcion'));
+        $data['producto']['alerta'] = floatval( $this->input->post('alerta'));
+        $data['producto']['cantidad'] = floatval( $this->input->post('cantidad'));
+        $data['producto']['unidad'] = htmlentities( $this->input->post('unidad'));
+
 
         $this->load->view('includes/header');
         $this->load->view('pages/productos/actualizar', $data);

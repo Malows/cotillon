@@ -21,15 +21,18 @@
         <label for="nombre">Nombre<?php echo form_error("nombre");?></label>
         <input type="text" class="form-control" name="nombre" placeholder="Nombre">
 
-        <label for="precio">Precio<?php echo form_error("precio");?></label>
-        <input type="text" class="form-control" name="precio" placeholder="Nombre">
-
         <label for="id_categoria">Categoria<?php echo form_error("id_categoria");?></label>
         <select name="id_categoria" class="form-control" placeholder="Seleccione una categoria">
           <?php foreach ($categorias as $cat){
             echo "<option value=\"".$cat['id_categoria']."\">".$cat['nombre_categoria']."</option>\n";
           }?>
         </select>
+
+        <label for="precio">Precio<?php echo form_error("precio");?></label>
+        <input type="text" class="form-control" name="precio" placeholder="Precio">
+
+        <label for="cantidad">Stock<?php echo form_error("cantidad");?></label>
+        <input type="text" class="form-control" name="cantidad" placeholder="Stock existente">
 
         <label for="unidad">Unidad<?php echo form_error('unidad');?></label>
         <select class="form-control" name="unidad" placeholder="Seleccione una unidad para el producto">
@@ -42,6 +45,9 @@
           <option value="metro">Metro (M)</option>
           <option value="centimetro">Centimetro (cm)</option>
         </select>
+
+        <label for="alerta">Stock Minimo<?php echo form_error("alerta");?></label>
+        <input type="text" class="form-control" name="alerta" placeholder="Alerta">
 
         <label for="descripcion">Descripción<?php echo form_error("descripcion");?></label>
         <textarea name="descripcion" class="form-control" maxlength="255" placeholder="Datos de contacto"></textarea>
