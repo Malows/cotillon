@@ -3,6 +3,8 @@
 class Caja_model extends MY_Model {
 	public function __construct() {
 		parent::__construct();
+		$this->nombre_tabla = 'caja';
+		$this->clave_primaria = 'id_caja';
 	}
 
 	private function ventasEntreFechas ($desde, $hasta) {
@@ -14,7 +16,7 @@ class Caja_model extends MY_Model {
 		$desde = ($pagina - 1) * 100;
 		$this->db->order_by('fecha_apertura', 'DESC');
 		$this->db->limit( 100, $desde );
-		return $this->db->get('caja')->result_array();
+		return $this->get()->result_array();
 	}
 
 	public function contar_total () {
@@ -29,7 +31,7 @@ class Caja_model extends MY_Model {
 	public function abrir_caja ($monto) {
 		$cajas = $this->lista_cajas_abiertas();
 		if (count($cajas)) return false;
-		$this->db->insert('caja', ['monto_apertura' => floatval($monto)]);
+		$this->insert(['monto_apertura' => floatval($monto)]);
 		return $this->db->insert_id();
 	}
 
@@ -66,8 +68,7 @@ class Caja_model extends MY_Model {
 		$caja['monto_real_cierre'] = floatval($monto);
 		$caja['fecha_cierre'] = $this->now();
 
-		$this->db->where('id_caja', $caja['id_caja']);
-		$this->db->update('caja', $caja);
+		$this->update($caja['id_caja'], $caja);
 		return $caja;
 	}
 

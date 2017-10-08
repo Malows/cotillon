@@ -1,5 +1,8 @@
-<?php 
+<?php
 class MY_Model extends CI_Model {
+
+	protected $nombre_tabla;
+	protected $clave_primaria;
 
 	public function __contruct() {
 		parent::__contruct();
@@ -14,6 +17,19 @@ class MY_Model extends CI_Model {
 	protected function now () {
 		return (new DateTime('now', new DateTimeZone('America/Argentina/Buenos_Aires')))->format('Y-m-d H:i:s');
 	}
+
+	protected function get($key = null) {
+		if ($key)
+			$this->db->where( $this->clave_primaria, intval($key) );
+		return $this->db->get( $this->nombre_tabla );
+	}
+
+	protected function update($key, $data) {
+		$this->db->where( $this->clave_primaria, intval($key) );
+		return $this->db->update( $this->nombre_tabla, $data );
+	}
+
+	protected function insert( $data ) {
+		return $this->db->insert( $this->nombre_tabla, $data );
+	}
 }
-
-

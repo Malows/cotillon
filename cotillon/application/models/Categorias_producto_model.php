@@ -5,6 +5,8 @@ class Categorias_producto_model extends MY_Model {
 
 	public function __construct() {
 		parent::__construct();
+		$this->nombre_tabla = 'categorias_producto';
+		$this->clave_primaria = 'id_categoria';
 	}
 
 	private function _sanitizar( $nombre ) {
@@ -13,36 +15,29 @@ class Categorias_producto_model extends MY_Model {
 
 	public function lista($trash = false) {
 		if (!$trash) $this->db->where('categorias_producto.soft_delete',null);
-		return $this->db->get('categorias_producto')->result_array();
+		return $this->get()->result_array();
 	}
 
 	public function crear( $nombre ) {
 		$data = $this->_sanitizar( $nombre );
 
-		$this->db->insert('categorias_producto', $data);
+		$this->db->insert($data);
 		return $this->_return();
 	}
 
 	public function leer( $id ) {
-		$this->db->where('id_categoria', intval($id) );
-		return $this->db->get('categorias_producto')->row_array();
+		return $this->get( $id )->row_array();
 	}
 
 	public function actualizar( $id, $nombre ) {
 		$data = $this->_sanitizar( $nombre );
-		$id = intval($id);
-
-		$this->db->where('id_categoria', $id);
-		$this->db->update('categorias_producto', $data);
+		$this->db->update($id, $data);
 		return $this->_return($id);
 	}
 
 	public function eliminar( $id ) {
-		$id = intval($id);
 		$data['soft_delete'] = $this->now();
-		
-		$this->db->where('id_categoria',$id);
-		$this->db->update('categorias_producto', $data);
+		$this->update($id, $data);
 		return $this->_return($id);
 	}
 

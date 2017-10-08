@@ -5,6 +5,8 @@ class Clientes_model extends MY_Model {
 
 	public function __construct() {
 		parent::__construct();
+		$this->nombre_tabla = 'clientes';
+		$this->clave_primaria = 'id_cliente';
 	}
 
 	private function _sanitizar( $nombre, $telefono, $email, $id_localidad, $direccion, $tipo_cliente ) {
@@ -20,11 +22,9 @@ class Clientes_model extends MY_Model {
 	}
 
 	public function crear( $nombre, $telefono, $email, $id_localidad, $direccion, $tipo_cliente ) {
-		// Sanitizar entrada de datos
 		$data = $this->_sanitizar( $nombre, $telefono, $email, $id_localidad, $direccion, $tipo_cliente );
 
-		// Ejecutar consulta
-		$retorno = $this->db->insert( 'clientes', $data );
+		$retorno = $this->insert( $data );
 		return $this->_return();
 	}
 
