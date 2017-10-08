@@ -5,6 +5,8 @@ class Usuarios_model extends MY_Model {
 
 	public function __construct() {
 		parent::__construct();
+		$this->nombre_tabla = 'usuarios';
+		$this->clave_primaria = 'id_usuario';
 	}
 
 	private function _sanitizar( $nombre, $apellido, $email, $dni, $es_admin ) {
@@ -19,12 +21,10 @@ class Usuarios_model extends MY_Model {
 	}
 
 	public function crear( $nombre, $apellido, $email, $dni, $contrasenia, $es_admin ) {
-		//sanitización de datos
 		$data = $this->_sanitizar( $nombre, $apellido, $email, $dni, $es_admin );
 		$data['contrasenia'] = password_hash($contrasenia, PASSWORD_DEFAULT); //https://secure.php.net/manual/es/function.password-hash.php
-		
-		// inserción de los datos
-		$retorno =$this->db->insert( 'usuarios', $data );
+
+		$retorno =$this->insert( 'usuarios', $data );
 		return $this->_return();
 	}
 
@@ -39,48 +39,41 @@ class Usuarios_model extends MY_Model {
 	}
 
 	public function actualizar($id ,$nombre, $apellido, $email, $dni, $es_admin ) {
-		//sanitizacion de datos
 		$data = $this->_sanitizar( $nombre, $apellido, $email, $dni, $es_admin );
-		$id = intval($id);
 
-		//consultas
-		$this->db->where('id_usuario', $id);
-		$this->db->update('usuarios', $data);
-		return $this->_resume($id); 
+		$this->update($id, $data);
+		return $this->_resume($id);
 	}
 
 	public function eliminar( $id ) {
-		//sanitizacion de datos
-		$id = intval($id);
 		$data['fecha_fin'] = $this->now();
 
-		$this->db->where('id_usuario', $id);
-		$this->db->update('usuarios', $data);
+		$this->update($id, $data);
 		return $this->_return($id);
 	}
 
 	public function lista($trash = false) {
 		if (!$trash) $this->db->where('fecha_fin', null);
-		return $this->db->get('usuarios')->result_array();
+		return $this->get()->result_array();
 	}
 
 	public function lista_activos()
 	{
 		$this->db->where('fecha_fin', null);
-		return $this->db->get('usuarios')->result_array();
+		return $this->get()->result_array();
 	}
 
 	public function cotejar( $dni, $contrasenia ) {
 		$user = $this->leer_por_dni($dni);
 
 		if (!boolval($user)) return FALSE; // usuario no existe
-		
+
 		//contraseña
 		$verificacion = password_verify($contrasenia, $user['password']);
-		
+
 		if ( !$verificacion ) return FALSE; // contraseña incorrecta
 		if ( !boolval($user['fecha_fin']) ) return FALSE; // usuario no habilitado
-		
+
 		return $aux;//usuario ok
 	}
 }

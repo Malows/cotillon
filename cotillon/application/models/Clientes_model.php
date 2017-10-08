@@ -29,38 +29,28 @@ class Clientes_model extends MY_Model {
 	}
 
 	public function leer( $id ) {
-		// Sanitizar entrada de datos
-		$id = intval( $id );
-		$this->db->where('id_cliente', $id);
 		$this->db->join('localidades', 'localidades.id_localidad = clientes.id_localidad');
-		return $this->db->get('clientes')->row_array();
+		return $this->get( $id )->row_array();
 	}
 
 	public function actualizar( $id, $nombre, $telefono, $email, $id_localidad, $direccion, $tipo_cliente  ) {
-		// Sanitizar entrada de datos
 		$data = $this->_sanitizar( $nombre, $telefono, $email, $id_localidad, $direccion, $tipo_cliente );
-		$id = intval( $id );
 
-		// Ejecutar consulta
-		$this->db->where( 'id_cliente', $id );
-		$this->db->update( 'clientes', $data );
+		$this->db->update( $id, $data );
 		return $this->_return( $id );
 	}
 
 	public function eliminar( $id ) {
-		// Sanitizar entrada de datos
-		$id = intval( $id );
 		$data['soft_delete'] = $this->now();
 
-		$this->db->where('id_cliente', $id);
-		$this->db->update('clientes', $data);
+		$this->update( $id, $data );
 		return $this->_return( $id );
 	}
 
 	public function lista($trash = false) {
 		$this->db->join('localidades', 'localidades.id_localidad = clientes.id_localidad');
 		if (!$trash) $this->db->where('soft_delete', null);
-		return $this->db->get('clientes')->result_array();
+		return $this->get()->result_array();
 	}
 
 	public function buscar( $campo, $valor ) {
@@ -81,6 +71,6 @@ class Clientes_model extends MY_Model {
 	public function lista_limpia() {
 		$this->db->where('soft_delete',null);
 		$this->db->select('id_cliente AS `id`, nombre_cliente AS `nombre`');
-		return $this->db->get('clientes')->result_array();
+		return $this->get()->result_array();
 	}
 }

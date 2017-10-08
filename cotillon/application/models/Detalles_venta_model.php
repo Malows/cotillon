@@ -4,6 +4,8 @@ class Detalles_venta_model extends MY_Model {
 
 	public function __construct() {
 		parent::__construct();
+		$this->nombre_tabla = 'detalles_venta';
+		$this->clave_primaria = '';
 	}
 
 	private function _sanitizar( $id_venta, $id_producto, $cantidad, $precio_unitario ) {
@@ -17,11 +19,10 @@ class Detalles_venta_model extends MY_Model {
 	}
 
 	public function crear( $id_venta, $id_producto, $cantidad, $precio_unitario ) {
-		// Sanitizar entrada de datos
 		$data = $this->_sanitizar( $id_venta, $id_producto, $cantidad, $precio_unitario );
 
 		// Ejecutar consulta
-		$this->db->insert( 'detalles_venta', $data );
+		$this->insert( $data );
 	}
 
 	public function batch_insertion( $lineas ) {
@@ -29,41 +30,24 @@ class Detalles_venta_model extends MY_Model {
 	}
 
 	public function leer( $id_venta, $id_producto ) {
-		// Sanitizar entrada de datos
-		$id_venta = intval( $id_venta );
-		$id_producto = intval( $id_producto );
-
-		$this->db->where('id_venta', $id_venta);
-		$this->db->where('id_producto', $id_producto);
-		return $this->db->get('detalles_venta')->result_array();
+		return $this->db->get(['id_venta' => $id_venta, 'id_producto' => $id_producto])->result_array();
 	}
 
 	public function actualizar( $id_venta, $id_producto, $cantidad, $precio_unitario  ) {
-		// Sanitizar entrada de datos
 		$data = $this->_sanitizar( $id_venta, $id_producto, $cantidad, $precio_unitario );
 
-		// Ejecutar consulta
-		$this->db->where('id_venta', $data['id_venta']);
-		$this->db->where('id_producto', $data['id_producto']);
-
-		$this->db->update( 'detalles_venta', $data );
+		$this->db->update(['id_venta' => $id_venta, 'id_producto' => $id_producto], $data);
 		return boolval( $this->db->affected_rows() );
 	}
 
 	public function eliminar( $id_venta, $id_producto ) {
-		// Sanitizar entrada de datos
-		$id_venta = intval( $id_venta );
-		$id_producto = intval( $id_producto );
-
-		$this->db->where('id_venta', $id_venta);
-		$this->db->where('id_producto', $id_producto);
-		$this->db->delete('detalles_venta');
-
+		$this->where(['id_venta' => $id_venta, 'id_producto' => $id_producto]);
+		$this->db->delete($this->nombre_tabla);
 		return boolval( $this->db->affected_rows() );
 	}
 
 	public function lista() {
-		return $this->db->get('detalles_venta')->result_array();
+		return $this->get()->result_array();
 	}
 
 	public function buscar_por_venta( $id_venta ) {
