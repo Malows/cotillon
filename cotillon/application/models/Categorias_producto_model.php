@@ -1,22 +1,26 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Categorias_producto_model extends CI_Model {
+class Categorias_producto_model extends MY_Model {
 
 	public function __construct() {
 		parent::__construct();
 	}
 
-	public function lista() {
-		$this->db->where('categorias_producto.soft_delete',null);
+	private function _sanitizar( $nombre ) {
+		return ['nombre_categoria' => htmlentities($nombre)];
+	}
+
+	public function lista($trash = false) {
+		if (!$trash) $this->db->where('categorias_producto.soft_delete',null);
 		return $this->db->get('categorias_producto')->result_array();
 	}
 
 	public function crear( $nombre ) {
-		$nombre = htmlentities($nombre);
+		$data = $this->_sanitizar( $nombre );
 
-		$retorno = $this->db->insert('categorias_producto', ['nombre_categoria' => $nombre]);
-		return $retorno ? $this->db->insert_id() : false;
+		$this->db->insert('categorias_producto', $data);
+		return $this->_return();
 	}
 
 	public function leer( $id ) {
@@ -25,20 +29,21 @@ class Categorias_producto_model extends CI_Model {
 	}
 
 	public function actualizar( $id, $nombre ) {
+		$data = $this->_sanitizar( $nombre );
 		$id = intval($id);
-		$nombre = htmlentities($nombre);
 
 		$this->db->where('id_categoria', $id);
-		$this->db->update('categorias_producto', ['nombre_categoria' => $nombre]);
-		return boolval( $this->db->affected_rows() );
+		$this->db->update('categorias_producto', $data);
+		return $this->_return($id);
 	}
 
 	public function eliminar( $id ) {
 		$id = intval($id);
+		$data['soft_delete'] = $this->now();
+		
 		$this->db->where('id_categoria',$id);
-		$data['soft_delete'] = date('Y-m-d H:i:s');
 		$this->db->update('categorias_producto', $data);
-		return boolval( $this->db->affected_rows() );
+		return $this->_return($id);
 	}
 
 	public function buscar($param) {

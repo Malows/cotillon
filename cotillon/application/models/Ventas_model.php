@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Ventas_model extends CI_Model {
+class Ventas_model extends MY_Model {
 
 	public function __construct() {
 		parent::__construct();

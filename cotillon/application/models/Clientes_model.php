@@ -1,34 +1,31 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Clientes_model extends CI_Model {
+class Clientes_model extends MY_Model {
 
 	public function __construct() {
 		parent::__construct();
 	}
 
+	private function _sanitizar( $nombre, $telefono, $email, $id_localidad, $direccion, $tipo_cliente ) {
+		$data = [];
+		$data['nombre'] = htmlentities( $nombre );
+		$data['telefono'] = htmlentities( $telefono );
+		$data['email'] = htmlentities( $email );
+		$data['direccion'] = htmlentities( $direccion );
+		$data['id_localidad'] = intval( $id_localidad );
+		$data['tipo_cliente'] = htmlentities( $tipo_cliente );
+
+		return $data;
+	}
+
 	public function crear( $nombre, $telefono, $email, $id_localidad, $direccion, $tipo_cliente ) {
 		// Sanitizar entrada de datos
-		$nombre = htmlentities( $nombre );
-		$telefono = htmlentities( $telefono );
-		$email = htmlentities( $email );
-		$direccion = htmlentities( $direccion );
-		$id_localidad = intval( $id_localidad );
-		$tipo_cliente = htmlentities( $tipo_cliente );
-
-		// Arreglo de datos
-		$data = [
-			'nombre_cliente' => $nombre,
-			'telefono' => $telefono,
-			'direccion' => $direccion,
-			'email' => $email,
-			'id_localidad' => $id_localidad,
-			'tipo_cliente' => $tipo_cliente
-		];
+		$data = $this->_sanitizar( $nombre, $telefono, $email, $id_localidad, $direccion, $tipo_cliente );
 
 		// Ejecutar consulta
 		$retorno = $this->db->insert( 'clientes', $data );
-		return $retorno ? $this->db->insert_id() : false;
+		return $this->_return();
 	}
 
 	public function leer( $id ) {
@@ -41,44 +38,28 @@ class Clientes_model extends CI_Model {
 
 	public function actualizar( $id, $nombre, $telefono, $email, $id_localidad, $direccion, $tipo_cliente  ) {
 		// Sanitizar entrada de datos
+		$data = $this->_sanitizar( $nombre, $telefono, $email, $id_localidad, $direccion, $tipo_cliente );
 		$id = intval( $id );
-		$nombre = htmlentities( $nombre );
-		$telefono = htmlentities( $telefono );
-		$email = htmlentities( $email );
-		$direccion = htmlentities( $direccion );
-		$id_localidad = intval( $id_localidad );
-		$tipo_cliente = htmlentities( $tipo_cliente );
-
-		// Arreglo de datos
-		$data = [
-			'nombre_cliente' => $nombre,
-			'telefono' => $telefono,
-			'direccion' => $direccion,
-			'email' => $email,
-			'id_localidad' => $id_localidad,
-			'tipo_cliente' => $tipo_cliente
-		];
 
 		// Ejecutar consulta
 		$this->db->where( 'id_cliente', $id );
 		$this->db->update( 'clientes', $data );
-		return boolval( $this->db->affected_rows() );
+		return $this->_return( $id );
 	}
 
 	public function eliminar( $id ) {
 		// Sanitizar entrada de datos
 		$id = intval( $id );
+		$data['soft_delete'] = $this->now();
 
 		$this->db->where('id_cliente', $id);
-		$data = [];
-    $data['soft_delete'] = date('Y-m-d H:i:s');
 		$this->db->update('clientes', $data);
-		return boolval( $this->db->affected_rows() );
+		return $this->_return( $id );
 	}
 
-	public function lista() {
+	public function lista($trash = false) {
 		$this->db->join('localidades', 'localidades.id_localidad = clientes.id_localidad');
-		$this->db->where('soft_delete', null);
+		if (!$trash) $this->db->where('soft_delete', null);
 		return $this->db->get('clientes')->result_array();
 	}
 
@@ -99,8 +80,7 @@ class Clientes_model extends CI_Model {
 
 	public function lista_limpia() {
 		$this->db->where('soft_delete',null);
-	  return $this->db
-	    ->select('id_cliente AS `id`, nombre_cliente AS `nombre`')
-	    ->get('clientes')->result_array();
+		$this->db->select('id_cliente AS `id`, nombre_cliente AS `nombre`');
+		return $this->db->get('clientes')->result_array();
 	}
 }

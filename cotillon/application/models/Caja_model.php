@@ -1,84 +1,74 @@
 <?php defined('BASEPATH') || exit('No direct script access allowed');
 
-class Caja_model extends CI_Model {
-  public function __construct() {
+class Caja_model extends MY_Model {
+	public function __construct() {
 		parent::__construct();
 	}
 
-  private function now () {
-    return (new DateTime('now', new DateTimeZone('America/Argentina/Buenos_Aires')))->format('Y-m-d H:i:s');
-  }
+	private function ventasEntreFechas ($desde, $hasta) {
+		$this->db->where_in('fecha', [ $desde, $hasta ]);
+		return $this->db->get('ventas')->result_array();
+	}
 
-  private function ventasEntreFechas ($desde, $hasta) {
-    $this->db->where_in('fecha', [ $desde, $hasta ]);
-    return $this->db->get('ventas')->result_array();
-  }
-
-  public function lista ($pagina = 1)
-  {
-    $desde = ($pagina - 1) * 100;
-
-    $this->db->order_by('fecha_apertura', 'DESC');
-    $this->db->limit( 100, $desde );
+	public function lista ($pagina = 1) {
+		$desde = ($pagina - 1) * 100;
+		$this->db->order_by('fecha_apertura', 'DESC');
+		$this->db->limit( 100, $desde );
 		return $this->db->get('caja')->result_array();
-  }
+	}
 
-  public function contar_total ()
-  {
-    return $this->db->count_all('caja');
-  }
+	public function contar_total () {
+		return $this->db->count_all('caja');
+	}
 
-  public function lista_cajas_abiertas() {
-    $this->db->where('fecha_cierre', null);
-    return $this->db->get('caja')->result_array();
-  }
+	public function lista_cajas_abiertas() {
+		$this->db->where('fecha_cierre', null);
+		return $this->db->get('caja')->result_array();
+	}
 
-  public function abrir_caja ($monto) {
-    $cajas = $this->lista_cajas_abiertas();
+	public function abrir_caja ($monto) {
+		$cajas = $this->lista_cajas_abiertas();
+		if (count($cajas)) return false;
+		$this->db->insert('caja', ['monto_apertura' => floatval($monto)]);
+		return $this->db->insert_id();
+	}
 
-    if (count($cajas)) return false;
+	public function estimar_caja () {
+		$cajas = $this->lista_cajas_abiertas();
+		if (count($cajas) != 1) {
+			return false;
+		} else {
+			$cajas = $cajas[0];
+		}
 
-    $this->db->insert('caja', ['monto_apertura' => floatval($monto)]);
-    return $this->db->insert_id();
-  }
+		$ventas = $this->ventasEntreFechas( $cajas['fecha_apertura'], $this->now() );
 
-  public function estimar_caja () {
-    $cajas = $this->lista_cajas_abiertas();
+		$totalDeVenta = array_reduce($ventas, function ($carry, $element) {
+			return $carry + $element['total'];
+		}, $cajas['monto_apertura']);
 
-    if (count($cajas) != 1) {
-      return false;
-    } else {
-      $cajas = $cajas[0];
-    }
+		$cajas['monto_estimado_cierre'] = $totalDeVenta;
 
-    $ventas = $this->ventasEntreFechas( $cajas['fecha_apertura'], $this->now() );
+		$this->db->where('id_caja', $cajas['id_caja']);
+		$this->db->update('caja', $cajas);
+		return $cajas;
+	}
 
-    $totalDeVenta = array_reduce($ventas, function ($carry, $element) {
-      return $carry + $element['total'];
-    }, $cajas['monto_apertura']);
+	public function cerrar_caja ($monto) {
+		$caja = $this->lista_cajas_abiertas();
 
-    $cajas['monto_estimado_cierre'] = $totalDeVenta;
+		if (count($caja) != 1) {
+			return false;
+		} else {
+			$caja = $caja[0];
+		}
 
-    $this->db->where('id_caja', $cajas['id_caja']);
-    $this->db->update('caja', $cajas);
-    return $cajas;
-  }
+		$caja['monto_real_cierre'] = floatval($monto);
+		$caja['fecha_cierre'] = $this->now();
 
-  public function cerrar_caja ($monto) {
-    $caja = $this->lista_cajas_abiertas();
-
-    if (count($caja) != 1) {
-      return false;
-    } else {
-      $caja = $caja[0];
-    }
-
-    $caja['monto_real_cierre'] = floatval($monto);
-    $caja['fecha_cierre'] = $this->now();
-
-    $this->db->where('id_caja', $caja['id_caja']);
-    $this->db->update('caja', $caja);
-    return $caja;
-  }
+		$this->db->where('id_caja', $caja['id_caja']);
+		$this->db->update('caja', $caja);
+		return $caja;
+	}
 
 }

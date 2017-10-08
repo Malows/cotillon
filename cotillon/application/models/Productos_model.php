@@ -1,178 +1,155 @@
 <?php defined('BASEPATH') || exit('No direct script access allowed');
 
-class Productos_model extends CI_Model {
+class Productos_model extends MY_Model {
 
-  function __construct() {
-    parent::__construct();
-  }
+	function __construct() {
+		parent::__construct();
+	}
 
-  private function _filtradoCampo ($campo, $tabla) {
-    $habilitados = $this->db->where("soft_delete", null)->select($campo)->get($tabla)->result_array();
-    return array_map( function ($elem) use ($campo) { return intval($elem[$campo]); },$habilitados);
-  }
+	private function _sanitizar ( $id_proveedor, $nombre, $precio, $id_categoria, $descripcion, $alerta, $unidad, $cantidad ) {
+		$data = [];
+		$data['id_proveedor'] = intval( $id_proveedor );
+		$data['nombre'] = htmlentities( $nombre );
+		$data['precio'] = floatval( $precio );
+		$data['id_categoria'] = intval( $id_categoria );
+		$data['descripcion'] = htmlentities( $descripcion );
+		$data['unidad'] = htmlentities( $unidad );
+		$data['alerta'] = floatval( $alerta );
+		$data['cantidad'] = abs(floatval( $cantidad ));
 
-  public function lista_alertas()
-  {
-    $categoriasHabilitadas = $this->_filtradoCampo('id_categoria', 'categorias_producto');
-    $proveedoresHabilitados = $this->_filtradoCampo('id_proveedor', 'proveedores');
+		return $data;
+	}
+		
+	private function _filtradoCampo ($campo, $tabla) {
+		$habilitados = $this->db->where("soft_delete", null)->select($campo)->get($tabla)->result_array();
+		return array_map( function ($elem) use ($campo) {
+			return intval($elem[$campo]);
+		}, $habilitados);
+	}
 
-    $this->db->where_in('productos.id_categoria', $categoriasHabilitadas);
-    $this->db->where_in('productos.id_proveedor', $proveedoresHabilitados);
+	public function lista_alertas() {
+		$categoriasHabilitadas = $this->_filtradoCampo('id_categoria', 'categorias_producto');
+		$proveedoresHabilitados = $this->_filtradoCampo('id_proveedor', 'proveedores');
 
-    $this->db->where('alerta >= cantidad');
-    $this->db->where('soft_delete',null);
-    return $this->db->get('productos')->result();
-  }
+		$this->db->where_in('productos.id_categoria', $categoriasHabilitadas);
+		$this->db->where_in('productos.id_proveedor', $proveedoresHabilitados);
 
-  public function lista() {
+		$this->db->where('alerta >= cantidad');
+		$this->db->where('soft_delete',null);
+		return $this->db->get('productos')->result();
+	}
 
-    $categoriasHabilitadas = $this->_filtradoCampo('id_categoria', 'categorias_producto');
-    $proveedoresHabilitados = $this->_filtradoCampo('id_proveedor', 'proveedores');
+	public function lista() {
 
-    $this->db->where_in('productos.id_categoria', $categoriasHabilitadas);
-    $this->db->where_in('productos.id_proveedor', $proveedoresHabilitados);
+		$categoriasHabilitadas = $this->_filtradoCampo('id_categoria', 'categorias_producto');
+		$proveedoresHabilitados = $this->_filtradoCampo('id_proveedor', 'proveedores');
 
-    $this->db->join('proveedores', 'proveedores.id_proveedor = productos.id_proveedor');
-    $this->db->join('categorias_producto', 'categorias_producto.id_categoria = productos.id_categoria');
-    $this->db->where('productos.soft_delete', null);
-    return $this->db->get('productos')->result_array();
-  }
+		$this->db->where_in('productos.id_categoria', $categoriasHabilitadas);
+		$this->db->where_in('productos.id_proveedor', $proveedoresHabilitados);
 
-  public function lista_limpia()
-  {
-    $categoriasHabilitadas = $this->_filtradoCampo('id_categoria', 'categorias_producto');
-    $proveedoresHabilitados = $this->_filtradoCampo('id_proveedor', 'proveedores');
+		$this->db->join('proveedores', 'proveedores.id_proveedor = productos.id_proveedor');
+		$this->db->join('categorias_producto', 'categorias_producto.id_categoria = productos.id_categoria');
+		$this->db->where('productos.soft_delete', null);
+		return $this->db->get('productos')->result_array();
+	}
 
-    $this->db->where_in('productos.id_categoria', $categoriasHabilitadas);
-    $this->db->where_in('productos.id_proveedor', $proveedoresHabilitados);
+	public function lista_limpia() {
+		$categoriasHabilitadas = $this->_filtradoCampo('id_categoria', 'categorias_producto');
+		$proveedoresHabilitados = $this->_filtradoCampo('id_proveedor', 'proveedores');
 
-    $this->db->where('soft_delete',null);
-    return $this->db
-      ->select('id_producto AS `id`, nombre, cantidad AS `stock`, precio')
-      ->get('productos')->result_array();
-  }
+		$this->db->where_in('productos.id_categoria', $categoriasHabilitadas);
+		$this->db->where_in('productos.id_proveedor', $proveedoresHabilitados);
 
-  public function lista_limpia_proveedores()
-  {
-    $categoriasHabilitadas = $this->_filtradoCampo('id_categoria', 'categorias_producto');
-    $proveedoresHabilitados = $this->_filtradoCampo('id_proveedor', 'proveedores');
+		$this->db->where('soft_delete',null);
+		return $this->db
+			->select('id_producto AS `id`, nombre, cantidad AS `stock`, precio')
+			->get('productos')->result_array();
+	}
 
-    $this->db->where_in('productos.id_categoria', $categoriasHabilitadas);
-    $this->db->where_in('productos.id_proveedor', $proveedoresHabilitados);
+	public function lista_limpia_proveedores() {
+		$categoriasHabilitadas = $this->_filtradoCampo('id_categoria', 'categorias_producto');
+		$proveedoresHabilitados = $this->_filtradoCampo('id_proveedor', 'proveedores');
 
-    $this->db->join('proveedores', 'proveedores.id_proveedor = productos.id_proveedor');
-    $this->db->where('soft_delete',null);
-    return $this->db
-      ->select('id_producto AS `id`, nombre, cantidad AS `stock`, precio, id_proveedor, proveedores.nombre_proveedor')
-      ->get('productos')->result_array();
-  }
+		$this->db->where_in('productos.id_categoria', $categoriasHabilitadas);
+		$this->db->where_in('productos.id_proveedor', $proveedoresHabilitados);
 
-  public function crear( $id_proveedor, $nombre, $precio, $id_categoria, $descripcion, $alerta, $unidad, $cantidad ) {
-    // Sanitizar datos
-    $id_proveedor = intval( $id_proveedor );
-    $nombre = htmlentities( $nombre );
-    $precio = floatval( $precio );
-    $id_categoria = intval( $id_categoria );
-    $descripcion = htmlentities( $descripcion );
-    $unidad = htmlentities( $unidad );
-    $alerta = floatval( $alerta );
-	$cantidad = abs(floatval( $cantidad ));
-    $data = [
-      'id_proveedor' => $id_proveedor,
-      'nombre' => $nombre,
-      'precio' => $precio,
-      'id_categoria' => $id_categoria,
-      'descripcion' => $descripcion,
-      'unidad' => $unidad,
-      'alerta' => $alerta,
-      'cantidad' => $cantidad
-    ];
-    $retorno = $this->db->insert('productos', $data);
-    return $retorno ? $this->db->insert_id() : false;
-  }
+		$this->db->join('proveedores', 'proveedores.id_proveedor = productos.id_proveedor');
+		$this->db->where('soft_delete',null);
+		return $this->db
+			->select('id_producto AS `id`, nombre, cantidad AS `stock`, precio, id_proveedor, proveedores.nombre_proveedor')
+			->get('productos')->result_array();
+	}
 
-  public function leer( $id ) {
-    // Sanitizar datos
-    $id = intval( $id );
-    $this->db->join('proveedores', 'proveedores.id_proveedor = productos.id_proveedor');
-    $this->db->join('categorias_producto', 'categorias_producto.id_categoria = productos.id_categoria');
-    $this->db->where('id_producto', $id);
-    return $this->db->get('productos')->row_array();
-  }
+	public function crear( $id_proveedor, $nombre, $precio, $id_categoria, $descripcion, $alerta, $unidad, $cantidad ) {
+		// Sanitizar datos
+		$data = $this->_sanitizar( $id_proveedor, $nombre, $precio, $id_categoria, $descripcion, $alerta, $unidad, $cantidad );
 
-  public function actualizar( $id, $id_proveedor, $nombre, $precio, $id_categoria, $descripcion, $alerta, $unidad, $cantidad ) {
-    // Sanitizar datos
-    $id = intval( $id );
-    $id_proveedor = intval( $id_proveedor );
-    $nombre = htmlentities( $nombre );
-    $precio = floatval( $precio );
-    $id_categoria = intval( $id_categoria );
-    $descripcion = htmlentities( $descripcion );
-    $alerta = floatval( $alerta );
-    $cantidad = abs(floatval( $cantidad ));
-    $unidad = htmlentities( $unidad );
+		$retorno = $this->db->insert('productos', $data);
+		return $this->_return();
+	}
 
-    $data = [
-      'id_proveedor' => $id_proveedor,
-      'nombre' => $nombre,
-      'precio' => $precio,
-      'id_categoria' => $id_categoria,
-      'descripcion' => $descripcion,
-      'alerta' => $alerta,
-      'unidad' => $unidad,
-      'cantidad' => $cantidad
-    ];
+	public function leer( $id ) {
+		// Sanitizar datos
+		$id = intval( $id );
 
-    // Ejecutar consulta
+		$this->db->join('proveedores', 'proveedores.id_proveedor = productos.id_proveedor');
+		$this->db->join('categorias_producto', 'categorias_producto.id_categoria = productos.id_categoria');
+		$this->db->where('id_producto', $id);
+		return $this->db->get('productos')->row_array();
+	}
+
+	public function actualizar( $id, $id_proveedor, $nombre, $precio, $id_categoria, $descripcion, $alerta, $unidad, $cantidad ) {
+		// Sanitizar datos
+		$id = intval( $id );
+		$data = $this->_sanitizar( $id_proveedor, $nombre, $precio, $id_categoria, $descripcion, $alerta, $unidad, $cantidad );
+
+		// Ejecutar consulta
 		$this->db->where( 'id_producto', $id );
 		$this->db->update( 'productos', $data );
-		return boolval( $this->db->affected_rows() );
-  }
+		return $this->_return( $id );
+	}
 
-  public function eliminar( $id ) {
-    // Sanitizar datos
-    $id = intval( $id );
+	public function eliminar( $id ) {
+		// Sanitizar datos
+		$id = intval( $id );
+		$data['soft_delete'] = $this->now();
 
-    $this->db->where('id_producto', $id);
-    $data = [];
-    $data['soft_delete'] = date('Y-m-d H:i:s');
-    $this->db->update('productos', $data);
-		// $this->db->delete('productos');
-		return boolval( $this->db->affected_rows() );
-  }
+		$this->db->where('id_producto', $id);
+		$this->db->update('productos', $data);
+		return $this->_return( $id );
+	}
 
+	public function incrementar( $id_producto, $cantidad ) {
+		$id_producto = intval($id_producto);
+		$this->db->where('id_producto', $id_producto);
+		$aux = $this->db->get('productos')->row_array();
+		$aux['cantidad'] += abs(floatval($cantidad)) ;
+		unset($aux['id_producto']);
 
-  public function incrementar( $id_producto, $cantidad ) {
-    $id_producto = intval($id_producto);
-    $this->db->where('id_producto', $id_producto);
-    $aux = $this->db->get('productos')->row_array();
-    $aux['cantidad'] += abs(floatval($cantidad)) ;
-    unset($aux['id_producto']);
+		$this->db->where('id_producto', $id_producto);
+		$this->db->update('productos',$aux);
+		return $this->_return($id_producto);
+	}
 
-    $this->db->where('id_producto', $id_producto);
-    return $this->db->update('productos',$aux);
-  }
+	public function reducir( $id_producto, $cantidad ) {
+		$id_producto = intval($id_producto);
+		$this->db->where('id_producto', $id_producto);
+		$aux = $this->db->get('productos')->row_array();
 
-  public function reducir( $id_producto, $cantidad ) {
-    $id_producto = intval($id_producto);
-    $this->db->where('id_producto', $id_producto);
-    $aux = $this->db->get('productos')->row_array();
+		$cantidad = abs(floatval($cantidad));
 
-    $cantidad = abs(floatval($cantidad));
+		if ( $aux['cantidad'] >= $cantidad ) {
+			$aux['cantidad'] -= $cantidad;
+			unset( $aux['id_producto'] );
 
-    if ( $aux['cantidad'] >= $cantidad ) {
-      $aux['cantidad'] -= $cantidad;
-      unset( $aux['id_producto'] );
+			$this->db->where('id_producto', $id_producto);
+			return $this->db->update('productos',$aux);
+		} else return FALSE;
+	}
 
-      $this->db->where('id_producto', $id_producto);
-      return $this->db->update('productos',$aux);
-    } else return FALSE;
-  }
-
-  public function productos_de_proveedor($id)
-  {
-    $this->db->where('id_proveedor', intval($id));
-    $this->db->where('soft_delete', null);
-    return $this->db->get('productos')->result_array();
-  }
+	public function productos_de_proveedor($id) {
+		$this->db->where('id_proveedor', intval($id));
+		$this->db->where('soft_delete', null);
+		return $this->db->get('productos')->result_array();
+	}
 }

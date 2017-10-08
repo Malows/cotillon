@@ -1,10 +1,13 @@
-<?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+<?php defined('BASEPATH') || exit('No direct script access allowed');
 
-class Localidades_model extends CI_Model {
+class Localidades_model extends MY_Model {
 
 	public function __construct() {
 		parent::__construct();
+	}
+
+	private function _sanitizar( $nombre, $barrio ) {
+		return ['nombre_localidad' => htmlentities($nombre), 'barrio' => htmlentities($barrio)];
 	}
 
 	public function lista() {
@@ -12,13 +15,10 @@ class Localidades_model extends CI_Model {
 	}
 
 	public function crear( $nombre, $barrio ) {
-		$nombre = htmlentities($nombre);
-		$barrio = htmlentities($barrio);
-
-		$data = ['nombre_localidad' => $nombre, 'barrio' => $barrio];
+		$data = $this->_sanitizar( $nombre, $barrio );
 
 		$retorno = $this->db->insert('localidades', $data);
-		return $retorno ? $this->db->insert_id() : false;
+		return $this->_return();
 	}
 
 	public function leer( $id ) {
@@ -28,21 +28,18 @@ class Localidades_model extends CI_Model {
 
 	public function actualizar( $id, $nombre, $barrio ) {
 		$id = intval($id);
-		$nombre = htmlentities($nombre);
-		$barrio = htmlentities($barrio);
-
-		$data = ['nombre_localidad' => $nombre, 'barrio' => $barrio];
+		$data = $this->_sanitizar( $nombre, $barrio );
 
 		$this->db->where('id_localidad', $id);
 		$this->db->update('localidades', $data);
-		return boolval( $this->db->affected_rows() );
+		return $this->_return($id);
 	}
 
 	public function eliminar( $id ) {
 		$id = intval($id);
 
-		$this->db->delete('localidades', array('id_localidad' => $id));
-		return boolval( $this->db->affected_rows() );
+		$this->db->delete('localidades', ['id_localidad' => $id]);
+		return $this->_return($id);
 	}
 
 	public function buscar($param) {

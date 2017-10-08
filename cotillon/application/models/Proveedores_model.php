@@ -1,28 +1,28 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Proveedores_model extends CI_Model {
+class Proveedores_model extends MY_Model {
 
 	public function __construct() {
 		parent::__construct();
 	}
 
+	private function _santizar ( $nombre, $contacto, $id_locaidad ) {
+		$data = [];
+		$data['nombre_proveedor'] = htmlentities( $nombre );
+		$data['contacto'] = htmlentities( $contacto );
+		$data['id_localidad'] = intval( $id_localidad );
+
+		return $data;
+	}
+
 	public function crear( $nombre, $contacto, $id_localidad ) {
 		// Sanitizar entrada de datos
-		$nombre = htmlentities( $nombre );
-		$contacto = htmlentities( $contacto );
-		$id_localidad = intval( $id_localidad );
-
-		// Arreglo de datos
-		$data = array(
-			'nombre_proveedor' => $nombre,
-			'contacto' => $contacto,
-			'id_localidad' => $id_localidad
-		);
+		$data = $this->_sanitizar( $nombre, $contacto, $id_localidad );
 
 		// Ejecutar consulta
 		$retorno = $this->db->insert( 'proveedores', $data );
-		return $retorno ? $this->db->insert_id() : false;
+		return $this->_return(); 
 	}
 
 	public function leer( $id ) {
@@ -35,38 +35,28 @@ class Proveedores_model extends CI_Model {
 
 	public function actualizar( $id, $nombre, $contacto, $id_localidad ) {
 		// Sanitizar entrada de datos
+		$data = $this->_sanitizar( $nombre, $contacto, $id_localidad );
 		$id = intval( $id );
-		$nombre = htmlentities( $nombre );
-		$contacto = htmlentities( $contacto );
-		$id_localidad = intval( $id_localidad );
-
-		// Arreglo de datos
-		$data = [
-			'nombre_proveedor' => $nombre,
-			'contacto' => $contacto,
-			'id_localidad' => $id_localidad
-		];
 
 		// Ejecutar consulta
 		$this->db->where( 'id_proveedor', $id );
 		$this->db->update( 'proveedores', $data );
-		return boolval( $this->db->affected_rows() );
+		return $this->_return($id);
 	}
 
 	public function eliminar( $id ) {
 		// Sanitizar entrada de datos
 		$id = intval( $id );
+ 		$data['soft_delete'] = $this->now();
 
 		$this->db->where('id_proveedor', $id);
-		$data = [];
-    $data['soft_delete'] = date('Y-m-d H:i:s');
-    $this->db->update('proveedores', $data);
-		return boolval( $this->db->affected_rows() );
+		$this->db->update('proveedores', $data);
+		return $this->_return($id);
 	}
 
-	public function lista() {
+	public function lista($trash = false) {
 		$this->db->join('localidades', 'localidades.id_localidad = proveedores.id_localidad');
-		$this->db->where('soft_delete', null);
+		if (!$trash) $this->db->where('soft_delete', null);
 		return $this->db->get('proveedores')->result_array();
 	}
 
