@@ -4,6 +4,8 @@ class Pedidos_model extends MY_Model {
 
 	public function __construct() {
 		parent::__construct();
+		$this->nombre_tabla = 'pedidos';
+		$this->clave_primaria = 'id_pedido';
 	}
 
 	public function lista($trash = false) {
