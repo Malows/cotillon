@@ -56,7 +56,7 @@ class Usuarios extends CI_Controller {
     } else {
       //obtenes datos
       $data = [
-        'usuarios' => $this->usuarios_model->lista_activos(),
+        'usuarios' => $this->usuarios_model->lista(),
         'id_usuario_logueado' => $this->session->userdata('id_usuario'),
         'es_admin_usuario_logueado' => $this->session->userdata('es_admin')
       ];
@@ -197,7 +197,7 @@ class Usuarios extends CI_Controller {
           //El usuario que se busca no es valido
           $data = [
             'accion' => 'actualizar',
-            'usuarios' =>  $this->usuarios_model->lista_activos(),
+            'usuarios' =>  $this->usuarios_model->lista(),
             'mensaje' => "Esta acción requiere de un usuario válido. Seleccione uno por favor."
           ];
 

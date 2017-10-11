@@ -8,10 +8,12 @@ class Localidades_model extends MY_Model {
 		$this->clave_primaria = 'id_localidad';
 	}
 
-	private function _sanitizar( $nombre, $barrio ) {
-		return ['nombre_localidad' => htmlentities($nombre), 'barrio' => htmlentities($barrio)];
+	protected function sanitizar( Array $data ) {
+		$data['nombre_localidad'] = htmlentities($data['nombre']);
+		$data['barrio'] = htmlentities($data['barrio']);
+		return $data;
 	}
-
+/*
 	public function lista() {
 		return $this->db->get()->result_array();
 	}
@@ -39,7 +41,7 @@ class Localidades_model extends MY_Model {
 		$this->db->delete('localidades', ['id_localidad' => $id]);
 		return $this->_return($id);
 	}
-
+ */
 	public function buscar($param) {
 		$param = htmlentities($param);
 

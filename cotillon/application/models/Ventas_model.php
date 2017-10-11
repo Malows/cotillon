@@ -7,60 +7,34 @@ class Ventas_model extends MY_Model {
 		parent::__construct();
 	}
 
-	public function leer( $id ) {
-		// Sanitizar entrada de datos
-		$id = intval( $id );
-		$this->db->where('id_venta', $id);
+	protected function sanitizar ( Array $data ) {
+		$data['id_cliente'] = intval( $data['id_cliente'] );
+		$data['total'] = floatval( $data['total'] );
+		return $data;
+	}
+
+	public function leer( $id, $trash = false ) {
+		if ($trash) $this->withTrashed();
 		$this->db->join('clientes', 'clientes.id_cliente = ventas.id_cliente');
-		return $this->db->get('ventas')->row_array();
+		return $this->get($id)->row_array();
 	}
 
-	public function crear( $id_cliente, $total ) {
+	public function crear( Array $data ) {
 		$this->db->trans_start();
-		// Sanitizar entrada de datos
-		$id_cliente = intval( $id_cliente );
-		$total = floatval($total);
-
-		// Arreglo de datos
-		$data = [
-			'id_cliente' => $id_cliente,
-			'total' => $total
-		];
-
-		// Ejecutar consulta
-		$retorno = $this->db->insert( 'ventas', $data );
-		return $retorno ? $this->db->insert_id() : false;
+		$this->insert( $data );
+		return $this->_return();
 	}
 
-	public function actualizar( $id, $id_cliente, $total ) {
-		// Sanitizar entrada de datos
-		$id = intval( $id );
-		$id_cliente = intval( $id_cliente );
-		$total = floatval( $total );
-
-		// Arreglo de datos
-		$data = array(
-      'id_cliente' => $id_cliente,
-			'total' => $total
-		);
-
-		// Ejecutar consulta
-		$this->db->where( 'id_venta', $id );
-		$this->db->update( 'ventas', $data );
-		// Completo transacción
+	public function actualizar( Int $id, Array $data ) {
+		$this->update( $id, $data );
 		$this->db->trans_complete();
-		// retorno de true o false por si actualicé
-		return boolval( $this->db->affected_rows() );
+		return $this->_return($id);
 	}
 
 	public function eliminar( $id ) {
-		// Sanitizar entrada de datos
-		$id = intval( $id );
-
-		$this->db->where('id_venta', $id);
+		$this->where($id);
 		$this->db->delete('ventas');
-
-		return boolval( $this->db->affected_rows() );
+		return $this->_return( $id );
 	}
 
 	public function lista( $paginacion = 1 ) {
