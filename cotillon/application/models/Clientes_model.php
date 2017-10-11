@@ -9,43 +9,24 @@ class Clientes_model extends MY_Model {
 		$this->clave_primaria = 'id_cliente';
 	}
 
-	private function _sanitizar( $nombre, $telefono, $email, $id_localidad, $direccion, $tipo_cliente ) {
-		$data = [];
-		$data['nombre'] = htmlentities( $nombre );
-		$data['telefono'] = htmlentities( $telefono );
-		$data['email'] = htmlentities( $email );
-		$data['direccion'] = htmlentities( $direccion );
-		$data['id_localidad'] = intval( $id_localidad );
-		$data['tipo_cliente'] = htmlentities( $tipo_cliente );
+	protected function sanitizar( Array $data ) {
+		$datos = [];
+		$datos['nombre_cliente'] = htmlentities( $data['nombre_cliente'] );
+		$datos['telefono'] = htmlentities( $data['telefono'] );
+		$datos['email'] = htmlentities( $data['email'] );
+		$datos['direccion'] = htmlentities( $data['direccion'] );
+		$datos['id_localidad'] = intval( $data['id_localidad'] );
+		$datos['tipo_cliente'] = htmlentities( $data['tipo_cliente'] );
 
-		return $data;
+		return $datos;
 	}
 
-	public function crear( $nombre, $telefono, $email, $id_localidad, $direccion, $tipo_cliente ) {
-		$data = $this->_sanitizar( $nombre, $telefono, $email, $id_localidad, $direccion, $tipo_cliente );
-
-		$retorno = $this->insert( $data );
-		return $this->_return();
-	}
-
-	public function leer( $id ) {
+	public function leer( $id, $trash = false ) {
+		if (!$trash) $this->withTrashed();
 		$this->db->join('localidades', 'localidades.id_localidad = clientes.id_localidad');
 		return $this->get( $id )->row_array();
 	}
 
-	public function actualizar( $id, $nombre, $telefono, $email, $id_localidad, $direccion, $tipo_cliente  ) {
-		$data = $this->_sanitizar( $nombre, $telefono, $email, $id_localidad, $direccion, $tipo_cliente );
-
-		$this->db->update( $id, $data );
-		return $this->_return( $id );
-	}
-
-	public function eliminar( $id ) {
-		$data['soft_delete'] = $this->now();
-
-		$this->update( $id, $data );
-		return $this->_return( $id );
-	}
 
 	public function lista($trash = false) {
 		$this->db->join('localidades', 'localidades.id_localidad = clientes.id_localidad');

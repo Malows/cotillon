@@ -95,14 +95,17 @@ class Usuarios extends CI_Controller {
 				$this->load->view('includes/footer');
 			} else {
         // Envié el formulario
-        $last_id = $this->usuarios_model->crear(
-          $this->security->xss_clean( $this->input->post('nombre') ),
-          $this->security->xss_clean( $this->input->post('apellido') ),
-          $this->security->xss_clean( $this->input->post('email') ),
-          $this->security->xss_clean( $this->input->post('dni') ),
-          $this->input->post('password'),
-          $this->security->xss_clean( $this->input->post('es_admin') )
-        );
+
+        $payload = [
+          'nombre' => $this->security->xss_clean( $this->input->post('nombre') ),
+          'apellido' => $this->security->xss_clean( $this->input->post('apellido') ),
+          'email' => $this->security->xss_clean( $this->input->post('email') ),
+          'dni' => $this->security->xss_clean( $this->input->post('dni') ),
+          'contrasenia' => $this->input->post('password'),
+          'es_admin' => $this->security->xss_clean( $this->input->post('es_admin') )
+        ];
+
+        $last_id = $this->usuarios_model->crear($payload);
 
         $permiso = $this->security->xss_clean( $this->input->post('es_admin') ) == "1" ? "Administrador" : "No Administrador";
 
@@ -184,7 +187,7 @@ class Usuarios extends CI_Controller {
       //delimitadores de errores
       $this->form_validation->set_error_delimiters('<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>');
 
-      $aux = $this->usuarios_model->leer_por_id( $id );
+      $aux = $this->usuarios_model->leer($id);
 
       if ( $this->form_validation->run() === FALSE ) {
         // Tengo el ID // No envió el formulario aún
@@ -213,14 +216,10 @@ class Usuarios extends CI_Controller {
         $aux['dni'] = $this->security->xss_clean($this->input->post('dni'));
         $aux['es_admin'] = $this->security->xss_clean($this->input->post('es_admin'));
 
-        $this->usuarios_model->actualizar(
-          $aux['id_usuario'],
-          $aux['nombre'],
-          $aux['apellido'],
-          $aux['email'],
-          $aux['dni'],
-          $aux['es_admin']
-        );
+        $payload = $aux;
+        unset($payload['id_usuario']);
+        
+        $this->usuarios_model->actualizar($id, $payload);
 
         if ($id) $this->registro->registrar($this->session->userdata('id_usuario'), 3, 'usuarios', $id);
 

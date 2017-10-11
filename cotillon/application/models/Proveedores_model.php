@@ -5,54 +5,52 @@ class Proveedores_model extends MY_Model {
 
 	public function __construct() {
 		parent::__construct();
+		$this->nombre_tabla = 'proveedores';
+		$this->clave_primaria = 'id_proveedor';
 	}
 
-	private function _santizar ( $nombre, $contacto, $id_locaidad ) {
-		$data = [];
-		$data['nombre_proveedor'] = htmlentities( $nombre );
-		$data['contacto'] = htmlentities( $contacto );
-		$data['id_localidad'] = intval( $id_localidad );
+	protected function sanitizar ( Array $data ) {
+		$data['nombre_proveedor'] = htmlentities( $data['nombre_proveedor'] );
+		$data['contacto'] = htmlentities( $data['contacto'] );
+		$data['id_localidad'] = intval( $data['id_localidad'] );
 
 		return $data;
 	}
 
-	public function crear( $nombre, $contacto, $id_localidad ) {
-		// Sanitizar entrada de datos
-		$data = $this->_sanitizar( $nombre, $contacto, $id_localidad );
+	// public function crear( $nombre, $contacto, $id_localidad ) {
+	// 	// Sanitizar entrada de datos
+	// 	$data = $this->_sanitizar( $nombre, $contacto, $id_localidad );
+	//
+	// 	// Ejecutar consulta
+	// 	$retorno = $this->db->insert( 'proveedores', $data );
+	// 	return $this->_return();
+	// }
 
-		// Ejecutar consulta
-		$retorno = $this->db->insert( 'proveedores', $data );
-		return $this->_return(); 
-	}
-
-	public function leer( $id ) {
-		// Sanitizar entrada de datos
-		$id = intval( $id );
+	public function leer( $id, $trash = false ) {
 		$this->db->join('localidades', 'localidades.id_localidad = proveedores.id_localidad');
-		$this->db->where('id_proveedor', $id);
-		return $this->db->get('proveedores')->row_array();
+		return $this->get($id)->row_array();
 	}
+	//
+	// public function actualizar( $id, $nombre, $contacto, $id_localidad ) {
+	// 	// Sanitizar entrada de datos
+	// 	$data = $this->_sanitizar( $nombre, $contacto, $id_localidad );
+	// 	$id = intval( $id );
+	//
+	// 	// Ejecutar consulta
+	// 	$this->db->where( 'id_proveedor', $id );
+	// 	$this->db->update( 'proveedores', $data );
+	// 	return $this->_return($id);
+	// }
 
-	public function actualizar( $id, $nombre, $contacto, $id_localidad ) {
-		// Sanitizar entrada de datos
-		$data = $this->_sanitizar( $nombre, $contacto, $id_localidad );
-		$id = intval( $id );
-
-		// Ejecutar consulta
-		$this->db->where( 'id_proveedor', $id );
-		$this->db->update( 'proveedores', $data );
-		return $this->_return($id);
-	}
-
-	public function eliminar( $id ) {
-		// Sanitizar entrada de datos
-		$id = intval( $id );
- 		$data['soft_delete'] = $this->now();
-
-		$this->db->where('id_proveedor', $id);
-		$this->db->update('proveedores', $data);
-		return $this->_return($id);
-	}
+	// public function eliminar( $id ) {
+	// 	// Sanitizar entrada de datos
+	// 	$id = intval( $id );
+ // 		$data['soft_delete'] = $this->now();
+	//
+	// 	$this->db->where('id_proveedor', $id);
+	// 	$this->db->update('proveedores', $data);
+	// 	return $this->_return($id);
+	// }
 
 	public function lista($trash = false) {
 		$this->db->join('localidades', 'localidades.id_localidad = proveedores.id_localidad');

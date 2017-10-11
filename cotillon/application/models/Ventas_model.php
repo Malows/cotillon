@@ -5,6 +5,8 @@ class Ventas_model extends MY_Model {
 
 	public function __construct() {
 		parent::__construct();
+		$this->nombre_tabla = 'ventas';
+		$this->clave_primaria = 'id_ventas';
 	}
 
 	protected function sanitizar ( Array $data ) {
@@ -25,7 +27,7 @@ class Ventas_model extends MY_Model {
 		return $this->_return();
 	}
 
-	public function actualizar( Int $id, Array $data ) {
+	public function actualizar( $id, Array $data ) {
 		$this->update( $id, $data );
 		$this->db->trans_complete();
 		return $this->_return($id);

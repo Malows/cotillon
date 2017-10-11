@@ -59,9 +59,9 @@ class Categorias extends CI_Controller {
           $this->load->view('includes/footer');
         } else {
           // Envié el formulario
-          $last_id = $this->Categorias_producto_model->crear(
-            $this->security->xss_clean( $this->input->post('nombre_categoria') )
-          );
+
+          $payload['nombre_categoria'] = $this->security->xss_clean( $this->input->post('nombre_categoria') );
+          $last_id = $this->Categorias_producto_model->crear( $payload );
 
           if ($last_id) $this->registro->registrar($this->session->userdata('id_usuario'), 8, 'categorias_producto', $last_id);
 
@@ -101,10 +101,8 @@ class Categorias extends CI_Controller {
           $data['exito'] = TRUE;
           $data['categoria']['nombre_categoria'] = htmlentities( $this->input->post('nombre_categoria') );
 
-          $this->Categorias_producto_model->actualizar(
-            $id,
-            $this->security->xss_clean( $this->input->post('nombre_categoria') )
-          );
+          $payload['nombre_categoria'] = $this->security->xss_clean( $this->input->post('nombre_categoria') );
+          $this->Categorias_producto_model->actualizar( $id, $payload );
 
           if ($id) $this->registro->registrar($this->session->userdata('id_usuario'), 9, 'categorias_producto', $id);
 

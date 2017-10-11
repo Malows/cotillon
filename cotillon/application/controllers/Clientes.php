@@ -88,14 +88,8 @@ class Clientes extends CI_Controller {
         $data['cliente']['direccion'] = $this->security->xss_clean( $this->input->post('direccion') );
         $data['cliente']['id_localidad'] = $this->security->xss_clean( $this->input->post('id_localidad') );
         $data['cliente']['tipo_cliente'] = $this->security->xss_clean( $this->input->post('tipo_cliente') );
-        $last_id = $this->clientes_model->crear(
-          $data['cliente']['nombre_cliente'],
-          $data['cliente']['telefono'],
-          $data['cliente']['email'],
-          $data['cliente']['id_localidad'],
-          $data['cliente']['direccion'],
-          $data['cliente']['tipo_cliente']
-        );
+
+        $last_id = $this->clientes_model->crear( $data['cliente'] );
         $data['exito'] = TRUE;
         if ($last_id) $this->registro->registrar($this->session->userdata('id_usuario'), 14, 'clientes', $last_id);
       } else {
@@ -131,17 +125,10 @@ class Clientes extends CI_Controller {
         $data['cliente']['direccion'] = $this->security->xss_clean( $this->input->post('direccion') );
         $data['cliente']['id_localidad'] = $this->security->xss_clean( $this->input->post('id_localidad') );
         $data['cliente']['tipo_cliente'] = $this->security->xss_clean( $this->input->post('tipo_cliente') );
-        $this->clientes_model->actualizar(
-          $id,
-          $data['cliente']['nombre_cliente'],
-          $data['cliente']['telefono'],
-          $data['cliente']['email'],
-          $data['cliente']['id_localidad'],
-          $data['cliente']['direccion'],
-          $data['cliente']['tipo_cliente']
-        );
+
+        $last_id = $this->clientes_model->actualizar( $id, $data['cliente'] );
         $data['exito'] = TRUE;
-        if ($id) $this->registro->registrar($this->session->userdata('id_usuario'), 15, 'clientes', $id);
+        if ($last_id) $this->registro->registrar($this->session->userdata('id_usuario'), 15, 'clientes', $last_id);
       } else {
         unset($data['exito']);
       }

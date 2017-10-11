@@ -17,7 +17,7 @@
         <label for="localidad">Localidad<?php echo form_error("localidad");?></label>
         <select name="localidad" class="form-control">
           <?php foreach ($localidades as $loc){
-            echo "<option value=\"".$loc['id_localidad']."\">".$loc['nombre_localidad']."</option>\n";
+            echo "<option value=\"".$loc['id_localidad']."\">".$loc['nombre_localidad'].' - '.$loc['barrio']."</option>\n";
         }?>
         </select>
 

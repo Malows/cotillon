@@ -9,36 +9,8 @@ class Categorias_producto_model extends MY_Model {
 		$this->clave_primaria = 'id_categoria';
 	}
 
-	private function _sanitizar( $nombre ) {
-		return ['nombre_categoria' => htmlentities($nombre)];
-	}
-
-	public function lista($trash = false) {
-		if (!$trash) $this->db->where('categorias_producto.soft_delete',null);
-		return $this->get()->result_array();
-	}
-
-	public function crear( $nombre ) {
-		$data = $this->_sanitizar( $nombre );
-
-		$this->db->insert($data);
-		return $this->_return();
-	}
-
-	public function leer( $id ) {
-		return $this->get( $id )->row_array();
-	}
-
-	public function actualizar( $id, $nombre ) {
-		$data = $this->_sanitizar( $nombre );
-		$this->db->update($id, $data);
-		return $this->_return($id);
-	}
-
-	public function eliminar( $id ) {
-		$data['soft_delete'] = $this->now();
-		$this->update($id, $data);
-		return $this->_return($id);
+	protected function sanitizar( Array $data ) {
+		return ['nombre_categoria' => htmlentities($data['nombre_categoria'])];
 	}
 
 	public function buscar($param) {
@@ -52,7 +24,6 @@ class Categorias_producto_model extends MY_Model {
 
 	public function productos_correspondientes( $id ) {
 		$id = intval($id);
-
 		$this->db->where('id_categoria', $id);
 		$this->db->where('productos.soft_delete',null);
 		return $this->db->get('productos')->result_array();

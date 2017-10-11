@@ -58,7 +58,7 @@ class MY_Model extends CI_Model {
 		return $this->_return();
 	}
 
-	public function actualizar ( Int $id, Array $data ) {
+	public function actualizar ( $id, Array $data ) {
 		$this->update($id, $data);
 		return $this->_return();
 	}

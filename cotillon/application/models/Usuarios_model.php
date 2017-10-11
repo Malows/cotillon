@@ -38,7 +38,7 @@ class Usuarios_model extends MY_Model {
 		$dni = intval($dni);
 		return $this->db->get_where('usuarios', ['dni' => $dni])->row_array();
 	}
-	
+
 	public function lista_activos() {
 		$usuarios = $this->lista();
 		echo "<br><br><br>\n\n\n";
@@ -47,7 +47,7 @@ class Usuarios_model extends MY_Model {
 	}
 
 	public function cotejar( $dni, $contrasenia ) {
-		$user = $this->get(['dni' => $dni]);
+		$user = $this->get(['dni' => $dni])->row_array();
 		$verificacion = password_verify($contrasenia, $user['password']);
 
 		if ( !boolval($user) ) return FALSE; // usuario no existe

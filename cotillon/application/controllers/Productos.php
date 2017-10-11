@@ -90,16 +90,17 @@ class Productos extends CI_Controller {
         $this->load->view('pages/productos/crear', $data);
         $this->load->view('includes/footer');
       } else {
-        $last_id = $this->productos_model->crear(
-          $this->security->xss_clean( $this->input->post('id_proveedor')),
-          $this->security->xss_clean( $this->input->post('nombre')),
-          $this->security->xss_clean( $this->input->post('precio')),
-          $this->security->xss_clean( $this->input->post('id_categoria')),
-          $this->security->xss_clean( $this->input->post('descripcion')),
-          $this->security->xss_clean( $this->input->post('alerta')),
-          $this->security->xss_clean( $this->input->post('unidad')),
-          $this->security->xss_clean( $this->input->post('cantidad'))
-        );
+        $payload = [
+          'id_proveedor' => $this->security->xss_clean( $this->input->post('id_proveedor')),
+          'nombre' => $this->security->xss_clean( $this->input->post('nombre')),
+          'precio' => $this->security->xss_clean( $this->input->post('precio')),
+          'id_categoria' => $this->security->xss_clean( $this->input->post('id_categoria')),
+          'descripcion' => $this->security->xss_clean( $this->input->post('descripcion')),
+          'alerta' => $this->security->xss_clean( $this->input->post('alerta')),
+          'unidad' => $this->security->xss_clean( $this->input->post('unidad')),
+          'cantidad' => $this->security->xss_clean( $this->input->post('cantidad'))
+        ];
+        $last_id = $this->productos_model->crear($payload);
         if ($last_id) $this->registro->registrar($this->session->userdata('id_usuario'), 11, 'productos', $last_id);
 
         $data['exito'] = TRUE;
@@ -134,36 +135,36 @@ class Productos extends CI_Controller {
         $this->load->view('pages/productos/actualizar', $data);
         $this->load->view('includes/footer');
       } else {
-        $this->productos_model->actualizar(
-          $id,
-          $this->security->xss_clean( $this->input->post('id_proveedor')),
-          $this->security->xss_clean( $this->input->post('nombre')),
-          $this->security->xss_clean( $this->input->post('precio')),
-          $this->security->xss_clean( $this->input->post('id_categoria')),
-          $this->security->xss_clean( $this->input->post('descripcion')),
-          $this->security->xss_clean( $this->input->post('alerta')),
-          $this->security->xss_clean( $this->input->post('unidad')),
-          $this->security->xss_clean( $this->input->post('cantidad'))
-        );
-        if ($id) $this->registro->registrar($this->session->userdata('id_usuario'), 12, 'productos', $id);
+          $payload = [
+            'id_proveedor' => $this->security->xss_clean( $this->input->post('id_proveedor')),
+            'nombre' => $this->security->xss_clean( $this->input->post('nombre')),
+            'precio' => $this->security->xss_clean( $this->input->post('precio')),
+            'id_categoria' => $this->security->xss_clean( $this->input->post('id_categoria')),
+            'descripcion' => $this->security->xss_clean( $this->input->post('descripcion')),
+            'alerta' => $this->security->xss_clean( $this->input->post('alerta')),
+            'unidad' => $this->security->xss_clean( $this->input->post('unidad')),
+            'cantidad' => $this->security->xss_clean( $this->input->post('cantidad'))
+          ];
+          $last_id = $this->productos_model->actualizar($id, $payload);
+          if ($last_id) $this->registro->registrar($this->session->userdata('id_usuario'), 12, 'productos', $last_id);
 
-        $data['exito'] = TRUE;
-        $data['producto']['nombre'] = htmlentities( $this->input->post('nombre'));
-        $data['producto']['precio'] = floatval( $this->input->post('precio'));
-        $data['producto']['id_proveedor'] = intval( $this->input->post('id_proveedor'));
-        $data['producto']['id_categoria'] = intval( $this->input->post('id_categoria'));
-        $data['producto']['descripcion'] = htmlentities( $this->input->post('descripcion'));
-        $data['producto']['alerta'] = floatval( $this->input->post('alerta'));
-        $data['producto']['cantidad'] = floatval( $this->input->post('cantidad'));
-        $data['producto']['unidad'] = htmlentities( $this->input->post('unidad'));
+          $data['exito'] = TRUE;
+          $data['producto']['nombre'] = htmlentities( $this->input->post('nombre'));
+          $data['producto']['precio'] = floatval( $this->input->post('precio'));
+          $data['producto']['id_proveedor'] = intval( $this->input->post('id_proveedor'));
+          $data['producto']['id_categoria'] = intval( $this->input->post('id_categoria'));
+          $data['producto']['descripcion'] = htmlentities( $this->input->post('descripcion'));
+          $data['producto']['alerta'] = floatval( $this->input->post('alerta'));
+          $data['producto']['cantidad'] = floatval( $this->input->post('cantidad'));
+          $data['producto']['unidad'] = htmlentities( $this->input->post('unidad'));
 
 
-        $this->load->view('includes/header');
-        $this->load->view('pages/productos/actualizar', $data);
-        $this->load->view('includes/footer');
+          $this->load->view('includes/header');
+          $this->load->view('pages/productos/actualizar', $data);
+          $this->load->view('includes/footer');
+        }
       }
     }
-  }
 
   public function ver( $id ) {
     if ( ! $this->session->userdata('esta_logeado') ) {

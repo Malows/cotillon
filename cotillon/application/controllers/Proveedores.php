@@ -69,11 +69,13 @@ class Proveedores extends CI_Controller
         $this->load->view('includes/footer');
       } else {
 
-        $last_id = $this->proveedores_model->crear(
-          $this->security->xss_clean( $this->input->post('nombre_proveedor')),
-          $this->security->xss_clean( $this->input->post('contacto')),
-          $this->security->xss_clean( $this->input->post('localidad'))
-        );
+        $payload = [
+          'nombre_proveedor' => $this->security->xss_clean( $this->input->post('nombre_proveedor')),
+          'contacto' => $this->security->xss_clean( $this->input->post('contacto')),
+          'id_localidad' => $this->security->xss_clean( $this->input->post('localidad'))
+        ];
+
+        $last_id = $this->proveedores_model->crear($payload);
 
         if ($last_id) $this->registro->registrar($this->session->userdata('id_usuario'), 5, 'proveedores', $last_id);
 
@@ -137,14 +139,17 @@ class Proveedores extends CI_Controller
         $data['proveedor']['contacto'] = $this->security->xss_clean( $this->input->post('contacto'));
         $data['proveedor']['id_localidad'] = $this->security->xss_clean( $this->input->post('localidad'));
 
-        $data['exito'] = $this->proveedores_model->actualizar(
-          $data['proveedor']['id_proveedor'],
-          $data['proveedor']['nombre_proveedor'],
-          $data['proveedor']['contacto'],
-          $data['proveedor']['id_localidad']
-        );
+        $data['exito'] = true;
 
-        if ($id) $this->registro->registrar($this->session->userdata('id_usuario'), 6, 'proveedores', $id);
+        $payload=[
+          'nombre_proveedor'=> $this->security->xss_clean( $this->input->post('nombre_proveedor')),
+          'contacto'=> $this->security->xss_clean( $this->input->post('contacto')),
+          'id_localidad'=> $this->security->xss_clean( $this->input->post('localidad'))
+        ];
+
+        $last_id = $this->proveedores_model->actualizar( $id, $payload );
+
+        if ($last_id) $this->registro->registrar($this->session->userdata('id_usuario'), 6, 'proveedores', $last_id);
 
         $this->load->view('includes/header');
         $this->load->view('pages/proveedores/actualizar', $data);
