@@ -7,6 +7,16 @@ class Caja_model extends MY_Model {
 		$this->clave_primaria = 'id_caja';
 	}
 
+	protected function sanitizar ( Array $data ) {
+		$datos = [];
+		$datos['fecha_apertura'] = htmlentities( $data['fecha_apertura'] );
+		$datos['monto_apertura'] = floatval( $data['monto_apertura'] );
+		$datos['fecha_cierre'] = array_key_exists('fecha_cierre', $data) ? htmlentities( $data['fecha_cierre'] ) : null;
+		$datos['monto_estimado_cierre'] = array_key_exists('monto_estimado_cierre', $data) ? htmlentities( $data['monto_estimado_cierre'] ) : null;
+		$datos['monto_real_cierre'] = array_key_exists('monto_real_cierre', $data) ? htmlentities( $data['monto_real_cierre'] ) : null;
+		return $datos;
+	}
+
 	private function ventasEntreFechas ($desde, $hasta) {
 		$this->db->where_in('fecha', [ $desde, $hasta ]);
 		return $this->db->get('ventas')->result_array();
@@ -24,14 +34,14 @@ class Caja_model extends MY_Model {
 	}
 
 	public function lista_cajas_abiertas() {
-		$this->db->where('fecha_cierre', null);
-		return $this->db->get('caja')->result_array();
+		$this->where(['fecha_cierre' => null]);
+		return $this->get()->result_array();
 	}
 
 	public function abrir_caja ($monto) {
 		$cajas = $this->lista_cajas_abiertas();
 		if (count($cajas)) return false;
-		$this->insert(['monto_apertura' => floatval($monto)]);
+		$this->db->insert($this->nombre_tabla, ['monto_apertura' => floatval($monto)]);
 		return $this->db->insert_id();
 	}
 

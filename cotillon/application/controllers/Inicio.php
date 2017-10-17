@@ -82,7 +82,7 @@ class Inicio extends CI_Controller {
 					$this->index();
 				}
 				if ( $aux === FALSE ) {
-					$vw = array( 'error' => "La combinación de usaurio y contraseña es incorrecta" );
+					$vw = array( 'error' => "La combinación de usuario y contraseña es incorrecta" );
 					$this->load->view( 'includes/header.php' );
 					//mandamos el error de no coincidencia
 					$this->load->view( 'pages/inicio/login_view.php', $vw ); //$vw['error'] => $error

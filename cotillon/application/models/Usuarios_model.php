@@ -40,8 +40,6 @@ class Usuarios_model extends MY_Model {
 
 	public function lista_activos() {
 		$usuarios = $this->lista();
-		echo "<br><br><br>\n\n\n";
-		var_dump($this->db->last_query());
 		return $usuarios;
 	}
 

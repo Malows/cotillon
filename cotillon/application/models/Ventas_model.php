@@ -5,7 +5,7 @@ class Ventas_model extends MY_Model {
 	public function __construct() {
 		parent::__construct();
 		$this->nombre_tabla = 'ventas';
-		$this->clave_primaria = 'id_ventas';
+		$this->clave_primaria = 'id_venta';
 	}
 
 	protected function sanitizar ( Array $data ) {
