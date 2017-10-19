@@ -54,10 +54,12 @@ class Registros extends CI_Controller
     if ( ! $this->session->userdata('esta_logeado') && $this->session->userdata('es_admin')) {
       show_404();
     } else {
+	$pagina = intval($this->input->get('pagina'));
       $datos = $this->registro->lista();
 
       $data['oraciones'] = array_map(function ($x){return $this->parseOracion($x);}, $datos);
-      $data['cantidad_total'] = $this->registro->cantidad_total();
+      $data['pagina_actual'] = $pagina;
+      $data['cantidad'] = $this->registro->cantidad_total();
 
       $this->load->view('includes/header');
       $this->load->view('pages/registros/index', $data);
