@@ -51,11 +51,17 @@ class Registros extends CI_Controller
   }
 
   public function index () {
+    if ( ! $this->session->userdata('esta_logeado') && $this->session->userdata('es_admin')) {
+      show_404();
+    } else {
+      $datos = $this->registro->lista();
 
-    $datos = $this->registro->lista();
-    var_dump($datos);
+      $data['oraciones'] = array_map(function ($x){return $this->parseOracion($x);}, $datos);
+      $data['cantidad_total'] = $this->registro->cantidad_total();
 
-    $oraciones = array_map(function ($x){return $this->parseOracion($x);}, $datos);
-    var_dump($oraciones);
+      $this->load->view('includes/header');
+      $this->load->view('pages/registros/index', $data);
+      $this->load->view('includes/footer');
+    }
   }
 }

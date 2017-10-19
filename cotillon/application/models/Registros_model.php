@@ -8,6 +8,15 @@ class Registros_model extends MY_Model {
     $this->clave_primaria = 'id_registro';
   }
 
+protected function sanitizar( Array $data ) {
+  $data['id_usuario'] = intval( $data['id_usuario'] );
+  $data['id_evento'] = intval( $data['id_evento'] );
+  $data['id_objetivo'] = intval( $data['id_objetivo'] );
+  $data['tabla'] = htmlentities( $data['tabla'] );
+  return $data;
+}
+
+
 private function tabla_punto_id ($tabla, $quitarPrefijo = false) {
   $prefix = $quitarPrefijo ? '' : "$tabla.";
   switch ($tabla) {
@@ -114,8 +123,7 @@ public function lista ($pagina = 1) {
         $nombre_id = $this->tabla_punto_id( $aux['tabla'], true);
         return $x[$nombre_id] == $elem['id_objetivo'];
       });
-
-      $datoFiltrado = $datoFiltrado[0];
+      $datoFiltrado = array_values($datoFiltrado)[0];
 
       $nombreCatcheado = $this->tabla_punto_nombre($aux['tabla'], true);
 
@@ -124,5 +132,10 @@ public function lista ($pagina = 1) {
 
       return $elem;
     }, $respuestas);
+  }
+
+
+  public function cantidad_total () {
+    return $this->db->count_all($this->nombre_tabla);
   }
 }

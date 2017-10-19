@@ -34,7 +34,7 @@
           if ($movimiento > 0) { $color = 'text-success'; $icono = 'fa fa-caret-up'; }
           if ($movimiento < 0) { $color = 'text-danger'; $icono = 'fa fa-caret-down'; }
           if ($movimiento == 0) { $color = 'text-muted'; $icono = 'fa fa-minus'; }
-          echo "<span class='$color'><i class='$icono'></i>$movimiento</span>";
+          echo "<span class='$color'><i class='$icono'></i> $movimiento</span>";
         }?></td>
       </tr>
     <?php endforeach; ?>

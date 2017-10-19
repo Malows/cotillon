@@ -34,6 +34,7 @@
 							<li><?php echo anchor( base_url("pedidos/"), "Pedidos"); ?></li>
 							<li><?php echo anchor( base_url("ventas/"), "Ventas"); ?></li>
 							<li><?php echo anchor( base_url("arqueos/"), "Arqueos"); ?></li>
+							<li><?php echo anchor( base_url("registros/"), "Registros"); ?></li>
 						<?php if($this->session->userdata('es_admin')): ?>
 							<li><?php echo anchor( base_url("usuarios/"), "Usuarios"); ?></li>
 						<?php endif; ?>

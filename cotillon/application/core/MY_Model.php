@@ -25,7 +25,7 @@ class MY_Model extends CI_Model {
 	}
 
 	protected function withTrashed () {
-		$this->where(['soft_delete' => null]);
+		$this->where([$this->nombre_tabla.'.soft_delete' => null]);
 	}
 
 	protected function get($key = null) {

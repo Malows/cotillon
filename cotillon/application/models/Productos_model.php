@@ -7,6 +7,7 @@ class Productos_model extends MY_Model {
 		$this->nombre_tabla = 'productos';
 		$this->clave_primaria = 'id_producto';
 	}
+	
 
 	protected function sanitizar ( Array $data ) {
 		$data['id_proveedor'] = intval( $data['id_proveedor'] );
@@ -17,13 +18,9 @@ class Productos_model extends MY_Model {
 		$data['unidad'] = htmlentities( $data['unidad'] );
 		$data['alerta'] = floatval( $data['alerta'] );
 		$data['cantidad'] = abs(floatval( $data['cantidad'] ));
-
 		return $data;
 	}
 
-	protected function withTrashed() {
-		$this->where([$this->nombre_tabla.'.soft_delete' => null]);
-	}
 
 	private function _filtradoCampo ($campo, $tabla) {
 		$habilitados = $this->db->where("soft_delete", null)->select($campo)->get($tabla)->result_array();
@@ -31,6 +28,7 @@ class Productos_model extends MY_Model {
 			return intval($elem[$campo]);
 		}, $habilitados);
 	}
+
 
 	public function lista_alertas() {
 		$categoriasHabilitadas = $this->_filtradoCampo('id_categoria', 'categorias_producto');
@@ -44,8 +42,8 @@ class Productos_model extends MY_Model {
 		return $this->get()->result();
 	}
 
-	public function lista( $trash = false ) {
 
+	public function lista( $trash = false ) {
 		$categoriasHabilitadas = $this->_filtradoCampo('id_categoria', 'categorias_producto');
 		$proveedoresHabilitados = $this->_filtradoCampo('id_proveedor', 'proveedores');
 
@@ -58,6 +56,7 @@ class Productos_model extends MY_Model {
 		return $this->get()->result_array();
 	}
 
+
 	public function lista_limpia() {
 		$categoriasHabilitadas = $this->_filtradoCampo('id_categoria', 'categorias_producto');
 		$proveedoresHabilitados = $this->_filtradoCampo('id_proveedor', 'proveedores');
@@ -69,6 +68,7 @@ class Productos_model extends MY_Model {
 		$this->db->select('id_producto AS `id`, nombre, cantidad AS `stock`, precio');
 		return $this->get()->result_array();
 	}
+
 
 	public function lista_limpia_proveedores() {
 		$categoriasHabilitadas = $this->_filtradoCampo('id_categoria', 'categorias_producto');
@@ -84,14 +84,7 @@ class Productos_model extends MY_Model {
 			->get('productos')->result_array();
 	}
 
-/*	public function crear( $id_proveedor, $nombre, $precio, $id_categoria, $descripcion, $alerta, $unidad, $cantidad ) {
-		// Sanitizar datos
-		$data = $this->_sanitizar( $id_proveedor, $nombre, $precio, $id_categoria, $descripcion, $alerta, $unidad, $cantidad );
 
-		$retorno = $this->db->insert($data);
-		return $this->_return();
-	}
-*/
 	public function leer( $id, $trash = false ) {
 		if ($trash) $this->withTrashed();
 		$this->db->join('proveedores', 'proveedores.id_proveedor = productos.id_proveedor');
@@ -99,22 +92,6 @@ class Productos_model extends MY_Model {
 		return $this->get( $id )->row_array();
 	}
 
-/*	public function actualizar( $id, $id_proveedor, $nombre, $precio, $id_categoria, $descripcion, $alerta, $unidad, $cantidad ) {
-		$data = $this->_sanitizar( $id_proveedor, $nombre, $precio, $id_categoria, $descripcion, $alerta, $unidad, $cantidad );
-
-		$this->update( $id, $data );
-		return $this->_return( $id );
-	}
-*/
-	// public function eliminar( $id ) {
-	// 	// Sanitizar datos
-	// 	$id = intval( $id );
-	// 	$data['soft_delete'] = $this->now();
-	//
-	// 	$this->db->where('id_producto', $id);
-	// 	$this->db->update('productos', $data);
-	// 	return $this->_return( $id );
-	// }
 
 	public function incrementar( $id_producto, $cantidad ) {
 		$aux = $this->get($id_producto)->row_array();
@@ -124,6 +101,7 @@ class Productos_model extends MY_Model {
 		$this->update($id_producto, $aux);
 		return $this->_return($id_producto);
 	}
+
 
 	public function reducir( $id_producto, $cantidad ) {
 		$aux = $this->get($id_producto)->row_array();
@@ -137,6 +115,7 @@ class Productos_model extends MY_Model {
 			return $this->_return($id_producto);
 		} else return FALSE;
 	}
+
 
 	public function productos_de_proveedor($id) {
 		$this->db->where('id_proveedor', intval($id));

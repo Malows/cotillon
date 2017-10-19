@@ -14,14 +14,5 @@ class Localidades_model extends MY_Model {
 		return $data;
 	}
 
-	protected function withTrashed() { } // No tengo soft_delete
-
-	// public function buscar($param) {
-	// 	$param = htmlentities($param);
-	//
-	// 	$this->db->like('nombre_localidad', $param, 'both');
-	// 	// Produces: WHERE `nombre_localidad` LIKE '%$param%' ESCAPE '!'
-	//
-	// 	return $this->get()->result_array();
-	// }
+	protected function withTrashed() {} // No tengo soft_delete
 }

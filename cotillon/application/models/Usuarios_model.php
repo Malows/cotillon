@@ -14,13 +14,14 @@ class Usuarios_model extends MY_Model {
 		$data['email'] = htmlentities($data['email']);
 		$data['dni'] = intval($data['dni']);
 		$data['es_admin'] = boolval($data['es_admin']);
-
 		return $data;
 	}
+
 
 	protected function withTrashed () {
 		$this->where(['fecha_fin' => null]);
 	}
+
 
 	public function crear( Array $data ) {
 		$data['contrasenia'] = password_hash($data['contrasenia'], PASSWORD_DEFAULT);
@@ -28,25 +29,27 @@ class Usuarios_model extends MY_Model {
 		return $this->_return();
 	}
 
+
 	public function leer_por_id( $id ) {
-		$id = intval($id);
-		return $this->db->get_where('usuarios', ['id_usuario' => $id])->row_array();
+		return $this->get(['id_usuario' => intval($id)])->row_array();
 	}
 
+
 	public function leer_por_dni( $dni ) {
-		$dni = intval($dni);
-		return $this->db->get_where('usuarios', ['dni' => $dni])->row_array();
+		return $this->get(['dni' => intval($dni)])->row_array();
 	}
+
 
 	public function lista_activos() {
 		$usuarios = $this->lista();
 		return $usuarios;
 	}
 
+
 	public function cotejar( $dni, $contrasenia ) {
 		$user = $this->get(['dni' => $dni])->row_array();
 		$verificacion = password_verify($contrasenia, $user['password']);
-
+		
 		if ( !boolval($user) ) return FALSE; // usuario no existe
 		if ( !$verificacion ) return FALSE; // contraseña incorrecta
 		if ( $user['fecha_fin'] ) return FALSE; // usuario no habilitado
