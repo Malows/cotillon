@@ -50,20 +50,21 @@ class Registros extends CI_Controller
     return $retorno.'.';
   }
 
-  public function index () {
-    if ( ! $this->session->userdata('esta_logeado') && $this->session->userdata('es_admin')) {
-      show_404();
-    } else {
-	$pagina = intval($this->input->get('pagina'));
-      $datos = $this->registro->lista();
+	public function index () {
+		if ( ! $this->session->userdata('esta_logeado') && $this->session->userdata('es_admin')) {
+			show_404();
+		} else {
+			$pagina = intval($this->input->get('pagina'));
+			$pagina = $pagina === 0 ? 1 : $pagina;
+			$datos = $this->registro->lista();
 
-      $data['oraciones'] = array_map(function ($x){return $this->parseOracion($x);}, $datos);
-      $data['pagina_actual'] = $pagina;
-      $data['cantidad'] = $this->registro->cantidad_total();
+			$data['oraciones'] = array_map(function ($x){return $this->parseOracion($x);}, $datos);
+			$data['pagina_actual'] = $pagina;
+			$data['cantidad'] = $this->registro->cantidad_total();
 
-      $this->load->view('includes/header');
-      $this->load->view('pages/registros/index', $data);
-      $this->load->view('includes/footer');
-    }
-  }
+			$this->load->view('includes/header');
+			$this->load->view('pages/registros/index', $data);
+			$this->load->view('includes/footer');
+		}
+	}
 }

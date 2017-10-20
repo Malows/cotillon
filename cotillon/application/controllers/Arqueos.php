@@ -11,6 +11,7 @@ class Arqueos extends CI_Controller {
       show_404();
     } else {
       $pagina = intval( $this->input->get('pagina') );
+      $pagina = $pagina !== 0 ? $pagina : 1;
       $data = [];
       $data['cantidadTotalDeArqueos'] = $this->caja->contar_total();
       $data['paginaActual'] = $pagina;
