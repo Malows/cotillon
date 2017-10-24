@@ -31,8 +31,8 @@ class Proveedores_model extends MY_Model {
 
 
 	public function lista_limpia() {
-		$this->db->select('nombre_proveedor, id_proveedor');
-		$this->get()->result_array();
+		$this->db->select('nombre_proveedor as nombre, id_proveedor as id');
+		return $this->get()->result_array();
 	}
 
 	public function buscar( $campo, $valor ) {

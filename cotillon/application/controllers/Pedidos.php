@@ -44,10 +44,11 @@ class Pedidos extends CI_Controller {
         'productos' => $this->productos_model->lista_limpia(),
         'proveedores' => $this->proveedores_model->lista_limpia()
       ];
-
-      $this->load->view('includes/header');
-      $this->load->view('pages/pedidos/crear', $data);
-      $this->load->view('includes/footer');
+      $this->load->view('includes/header_modal');
+      $this->load->view('pages/pedidos/crear');
+      $this->load->view('includes/footer_vue1');
+      $this->load->view('pages/pedidos/scripts_crear', $data);
+      $this->load->view('includes/footer_vue2');
     }
   }
 }
