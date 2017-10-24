@@ -9,9 +9,11 @@ class Ventas_model extends MY_Model {
 	}
 
 	protected function sanitizar ( Array $data ) {
-		$data['id_cliente'] = intval( $data['id_cliente'] );
-		$data['total'] = floatval( $data['total'] );
-		return $data;
+		$datos = [];
+		$datos['id_cliente'] = intval( $data['id_cliente'] );
+		$datos['total'] = floatval( $data['total'] );
+			
+		return $datos;
 	}
 
 	public function leer( $id, $trash = false ) {

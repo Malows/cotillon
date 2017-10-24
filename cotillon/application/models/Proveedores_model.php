@@ -26,9 +26,14 @@ class Proveedores_model extends MY_Model {
 	public function lista($trash = false) {
 		$this->db->join('localidades', 'localidades.id_localidad = proveedores.id_localidad');
 		if (!$trash) $this->db->where('soft_delete', null);
-		return $this->db->get('proveedores')->result_array();
+		return $this->get()->result_array();
 	}
 
+
+	public function lista_limpia() {
+		$this->db->select('nombre_proveedor, id_proveedor');
+		$this->get()->result_array();
+	}
 
 	public function buscar( $campo, $valor ) {
 		$campo = htmlentities($campo);

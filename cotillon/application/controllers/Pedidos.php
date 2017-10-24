@@ -8,8 +8,7 @@ class Pedidos extends CI_Controller {
     $this->load->model('Pedidos_model');
   }
 
-  public function index ()
-  {
+  public function index () {
     if ( ! $this->session->userdata('esta_logeado') ) {
       show_404();
     } else {
@@ -25,8 +24,7 @@ class Pedidos extends CI_Controller {
     }
   }
 
-  public function eliminar ($id = 0)
-  {
+  public function eliminar ($id = 0) {
     if ( ! $this->session->userdata('esta_logeado') ) {
       show_404();
     } else {
@@ -35,13 +33,20 @@ class Pedidos extends CI_Controller {
     }
   }
 
-  public function crear ()
-  {
+  public function crear () {
     if ( ! $this->session->userdata('esta_logeado') ) {
       show_404();
     } else {
+      $this->load->model('productos_model');
+      $this->load->model('proveedores_model');
+
+      $data = [
+        'productos' => $this->productos_model->lista_limpia(),
+        'proveedores' => $this->proveedores_model->lista_limpia()
+      ];
+
       $this->load->view('includes/header');
-      $this->load->view('pages/pedidos/crear');
+      $this->load->view('pages/pedidos/crear', $data);
       $this->load->view('includes/footer');
     }
   }

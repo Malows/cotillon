@@ -64,7 +64,7 @@ class Ventas extends CI_Controller {
 
       // Inserto la venta con total 0 y el id del cliente
       // Inicio transacción
-      $this->ventas_model->crear(intval($cliente['id']), $total_de_venta);
+      $this->ventas_model->crear(['id_cliente' => $cliente['id'], 'total' => $total_de_venta]);
 
       // Obtengo el id de la ultima venta grabada en disco (total 0)
       $ultimo_id = $this->ventas_model->last_id();
@@ -95,7 +95,7 @@ class Ventas extends CI_Controller {
       }
       // actualizo la venta con el nuevo total de venta
       // Finalizo transacción
-      $this->ventas_model->actualizar($ultimo_id, $cliente['id'], $total_de_venta);
+      $this->ventas_model->actualizar($ultimo_id, ['id_cliente' => $cliente['id'], 'total' => $total_de_venta]);
 
 
       if ($ultimo_id) $this->registro->registrar($this->session->userdata('id_usuario'), 1, 'ventas', $ultimo_id);
@@ -113,6 +113,28 @@ public function ver($id) {
     $this->load->view('includes/header');
     $this->load->view('pages/ventas/ver', $data);
     $this->load->view('includes/footer');
+  }
+}
+
+public function pdf($id) {
+  if ( ! $this->session->userdata('esta_logeado') ) {
+    show_404();
+  } else {
+    // $this->load->library('pdf');
+    $data = [
+      'venta' => $this->ventas_model->leer($id),
+      'detalles' => $this->detalles_venta_model->buscar_por_venta($id)
+    ];
+    $html = $this->load->view('includes/header', [], true);
+    $html .= $this->load->view('pages/ventas/ver', $data, true);
+    $html .= $this->load->view('includes/footer', [], true);
+
+    $this->load->library('dompdf_gen');
+
+		// Convert to PDF
+		$this->dompdf->load_html($html);
+		$this->dompdf->render();
+		$this->dompdf->stream("welcome.pdf");
   }
 }
 
