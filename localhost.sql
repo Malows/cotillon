@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3307
--- Tiempo de generación: 04-10-2017 a las 16:05:04
+-- Tiempo de generación: 25-10-2017 a las 23:37:24
 -- Versión del servidor: 5.6.33
 -- Versión de PHP: 5.6.26
 
@@ -37,6 +37,16 @@ CREATE TABLE `caja` (
   `monto_real_cierre` float DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Volcado de datos para la tabla `caja`
+--
+
+INSERT INTO `caja` (`id_caja`, `fecha_apertura`, `monto_apertura`, `fecha_cierre`, `monto_estimado_cierre`, `monto_real_cierre`) VALUES
+(1, '2017-10-17 01:26:50', 200, '2017-10-17 01:43:33', 200, 200),
+(2, '2017-10-19 23:02:20', 200, '2017-10-19 23:02:30', 200, 300),
+(3, '2017-10-19 23:02:47', 100, '2017-10-19 23:02:55', 100, 50),
+(4, '2017-10-26 00:09:13', 100, '2017-10-26 00:36:16', 220, 220);
+
 -- --------------------------------------------------------
 
 --
@@ -58,7 +68,9 @@ INSERT INTO `categorias_producto` (`id_categoria`, `nombre_categoria`, `soft_del
 (2, 'Descartables', NULL),
 (3, 'Velas', NULL),
 (4, 'Disfraces', NULL),
-(5, 'Cotillon', NULL);
+(5, 'Cotillon', NULL),
+(6, 'Pirotecnia', NULL),
+(7, 'eliminable', '2017-10-25 23:51:40');
 
 -- --------------------------------------------------------
 
@@ -86,28 +98,28 @@ INSERT INTO `clientes` (`id_cliente`, `nombre_cliente`, `telefono`, `email`, `di
 (2, 'Pechugas Larroo', '', NULL, 'Avenida 123', 1, 'Mayorista', NULL),
 (3, 'Betty Boobies', '(0342)-4550055', 'perez@algo.com', 'Direcci&oacute;n 789', 1, 'Minorista', NULL),
 (4, 'Guadalupe Guadalupe', '(0342)-4555555', 'guadalupe@elnombre.com', 'Javier de la Rosa 650', 3, 'Minorista', NULL),
-(5, 'Cliente de Prueba', '(0342)-4550055', 'prueba_cliente@prueba.com', 'Siempre viva 225', 1, 'Minorista', NULL);
+(5, 'Cliente de Prueba', '(0342)-4550055', 'prueba_cliente@prueba.com', 'Siempre viva 225', 1, 'Minorista', NULL),
+(6, 'Swag Dealer', '(0342)-4550055', 'swag@dealer.com', 'swag 1337', 12, 'Minorista', '2017-10-25 23:53:27');
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `detalles_pedidos`
+-- Estructura de tabla para la tabla `detalles_pedido`
 --
 
-CREATE TABLE `detalles_pedidos` (
+CREATE TABLE `detalles_pedido` (
   `id_pedido` int(11) NOT NULL,
-  `id_productos` int(11) NOT NULL,
+  `id_producto` int(11) NOT NULL,
   `cantidad` float NOT NULL,
   `precio_unitario` float NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Volcado de datos para la tabla `detalles_pedidos`
+-- Volcado de datos para la tabla `detalles_pedido`
 --
 
-INSERT INTO `detalles_pedidos` (`id_pedido`, `id_productos`, `cantidad`, `precio_unitario`) VALUES
-(1, 3, 2, 1),
-(1, 4, 5, 4);
+INSERT INTO `detalles_pedido` (`id_pedido`, `id_producto`, `cantidad`, `precio_unitario`) VALUES
+(1, 1, 10, 10);
 
 -- --------------------------------------------------------
 
@@ -139,11 +151,13 @@ INSERT INTO `detalles_venta` (`id_producto`, `id_venta`, `cantidad_venta`, `prec
 (3, 1, 1, 100),
 (3, 2, 1, 100),
 (3, 17, 10, 100),
+(3, 30, 1, 100),
 (4, 1, 1, 120),
 (4, 2, 1, 120),
 (4, 17, 10, 120),
 (4, 27, 1, 120),
 (4, 28, 1, 120),
+(4, 31, 1, 120),
 (5, 3, 1, 50),
 (5, 17, 10, 50),
 (5, 20, 5, 50),
@@ -191,7 +205,11 @@ INSERT INTO `eventos` (`id_evento`, `descripcion`) VALUES
 (18, 'modificó una localidad'),
 (19, 'deshabilitó una localidad'),
 (20, 'agregó stock'),
-(21, 'redujo stock');
+(21, 'redujo stock'),
+(22, 'creó un pedido'),
+(23, 'modificó un pedido'),
+(24, 'deshabilitó un pedido'),
+(25, 'recibió un pedido');
 
 -- --------------------------------------------------------
 
@@ -213,7 +231,9 @@ INSERT INTO `localidades` (`id_localidad`, `nombre_localidad`, `barrio`) VALUES
 (2, 'Santa Fe', 'Centenario'),
 (1, 'Santa Fe', 'Centro'),
 (3, 'Santa Fe', 'Guadalupe'),
-(11, 'Santa Fe', 'Maria Selva');
+(11, 'Santa Fe', 'Maria Selva'),
+(12, 'Venado Tuerto', 'Barrio Tuerto'),
+(13, 'Venado Tuerto', 'Mar Chiquita');
 
 -- --------------------------------------------------------
 
@@ -229,6 +249,13 @@ CREATE TABLE `pedidos` (
   `precio_total` float NOT NULL,
   `soft_delete` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `pedidos`
+--
+
+INSERT INTO `pedidos` (`id_pedido`, `id_proveedor`, `fecha_creacion`, `fecha_recepcion`, `precio_total`, `soft_delete`) VALUES
+(1, 1, '2017-10-26 03:10:59', NULL, 100, NULL);
 
 -- --------------------------------------------------------
 
@@ -255,13 +282,14 @@ CREATE TABLE `productos` (
 
 INSERT INTO `productos` (`id_producto`, `id_proveedor`, `nombre`, `precio`, `id_categoria`, `descripcion`, `cantidad`, `unidad`, `alerta`, `soft_delete`) VALUES
 (1, 1, 'Manguera de nafta', 150, 4, '', 0, 'metro', 10, NULL),
-(2, 1, 'Producto eliminable', 10000, 2, 'Se va a eliminar para no ser mostrado', NULL, NULL, 0, '2017-09-13 20:32:22'),
-(3, 2, 'Torta de cumplea&ntilde;os CARA', 100, 1, '', 1, 'unidades', 5, NULL),
-(4, 2, 'Bizcochos', 120, 1, 'Bizcochos recreativos', 4, 'kilogramos', 2.5, NULL),
+(2, 1, 'Producto eliminable', 10000, 2, 'Se va a eliminar para no ser mostrado', NULL, NULL, 0, '2017-10-25 23:57:40'),
+(3, 2, 'Torta de cumplea&ntilde;os CARA', 100, 1, '', 0, 'unidades', 5, NULL),
+(4, 2, 'Bizcochos', 120, 1, 'Bizcochos recreativos', 3, 'kilogramos', 2.5, NULL),
 (5, 1, 'Regadores', 50, 4, 'Es la que va para el pasto', 0, 'unidades', 0, NULL),
 (6, 1, 'Guantes', 20, 2, 'Guantes, para golpear como caballero', 1, 'unidades', 0, NULL),
 (7, 1, 'Enrollador de mangueras', 256, 5, 'La gilada que enrolla', 1, 'unidades', 0, NULL),
-(8, 2, 'Chocolate de tortas', 20, 1, '', 1, 'unidades', 0, NULL);
+(8, 2, 'Chocolate de tortas', 20, 1, '', 1, 'unidades', 0, NULL),
+(10, 2, 'Churros', 8, 1, 'Churros', 10, 'unidades', 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -283,7 +311,9 @@ CREATE TABLE `proveedores` (
 
 INSERT INTO `proveedores` (`id_proveedor`, `nombre_proveedor`, `id_localidad`, `contacto`, `soft_delete`) VALUES
 (1, 'La Goma Argentina', 1, 'Con verdadero olor a hule\r\ntel: 4555555', NULL),
-(2, 'panaderia la nueva estrella', 1, '168476', NULL);
+(2, 'panaderia la nueva estrella', 1, '168476', NULL),
+(3, 'Cientifuegos', 1, '123123123454545', NULL),
+(4, 'Eliminable', 2, '46847897878456123123', '2017-10-25 23:55:33');
 
 -- --------------------------------------------------------
 
@@ -306,7 +336,33 @@ CREATE TABLE `registros` (
 
 INSERT INTO `registros` (`id_registro`, `id_usuario`, `id_evento`, `id_objetivo`, `tabla`, `fecha`) VALUES
 (1, 1, 14, 5, 'clientes', '2017-09-26 01:26:41'),
-(2, 1, 2, 6, 'usuarios', '2017-09-26 01:43:13');
+(2, 1, 2, 6, 'usuarios', '2017-09-26 01:43:13'),
+(3, 1, 17, 12, 'localidades', '2017-10-11 00:53:30'),
+(4, 1, 14, 6, 'clientes', '2017-10-11 01:19:55'),
+(5, 1, 8, 6, 'categorias_producto', '2017-10-11 01:36:50'),
+(6, 1, 9, 6, 'categorias_producto', '2017-10-11 01:37:05'),
+(7, 1, 11, 10, 'productos', '2017-10-11 02:04:51'),
+(8, 1, 20, 1, 'productos', '2017-10-11 02:09:05'),
+(9, 1, 21, 1, 'productos', '2017-10-11 02:10:14'),
+(10, 1, 5, 3, 'proveedores', '2017-10-11 02:45:41'),
+(11, 1, 9, 1, 'categorias_producto', '2017-10-16 23:05:41'),
+(12, 1, 9, 1, 'categorias_producto', '2017-10-16 23:05:46'),
+(13, 1, 17, 13, 'localidades', '2017-10-17 01:20:51'),
+(14, 1, 1, 30, 'ventas', '2017-10-24 00:43:21'),
+(15, 1, 2, 7, 'usuarios', '2017-10-25 22:39:23'),
+(16, 1, 4, 7, 'usuarios', '2017-10-25 22:39:30'),
+(17, 1, 4, 4, 'usuarios', '2017-10-25 22:43:29'),
+(18, 1, 4, 3, 'usuarios', '2017-10-25 22:43:35'),
+(19, 1, 4, 4, 'usuarios', '2017-10-25 23:49:51'),
+(20, 1, 4, 3, 'usuarios', '2017-10-25 23:49:57'),
+(21, 1, 8, 7, 'categorias_producto', '2017-10-25 23:51:28'),
+(22, 1, 10, 7, 'categorias_producto', '2017-10-25 23:51:40'),
+(23, 1, 16, 6, 'clientes', '2017-10-25 23:53:27'),
+(24, 1, 5, 4, 'proveedores', '2017-10-25 23:55:09'),
+(25, 1, 7, 4, 'proveedores', '2017-10-25 23:55:33'),
+(26, 1, 13, 2, 'productos', '2017-10-25 23:57:40'),
+(27, 1, 1, 31, 'ventas', '2017-10-26 00:18:49'),
+(28, 1, 22, 1, 'pedidos', '2017-10-26 03:10:59');
 
 -- --------------------------------------------------------
 
@@ -333,8 +389,8 @@ CREATE TABLE `usuarios` (
 INSERT INTO `usuarios` (`id_usuario`, `nombre`, `apellido`, `dni`, `email`, `password`, `es_admin`, `fecha_inicio`, `fecha_fin`) VALUES
 (1, 'Juan Manuel', 'Cruz', 35448975, 'juancho_1210@hotmail.com', '$2y$10$IzOBA5HxNUMdiX96FxLbv.TCUxCR7g8rUgl2Xw1rh37/tMENChMK6', 1, '2016-10-14 21:48:21', NULL),
 (2, 'Milton', 'Wery', 34828118, 'milton_st@hotmail.com', '$2y$10$xwTAWv.MV/dBVM9MXewBiebBCnL6zI/4rDXRRSSnjrxSUffuNe.zu', 1, '2016-11-22 05:30:03', NULL),
-(3, 'Random', 'Random', 123456789, 'random@mail.com', '$2y$10$IJEYN2bHkVKy2jg6xiCoJOTX6BMtxP6JXTOztNTHVYlv.ApWTSD/O', 0, '2017-01-12 04:47:04', '2017-01-12 01:17:56'),
-(4, 'Ramdos', 'SeedTime', 23456789, 'otro_mail@mail.com', '$2y$10$bBniFrNPkWae1aQuyUoTXeaNHN6hviLMpkzV0P6TRZfqtwX9iagmK', 0, '2017-01-26 03:08:03', '2017-01-25 22:08:15'),
+(3, 'Random', 'Random', 123456789, 'random@mail.com', '$2y$10$IJEYN2bHkVKy2jg6xiCoJOTX6BMtxP6JXTOztNTHVYlv.ApWTSD/O', 0, '2017-01-12 04:47:04', '2017-10-26 02:49:57'),
+(4, 'Ramdos', 'SeedTime', 23456789, 'otro_mail@mail.com', '$2y$10$bBniFrNPkWae1aQuyUoTXeaNHN6hviLMpkzV0P6TRZfqtwX9iagmK', 0, '2017-01-26 03:08:03', '2017-10-26 02:49:51'),
 (5, 'user', 'user', 12345678, 'user@example.com', '$2y$10$sIOXUrWJYNrnycLzkyzte.9AGeSsKXA9jsl5APGuTkv3/ngY9ktD6', 0, '2017-05-09 01:15:57', NULL),
 (6, 'Administrador', 'Administrador', 111222333, 'administrador@mail.com', '$2y$10$dE2h1/GKOj7oh0fmrjX5oOVNnwCrs1mny7OkF7DSxjZh040GOSQEW', 1, '2017-09-26 04:43:13', NULL);
 
@@ -369,7 +425,9 @@ INSERT INTO `ventas` (`id_venta`, `id_cliente`, `fecha`, `total`) VALUES
 (20, 3, '2017-07-13 04:40:00', 1790),
 (23, 4, '2017-09-20 03:54:48', 200),
 (27, 1, '2017-09-20 04:48:55', 120),
-(28, 1, '2017-09-20 04:51:55', 120);
+(28, 1, '2017-09-20 04:51:55', 120),
+(30, 3, '2017-10-24 03:43:21', 100),
+(31, 1, '2017-10-26 03:18:49', 120);
 
 --
 -- Índices para tablas volcadas
@@ -395,10 +453,10 @@ ALTER TABLE `clientes`
   ADD KEY `idlocalidad` (`id_localidad`);
 
 --
--- Indices de la tabla `detalles_pedidos`
+-- Indices de la tabla `detalles_pedido`
 --
-ALTER TABLE `detalles_pedidos`
-  ADD PRIMARY KEY (`id_pedido`,`id_productos`);
+ALTER TABLE `detalles_pedido`
+  ADD PRIMARY KEY (`id_pedido`,`id_producto`);
 
 --
 -- Indices de la tabla `detalles_venta`
@@ -471,57 +529,57 @@ ALTER TABLE `ventas`
 -- AUTO_INCREMENT de la tabla `caja`
 --
 ALTER TABLE `caja`
-  MODIFY `id_caja` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_caja` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT de la tabla `categorias_producto`
 --
 ALTER TABLE `categorias_producto`
-  MODIFY `id_categoria` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_categoria` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT de la tabla `clientes`
 --
 ALTER TABLE `clientes`
-  MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT de la tabla `eventos`
 --
 ALTER TABLE `eventos`
-  MODIFY `id_evento` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id_evento` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 --
 -- AUTO_INCREMENT de la tabla `localidades`
 --
 ALTER TABLE `localidades`
-  MODIFY `id_localidad` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id_localidad` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 --
 -- AUTO_INCREMENT de la tabla `pedidos`
 --
 ALTER TABLE `pedidos`
-  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT de la tabla `productos`
 --
 ALTER TABLE `productos`
-  MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 --
 -- AUTO_INCREMENT de la tabla `proveedores`
 --
 ALTER TABLE `proveedores`
-  MODIFY `id_proveedor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_proveedor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT de la tabla `registros`
 --
 ALTER TABLE `registros`
-  MODIFY `id_registro` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_registro` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT de la tabla `ventas`
 --
 ALTER TABLE `ventas`
-  MODIFY `id_venta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `id_venta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 --
 -- Restricciones para tablas volcadas
 --

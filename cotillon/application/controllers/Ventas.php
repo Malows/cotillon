@@ -70,33 +70,29 @@ class Ventas extends CI_Controller {
       $ultimo_id = $this->ventas_model->last_id();
 
       // Parseo el array para hacer un insert_batch
-      for($i= 0; $i < count($productos); $i++) {
-        $productos[$i]['cantidad_venta'] = floatval( $productos[$i]['cantidad'] );
-        $productos[$i]['precio_unitario'] = floatval( $productos[$i]['precio'] );
-        $productos[$i]['id_producto'] = intval( $productos[$i]['id'] );
-        $productos[$i]['id_venta'] = $ultimo_id;
-        //voy sumando el total de venta
-        $total_de_venta += $productos[$i]['cantidad_venta'] * $productos[$i]['precio_unitario'];
+      $productos = array_map(function ($x) use ($ultimo_id) {
+        $x['cantidad_venta'] = floatval( $x['cantidad'] );
+        $x['precio_unitario'] = floatval( $x['precio'] );
+        $x['id_producto'] = intval( $x['id'] );
+        $x['id_venta'] = $ultimo_id;
         //elimino claves innecesarias
-        unset(
-          $productos[$i]['precio'],
-          $productos[$i]['nombre'],
-          $productos[$i]['id'],
-          $productos[$i]['stock'],
-          $productos[$i]['cantidad']
-         );
-      }
-      // var_dump($productos);
+        unset($x['precio'], $x['nombre'], $x['id'], $x['stock'], $x['cantidad']);
+        return $x;
+      }, $productos);
+
+      // actualizo stocks en productos
+      // voy sumando el total de venta
+      $total_de_venta = array_reduce($productos, function($c, $x) {
+        $this->productos_model->reducir($x['id_producto'], $x['cantidad_venta']);
+        return $c + ($x['cantidad_venta'] * $x['precio_unitario']);
+      }, 0);
+
       // insercion en bloque de todas las lineas de la venta
       $this->detalles_venta_model->batch_insertion($productos);
-      // actualizo stocks en productos
-      foreach ($productos as $producto) {
-        $this->productos_model->reducir($producto['id_producto'],$producto['cantidad_venta']);
-      }
+
       // actualizo la venta con el nuevo total de venta
       // Finalizo transacción
       $this->ventas_model->actualizar($ultimo_id, ['id_cliente' => $cliente['id'], 'total' => $total_de_venta]);
-
 
       if ($ultimo_id) $this->registro->registrar($this->session->userdata('id_usuario'), 1, 'ventas', $ultimo_id);
     }

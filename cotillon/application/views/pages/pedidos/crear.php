@@ -40,7 +40,7 @@
   </ul>
   <hr>
   <div>
-    <p v-if="totalDePedido">subtotal: <strong>${{totalDeVenta()}}</strong></p>
+    <p v-if="totalDePedido">subtotal: <strong>${{totalDePedido}}</strong></p>
     <p v-else>Agregue productos al listado</p>
     <p v-show="proveedor_seleccionado">Cliente: <strong>{{proveedor_seleccionado.label}}</strong></p>
   </div>
@@ -62,10 +62,10 @@
           </li>
         </ul>
         <hr>
-        <!-- <p>subtotal: <strong>${{totalDeVenta()}}</strong></p> -->
+        <p>subtotal: <strong>${{totalDePedido}}</strong></p>
       </section>
       <footer class="modal-card-foot">
-          <button class="btn btn-success" v-on:click="emitirVenta">Pedir</button>
+          <button class="btn btn-success" v-on:click="emitirPedido">Pedir</button>
           <button class="btn btn-default" v-on:click="cerrarModal">Cerrar</button>
       </footer>
     </div>

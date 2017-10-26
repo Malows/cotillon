@@ -7,7 +7,7 @@ class Productos_model extends MY_Model {
 		$this->nombre_tabla = 'productos';
 		$this->clave_primaria = 'id_producto';
 	}
-	
+
 
 	protected function sanitizar ( Array $data ) {
 		$data['id_proveedor'] = intval( $data['id_proveedor'] );
@@ -69,6 +69,18 @@ class Productos_model extends MY_Model {
 		return $this->get()->result_array();
 	}
 
+
+	public function lista_limpia_pedido() {
+		$categoriasHabilitadas = $this->_filtradoCampo('id_categoria', 'categorias_producto');
+		$proveedoresHabilitados = $this->_filtradoCampo('id_proveedor', 'proveedores');
+
+		$this->db->where_in('productos.id_categoria', $categoriasHabilitadas);
+		$this->db->where_in('productos.id_proveedor', $proveedoresHabilitados);
+
+		$this->db->where('soft_delete',null);
+		$this->db->select('id_producto AS `id`, nombre, id_proveedor');
+		return $this->get()->result_array();
+	}
 
 	public function lista_limpia_proveedores() {
 		$categoriasHabilitadas = $this->_filtradoCampo('id_categoria', 'categorias_producto');

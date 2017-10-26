@@ -18,6 +18,7 @@
       precio: '',
       productos: [
         <?php foreach ($productos as $value) {
+          $value['nombre'] = html_entity_decode($value['nombre']);
           echo json_encode($value).",\n";
         }?>
       ],
@@ -49,7 +50,6 @@
           this.producto_seleccionado = ''
           this.id_producto_seleccionado = ''
           this.precio = ''
-          document.querySelector('input[name="id"]').focus()
         } else {
           if ( ! this.producto_seleccionado ) this.errors.push('Debe seleccionar un producto.')
           if ( this.cantidad === '' ) this.errors.push('Debe ingresar una cantidad de producto.')
@@ -62,11 +62,7 @@
         this.productos_agregados.splice(indice, 1)
       },
 
-      totalDeVenta() {
-        return this.productos_agregados.reduce((prev, curr) => { return prev + curr.precio * curr.cantidad }, 0)
-      },
-
-      emitirVenta() {
+      emitirPedido() {
         const payload = {
           'proveedor': {
             'id': this.proveedor_seleccionado.value,
@@ -74,6 +70,8 @@
           },
           'productos': this.productos_agregados
         }
+        payload.total = this.totalDePedido
+        // payload.total = this.productos_agregados.reduce((c, x) => c + (x.cantidad * c.precio), 0)
         console.log(payload);
         $.ajax({
           url: '<?php echo base_url('pedidos/api_emitir_pedidos'); ?>',
@@ -102,7 +100,9 @@
         return this.productos_agregados.reduce((c, x) => c + (x.cantidad * x.precio), 0)
       },
       productosParaSelect () {
-        return this.productos.map(elem => {return {value: elem, label: elem.nombre}})
+        return this.productos
+          .filter(x => this.proveedor_seleccionado ? x.id_proveedor == this.proveedor_seleccionado.value : true)
+          .map(elem => {return {value: elem, label: elem.nombre}})
       },
       proveedoresParaSelect() {
         return this.proveedores.map(elem => {return {value: elem.id, label: elem.nombre}})

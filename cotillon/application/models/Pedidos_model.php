@@ -13,8 +13,8 @@ class Pedidos_model extends MY_Model {
 	protected function sanitizar ( Array $data ) {
 			$datos = [];
 			$datos['id_proveedor'] = intval($data['id_proveedor']);
-			$datos['fecha_creacion'] = htmlentities($data['fecha_creacion']);
-			$datos['fecha_recepcion'] = htmlentities($data['fecha_recepcion']);
+			if (array_key_exists('fecha_creacion', $data)) $datos['fecha_creacion'] = htmlentities($data['fecha_creacion']);
+			if (array_key_exists('fecha_recepcion', $data)) $datos['fecha_recepcion'] = htmlentities($data['fecha_recepcion']);
 			$datos['precio_total'] = floatval($data['precio_total']);
 			return $datos;
 	}

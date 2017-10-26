@@ -5,7 +5,8 @@ class Pedidos extends CI_Controller {
   public function __construct ()
   {
     parent::__construct();
-    $this->load->model('Pedidos_model');
+    $this->load->model('pedidos_model');
+    $this->load->model('detalles_pedido_model');
   }
 
   public function index () {
@@ -14,7 +15,7 @@ class Pedidos extends CI_Controller {
     } else {
 
       $data = [
-        'pedidos' => $this->Pedidos_model->lista(),
+        'pedidos' => $this->pedidos_model->lista(),
         'es_admin_usuario_logueado' => $this->session->userdata('es_admin')
       ];
 
@@ -28,7 +29,7 @@ class Pedidos extends CI_Controller {
     if ( ! $this->session->userdata('esta_logeado') ) {
       show_404();
     } else {
-      $this->Pedidos_model->eliminar($id);
+      $this->pedidos_model->eliminar($id);
       redirect('/pedidos', 'refresh');
     }
   }
@@ -41,7 +42,7 @@ class Pedidos extends CI_Controller {
       $this->load->model('proveedores_model');
 
       $data = [
-        'productos' => $this->productos_model->lista_limpia(),
+        'productos' => $this->productos_model->lista_limpia_pedido(),
         'proveedores' => $this->proveedores_model->lista_limpia()
       ];
       $this->load->view('includes/header_modal');
@@ -49,6 +50,31 @@ class Pedidos extends CI_Controller {
       $this->load->view('includes/footer_vue1');
       $this->load->view('pages/pedidos/scripts_crear', $data);
       $this->load->view('includes/footer_vue2');
+    }
+  }
+
+  public function api_emitir_pedidos($payload = null) {
+    if ( ! $this->session->userdata('esta_logeado') ) {
+      show_404();
+    } else {
+      $proveedor = $this->input->get('proveedor');
+      $productos = $this->input->get('productos');
+      $total = $this->input->get('total');
+
+      $last_id = $this->pedidos_model->crear(['id_proveedor' => $proveedor['id'], 'precio_total' => $total]);
+
+      $productos = array_map(function ($x) use ($last_id) {
+        $x['cantidad'] = floatval( $x['cantidad'] );
+        $x['precio_unitario'] = floatval( $x['precio'] );
+        $x['id_producto'] = intval( $x['id'] );
+        $x['id_pedido'] = $last_id;
+        unset( $x['precio'], $x['nombre'], $x['id'], $x['id_proveedor'] );
+        return $x;
+      }, $productos);
+
+      $this->detalles_pedido_model->batch_insertion($productos);
+
+      if ($last_id) $this->registro->registrar($this->session->userdata('id_usuario'), 22, 'pedidos', $last_id);
     }
   }
 }
