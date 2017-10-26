@@ -12,7 +12,7 @@ class Ventas_model extends MY_Model {
 		$datos = [];
 		$datos['id_cliente'] = intval( $data['id_cliente'] );
 		$datos['total'] = floatval( $data['total'] );
-			
+
 		return $datos;
 	}
 
@@ -32,12 +32,6 @@ class Ventas_model extends MY_Model {
 		$this->update( $id, $data );
 		$this->db->trans_complete();
 		return $this->_return($id);
-	}
-
-	public function eliminar( $id ) {
-		$this->where($id);
-		$this->db->delete('ventas');
-		return $this->_return( $id );
 	}
 
 	public function lista( $paginacion = 1 ) {

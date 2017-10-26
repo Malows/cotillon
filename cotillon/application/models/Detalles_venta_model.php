@@ -19,15 +19,10 @@ class Detalles_venta_model extends MY_Model {
 		return $this->db->insert_batch('detalles_venta', $lineas);
 	}
 
-	public function eliminar( $keys ) {
-		$this->where($keys);
-		$this->db->delete($this->nombre_tabla);
-		// return boolval( $this->db->affected_rows() );
-	}
-
 	public function buscar_por_venta( $id_venta ) {
 		$id_venta = intval( $id_venta );
-		$this->db->select('detalles_venta.id_producto, detalles_venta.id_venta, detalles_venta.cantidad_venta, detalles_venta.precio_unitario, productos.nombre');
+		$tabla = $this->nombre_tabla;
+		$this->db->select("$tabla.id_producto, $tabla.id_venta, $tabla.cantidad_venta, $tabla.precio_unitario, productos.nombre");
 		$this->db->join('productos', 'productos.id_producto = detalles_venta.id_producto');
 		return $this->get(['id_venta' => $id_venta])->result_array();
 	}

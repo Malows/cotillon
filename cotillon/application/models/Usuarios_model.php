@@ -6,6 +6,7 @@ class Usuarios_model extends MY_Model {
 		parent::__construct();
 		$this->nombre_tabla = 'usuarios';
 		$this->clave_primaria = 'id_usuario';
+		$this->soft_delete = 'fecha_fin';
 	}
 
 	protected function sanitizar( Array $data ) {
@@ -18,13 +19,8 @@ class Usuarios_model extends MY_Model {
 	}
 
 
-	protected function withTrashed () {
-		$this->where(['fecha_fin' => null]);
-	}
-
-
 	public function crear( Array $data ) {
-		$data['contrasenia'] = password_hash($data['contrasenia'], PASSWORD_DEFAULT);
+		$data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
 		$this->insert($data);
 		return $this->_return();
 	}
@@ -40,16 +36,10 @@ class Usuarios_model extends MY_Model {
 	}
 
 
-	public function lista_activos() {
-		$usuarios = $this->lista();
-		return $usuarios;
-	}
-
-
-	public function cotejar( $dni, $contrasenia ) {
+	public function cotejar( $dni, $password ) {
 		$user = $this->get(['dni' => $dni])->row_array();
-		$verificacion = password_verify($contrasenia, $user['password']);
-		
+		$verificacion = password_verify($password, $user['password']);
+
 		if ( !boolval($user) ) return FALSE; // usuario no existe
 		if ( !$verificacion ) return FALSE; // contraseña incorrecta
 		if ( $user['fecha_fin'] ) return FALSE; // usuario no habilitado

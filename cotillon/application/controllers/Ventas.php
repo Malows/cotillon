@@ -129,12 +129,11 @@ public function pdf($id) {
     $html .= $this->load->view('pages/ventas/ver', $data, true);
     $html .= $this->load->view('includes/footer', [], true);
 
-    $this->load->library('dompdf_gen');
-
+    $this->load->library('pdf');
+    $fecha = date('dmYHis');
 		// Convert to PDF
-		$this->dompdf->load_html($html);
-		$this->dompdf->render();
-		$this->dompdf->stream("welcome.pdf");
+		$this->pdf->pdf->WriteHtml($html);
+		$this->pdf->pdf->Output("venta-$fecha.pdf", 'D');
   }
 }
 

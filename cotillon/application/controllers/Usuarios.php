@@ -101,7 +101,7 @@ class Usuarios extends CI_Controller {
           'apellido' => $this->security->xss_clean( $this->input->post('apellido') ),
           'email' => $this->security->xss_clean( $this->input->post('email') ),
           'dni' => $this->security->xss_clean( $this->input->post('dni') ),
-          'contrasenia' => $this->input->post('password'),
+          'password' => $this->input->post('password'),
           'es_admin' => $this->security->xss_clean( $this->input->post('es_admin') )
         ];
 
@@ -134,7 +134,7 @@ class Usuarios extends CI_Controller {
 
       $data = [
         'accion' => 'ver',
-        'usuarios' =>  $this->usuarios_model->lista_activos(),
+        'usuarios' =>  $this->usuarios_model->lista(),
         'mensaje' => "Esta acción requiere de un usuario válido.
         Seleccione uno por favor."
       ];
@@ -218,7 +218,7 @@ class Usuarios extends CI_Controller {
 
         $payload = $aux;
         unset($payload['id_usuario']);
-        
+
         $this->usuarios_model->actualizar($id, $payload);
 
         if ($id) $this->registro->registrar($this->session->userdata('id_usuario'), 3, 'usuarios', $id);
@@ -253,7 +253,7 @@ class Usuarios extends CI_Controller {
           //El usuario que se busca no es valido
           $data = [
             'accion' => 'eliminar',
-            'usuarios' =>  $this->usuarios_model->lista_activos(),
+            'usuarios' =>  $this->usuarios_model->lista(),
             'mensaje' => "Esta acción requiere de un usuario válido. Seleccione uno por favor."
           ];
           $this->load->view('includes/header');

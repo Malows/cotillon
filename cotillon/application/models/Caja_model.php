@@ -18,7 +18,8 @@ class Caja_model extends MY_Model {
 	}
 
 	private function ventasEntreFechas ($desde, $hasta) {
-		$this->db->where_in('fecha', [ $desde, $hasta ]);
+		$this->db->where("fecha >=", $desde);
+		$this->db->where("fecha <=", $hasta);
 		return $this->db->get('ventas')->result_array();
 	}
 

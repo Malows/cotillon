@@ -19,12 +19,6 @@ class Detalles_pedido_model extends MY_Model {
 		return $this->db->insert_batch($this->nombre_tabla, $lineas);
 	}
 
-	public function eliminar( $keys ) {
-		$this->where($keys);
-		$this->db->delete($this->nombre_tabla);
-		// return boolval( $this->db->affected_rows() );
-	}
-
 	public function buscar_por_pedido( $id_pedido ) {
 		$id_venta = intval( $id_pedido );
 		$tabla = $this->nombre_tabla;

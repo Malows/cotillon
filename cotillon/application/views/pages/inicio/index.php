@@ -6,16 +6,16 @@
 
     $hoy = new DateTime('now', new DateTimeZone('America/Argentina/Buenos_Aires'));
     $fechaDeCaja = DateTime::createFromFormat('Y-m-d H:i:s', $caja[0]['fecha_apertura']);
-
+    $parsedFecha = $fechaDeCaja->format('d/m/Y');
     $intervalo = $hoy->diff($fechaDeCaja);
     $minutos = $intervalo->i +  ($intervalo->h * 60) + ($intervalo->days * 24 * 60);
-    if ($minuto > 900) {
+    if ($minutos > 900) {
       $alert['estado'] = 'danger';
       $alert['mensaje'] = '<strong>Una caja de fecha anterior se encuentra aún abierta. Por favor cierrela antes de iniciar las actividades comerciales</strong>';
       $alert['mensaje'] .= '<hr>' . anchor( base_url('arqueos/'), "Cerrar caja");
     } else {
       $alert['estado'] = 'success';
-      $alert['mensaje'] = "La caja se encuentra abierta con fecha de $fechaDeCaja->format('d/m/Y') y un monto de $" . $caja[0]['monto_apertura'];
+      $alert['mensaje'] = "La caja se encuentra abierta con fecha de $parsedFecha y un monto de $" . $caja[0]['monto_apertura'];
     }
   } else {
     $alert['estado'] = 'warning';

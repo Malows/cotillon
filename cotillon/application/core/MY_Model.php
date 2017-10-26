@@ -3,6 +3,7 @@ class MY_Model extends CI_Model {
 
 	protected $nombre_tabla;
 	protected $clave_primaria;
+	protected $soft_delete = 'soft_delete';
 
 	public function __contruct() {
 		parent::__contruct();
@@ -25,7 +26,9 @@ class MY_Model extends CI_Model {
 	}
 
 	protected function withTrashed () {
-		$this->where([$this->nombre_tabla.'.soft_delete' => null]);
+		$nombre = $this->nombre_tabla. '.' .$this->soft_delete;
+		var_dump($nombre);
+		$this->where([$nombre => null]);
 	}
 
 	protected function get($key = null) {
@@ -37,6 +40,17 @@ class MY_Model extends CI_Model {
 		$this->where( $key );
 		$data = $this->sanitizar( $data );
 		return $this->db->update( $this->nombre_tabla, $data );
+	}
+
+	protected function delete ( $key ) {
+		$data[$this->soft_delete] = $this->now();
+		$this->where($key);
+		return $this->db->update($this->nombre_tabla, $data);
+	}
+
+	protected function destroy( $key ) {
+		$this->where($key);
+		$this->db->delete($this->nombre_tabla);
 	}
 
 	protected function insert( $data ) {
@@ -63,9 +77,9 @@ class MY_Model extends CI_Model {
 		return $this->_return();
 	}
 
-	public function eliminar ( $key ) {
-		$data['soft_delete'] = $this->now();
-		$this->update($key, $data);
+	public function eliminar ( $key, $erase = false ) {
+		if ($erase) $this->destroy($key);
+		else $this->delete($key);
 		return $this->_return();
 	}
 
