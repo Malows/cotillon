@@ -27,4 +27,16 @@ class Categorias_producto_model extends MY_Model {
 		$this->db->where('productos.soft_delete',null);
 		return $this->db->get('productos')->result_array();
 	}
+
+	public function cantidad_categoria() {
+		$this->db->select('id_categoria, nombre_categoria AS `nombre`, SUM(cantidad_vendida) AS `total`');
+		$this->db->group_by('id_categoria');
+		$cantidades = $this->db->get('digest_categorias_ventas')->result_array();
+
+		$resultado = [];
+		foreach ($cantidades as $item) {
+			$resultado[$item['nombre']] = intval($item['total']); // puede ser float pero es más facil
+		}
+		return $resultado;
+	}
 }

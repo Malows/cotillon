@@ -67,8 +67,16 @@
 <script>
 let labels_1 = <?= json_encode( array_map( function($elem){return $elem['fecha']->format('Y-m-d');}, $ventas ) );?>;
 labels_1 = labels_1.map(fecha => {let aux = moment(fecha); return aux.format('MMMM')})
-let data_1 = <?= json_encode( array_map( function($elem){return $elem['total'];}, $ventas ) );?>;
-let backgroundColor = [
+const data_1 = <?= json_encode( array_map( function($elem){return $elem['total'];}, $ventas ) );?>;
+const labels_2 = <?= json_encode( array_keys($datos_ventas_categorias) ); ?>;
+const data_2 = <?= json_encode( array_values($datos_ventas_categorias) ); ?>;
+const backgroundColor = [
+    'rgba(255, 99, 132, 0.2)',
+    'rgba(54, 162, 235, 0.2)',
+    'rgba(255, 206, 86, 0.2)',
+    'rgba(75, 192, 192, 0.2)',
+    'rgba(153, 102, 255, 0.2)',
+    'rgba(255, 159, 64, 0.2)',
     'rgba(255, 99, 132, 0.2)',
     'rgba(54, 162, 235, 0.2)',
     'rgba(255, 206, 86, 0.2)',
@@ -76,7 +84,13 @@ let backgroundColor = [
     'rgba(153, 102, 255, 0.2)',
     'rgba(255, 159, 64, 0.2)'
 ];
-let borderColor = [
+const borderColor = [
+    'rgba(255,99,132,1)',
+    'rgba(54, 162, 235, 1)',
+    'rgba(255, 206, 86, 1)',
+    'rgba(75, 192, 192, 1)',
+    'rgba(153, 102, 255, 1)',
+    'rgba(255, 159, 64, 1)',
     'rgba(255,99,132,1)',
     'rgba(54, 162, 235, 1)',
     'rgba(255, 206, 86, 1)',
@@ -106,10 +120,10 @@ var ctx2 = document.getElementById("canvas2");
 var myChart2 = new Chart(ctx2, {
   type: 'pie',
   data: {
-      labels: labels_1,
+      labels: labels_2,
       datasets: [{
-          label: '# of Votes',
-          data: data_1,
+          label: '# de ventas',
+          data: data_2,
           backgroundColor: backgroundColor,
           borderColor: borderColor,
           borderWidth: 1
@@ -119,16 +133,17 @@ var myChart2 = new Chart(ctx2, {
     responsive: true,
   }
 });
+const randomIndex = parseInt(Math.random() * (borderColor.length));
 var ctx3 = document.getElementById("canvas3");
 var myChart3 = new Chart(ctx3, {
   type: 'line',
   data: {
       labels: labels_1,
       datasets: [{
-          label: '# of Votes',
+          label: 'Ventas por mes',
           data: data_1,
-          backgroundColor: backgroundColor,
-          borderColor: borderColor,
+          backgroundColor: backgroundColor[randomIndex],
+          borderColor: borderColor[randomIndex],
           borderWidth: 1
       }]
   },

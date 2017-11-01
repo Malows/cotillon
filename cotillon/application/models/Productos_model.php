@@ -10,15 +10,33 @@ class Productos_model extends MY_Model {
 
 
 	protected function sanitizar ( Array $data ) {
-		$data['id_proveedor'] = intval( $data['id_proveedor'] );
-		$data['nombre'] = htmlentities( $data['nombre'] );
-		$data['precio'] = floatval( $data['precio'] );
-		$data['id_categoria'] = intval( $data['id_categoria'] );
-		$data['descripcion'] = htmlentities( $data['descripcion'] );
-		$data['unidad'] = htmlentities( $data['unidad'] );
-		$data['alerta'] = floatval( $data['alerta'] );
-		$data['cantidad'] = abs(floatval( $data['cantidad'] ));
-		return $data;
+		$datos = [];
+
+		if (array_key_exists('id_proveedor', $data))
+			$datos['id_proveedor'] = intval( $data['id_proveedor'] );
+
+		if (array_key_exists('nombre', $data))
+			$datos['nombre'] = htmlentities( $data['nombre'] );
+
+		if (array_key_exists('precio', $data))
+			$datos['precio'] = floatval( $data['precio'] );
+
+		if (array_key_exists('id_categoria', $data))
+			$datos['id_categoria'] = intval( $data['id_categoria'] );
+
+		if (array_key_exists('descripcion', $data))
+			$datos['descripcion'] = htmlentities( $data['descripcion'] );
+
+		if (array_key_exists('unidad', $data))
+			$datos['unidad'] = htmlentities( $data['unidad'] );
+
+		if (array_key_exists('alerta', $data))
+			$datos['alerta'] = floatval( $data['alerta'] );
+
+		if (array_key_exists('cantidad', $data))
+			$datos['cantidad'] = abs(floatval( $data['cantidad'] ));
+
+		return $datos;
 	}
 
 
@@ -108,9 +126,9 @@ class Productos_model extends MY_Model {
 	public function incrementar( $id_producto, $cantidad ) {
 		$aux = $this->get($id_producto)->row_array();
 		$aux['cantidad'] += abs(floatval($cantidad));
-		unset($aux['id_producto']);
 
-		$this->update($id_producto, $aux);
+		$data['cantidad'] = $aux['cantidad'];
+		$this->update($id_producto, $data);
 		return $this->_return($id_producto);
 	}
 
@@ -121,9 +139,9 @@ class Productos_model extends MY_Model {
 
 		if ( $aux['cantidad'] >= $cantidad ) {
 			$aux['cantidad'] -= $cantidad;
-			unset( $aux['id_producto'] );
 
-			$this->update($id_producto, $aux);
+			$data['cantidad'] = $aux['cantidad'];
+			$this->update($id_producto, $data);
 			return $this->_return($id_producto);
 		} else return FALSE;
 	}

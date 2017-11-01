@@ -8,6 +8,7 @@ class Inicio extends CI_Controller {
 		$this->load->model('usuarios_model');
 		$this->load->model('productos_model');
 		$this->load->model('ventas_model');
+		$this->load->model('categorias_producto_model');
 		date_default_timezone_set ( 'America/Argentina/Buenos_Aires' );
 		setlocale(LC_ALL, "es_AR");
 	}
@@ -101,7 +102,8 @@ class Inicio extends CI_Controller {
 			$data = [
 				'alertas' => $this->productos_model->lista_alertas(),
 				'ventas' => array_reverse($ventas),
-				'caja' => $this->caja->lista_cajas_abiertas()
+				'caja' => $this->caja->lista_cajas_abiertas(),
+				'datos_ventas_categorias' => $this->categorias_producto_model->cantidad_categoria()
 			 ];
 			$this->load->view('includes/header');
 			$this->load->view('pages/inicio/index', $data);
