@@ -65,9 +65,8 @@
   })
 </script> -->
 <script>
-let labels_1 = <?= json_encode( array_map( function($elem){return $elem['fecha']->format('Y-m-d');}, $ventas ) );?>;
-labels_1 = labels_1.map(fecha => {let aux = moment(fecha); return aux.format('MMMM')})
-const data_1 = <?= json_encode( array_map( function($elem){return $elem['total'];}, $ventas ) );?>;
+const labels_1 = <?= json_encode( array_keys($ventas) );?>.map(fecha => moment(fecha).format('MMMM'));
+const data_1 = <?= json_encode( array_values($ventas) );?>;
 const labels_2 = <?= json_encode( array_keys($datos_ventas_categorias) ); ?>;
 const data_2 = <?= json_encode( array_values($datos_ventas_categorias) ); ?>;
 const backgroundColor = [
@@ -105,7 +104,7 @@ var myChart1 = new Chart(ctx1, {
   data: {
       labels: labels_1,
       datasets: [{
-          label: '# of Votes',
+          label: 'Ventas por mes',
           data: data_1,
           backgroundColor: backgroundColor,
           borderColor: borderColor,

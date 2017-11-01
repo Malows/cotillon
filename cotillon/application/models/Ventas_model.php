@@ -62,4 +62,14 @@ class Ventas_model extends MY_Model {
 	{
 		return $this->db->count_all('ventas');
 	}
+
+	public function ventas_por_mes() {
+		// CREATE VIEW digest_ventas_mes AS
+		// SELECT YEAR(fecha) AS `año`, MONTH(fecha) AS `mes`, SUM(total) AS `total`
+		// FROM ventas
+		// GROUP BY año, mes
+		// ORDER BY año DESC, mes DESC;
+		$this->db->limit(13, 0);
+		return $this->db->get('digest_ventas_mes')->result_array();
+	}
 }

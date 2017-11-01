@@ -13,43 +13,22 @@ class Inicio extends CI_Controller {
 		setlocale(LC_ALL, "es_AR");
 	}
 
-	protected function entreFechas ($fecha, $desde, $hasta) {
-		return $fecha >= $desde && $fecha < $hasta;
+	private function parsearFecha( $ventas ) {
+		return array_map(function ($x) {
+			$año = $x['año'];
+			$mes = strlen($x['mes']) == 2 ? $x['mes'] : '0'.$x['mes'];
+			$x['fecha'] = "$año-$mes-01";
+			$x['total'] = intval($x['total']);
+	 		unset($x['año'], $x['mes']);
+		 	return $x;
+		}, $ventas);
 	}
 
-	protected function sumatoria (Array $input) {
-		return array_reduce($input, function($car, $cur){return $car + $cur['total'];}, 0);
-	}
-
-	protected function treeShaking (Array $input) {
-		$aux = [];
-		for ($i=0, $j=1 ; $i < 12; $i++, $j++) {
-			$push_array = [];
-			$desde = new DateTime('now', new DateTimeZone('America/Argentina/Buenos_Aires'));
-			$hasta = new DateTime('now', new DateTimeZone('America/Argentina/Buenos_Aires'));
-			$desde->modify("-$j month");
-			$desde->setDate( intval( $desde->format('Y') ), intval( $desde->format('m') ), 1 );
-			$desde->setTime(0,0,0);
-
-			$hasta->modify("-$i month");
-			$hasta->setDate( intval( $hasta->format('Y') ), intval( $hasta->format('m') ), 1 );
-			$hasta->setTime(0,0,0);
-
-			foreach ($input as $key => $venta) {
-				$fecha_venta =  DateTime::createFromFormat('Y-m-d H:i:s', $venta['fecha']);
-
-				if ( $this->entreFechas($fecha_venta, $desde, $hasta) ) {
-					$push_array[] = $venta;
-					unset( $input[$key] );
-				}
-			}
-
-			$aux[] = [
-				'fecha' => $desde,
-				'total' => $this->sumatoria($push_array)
-			];
-		}
-		return $aux;
+	private function pluck($array, $key, $value) {
+		return array_reduce($array, function ($acc, $item) use ($key, $value) {
+			$acc[ $item[$key] ] = $item[$value];
+			return $acc;
+		}, []);
 	}
 
 	public function index() {
@@ -92,12 +71,9 @@ class Inicio extends CI_Controller {
 			}
 
 		} else { // estoy registrado
-
-			$unAnioAtras = new DateTime('now', new DateTimeZone('America/Argentina/Buenos_Aires'));
-      $unAnioAtras->modify('-1year');
-			$unAnioAtras->setDate( intval( $unAnioAtras->format('Y') ), intval( $unAnioAtras->format('m') ), 1 );
-			$unAnioAtras->setTime(0,0,0);
-			$ventas = $this->treeShaking( $this->ventas_model->hasta($unAnioAtras) );
+			$ventas = $this->ventas_model->ventas_por_mes();
+			$ventas = $this->parsearFecha( $ventas );
+			$ventas = $this->pluck($ventas, 'fecha', 'total');
 
 			$data = [
 				'alertas' => $this->productos_model->lista_alertas(),
