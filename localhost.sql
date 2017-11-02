@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3307
--- Tiempo de generación: 25-10-2017 a las 23:37:24
+-- Tiempo de generación: 02-11-2017 a las 12:41:33
 -- Versión del servidor: 5.6.33
 -- Versión de PHP: 5.6.26
 
@@ -168,6 +168,44 @@ INSERT INTO `detalles_venta` (`id_producto`, `id_venta`, `cantidad_venta`, `prec
 (6, 20, 2, 20),
 (7, 4, 1, 256),
 (7, 17, 13, 256);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura Stand-in para la vista `digest_categorias_ventas`
+-- (Véase abajo para la vista actual)
+--
+CREATE TABLE `digest_categorias_ventas` (
+`id_producto` int(11)
+,`nombre` varchar(45)
+,`cantidad_vendida` decimal(32,0)
+,`id_categoria` int(11)
+,`nombre_categoria` varchar(45)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura Stand-in para la vista `digest_top_venta_productos`
+-- (Véase abajo para la vista actual)
+--
+CREATE TABLE `digest_top_venta_productos` (
+`id_producto` int(11)
+,`nombre` varchar(45)
+,`total_venta` decimal(32,0)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura Stand-in para la vista `digest_ventas_mes`
+-- (Véase abajo para la vista actual)
+--
+CREATE TABLE `digest_ventas_mes` (
+`año` int(4)
+,`mes` int(2)
+,`total` double
+);
 
 -- --------------------------------------------------------
 
@@ -429,6 +467,33 @@ INSERT INTO `ventas` (`id_venta`, `id_cliente`, `fecha`, `total`) VALUES
 (30, 3, '2017-10-24 03:43:21', 100),
 (31, 1, '2017-10-26 03:18:49', 120);
 
+-- --------------------------------------------------------
+
+--
+-- Estructura para la vista `digest_categorias_ventas`
+--
+DROP TABLE IF EXISTS `digest_categorias_ventas`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`juan`@`localhost` SQL SECURITY DEFINER VIEW `digest_categorias_ventas`  AS  select `productos`.`id_producto` AS `id_producto`,`productos`.`nombre` AS `nombre`,sum(`detalles_venta`.`cantidad_venta`) AS `cantidad_vendida`,`categorias_producto`.`id_categoria` AS `id_categoria`,`categorias_producto`.`nombre_categoria` AS `nombre_categoria` from ((`detalles_venta` join `productos` on((`productos`.`id_producto` = `detalles_venta`.`id_producto`))) join `categorias_producto` on((`productos`.`id_categoria` = `categorias_producto`.`id_categoria`))) group by `productos`.`id_producto` ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura para la vista `digest_top_venta_productos`
+--
+DROP TABLE IF EXISTS `digest_top_venta_productos`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`juan`@`localhost` SQL SECURITY DEFINER VIEW `digest_top_venta_productos`  AS  select `productos`.`id_producto` AS `id_producto`,`productos`.`nombre` AS `nombre`,sum(`detalles_venta`.`cantidad_venta`) AS `total_venta` from (`productos` join `detalles_venta` on((`productos`.`id_producto` = `detalles_venta`.`id_producto`))) group by `productos`.`id_producto` order by `total_venta` desc ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura para la vista `digest_ventas_mes`
+--
+DROP TABLE IF EXISTS `digest_ventas_mes`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`juan`@`localhost` SQL SECURITY DEFINER VIEW `digest_ventas_mes`  AS  select year(`ventas`.`fecha`) AS `año`,month(`ventas`.`fecha`) AS `mes`,sum(`ventas`.`total`) AS `total` from `ventas` group by `año`,`mes` order by `año` desc,`mes` desc ;
+
 --
 -- Índices para tablas volcadas
 --
@@ -574,7 +639,7 @@ ALTER TABLE `registros`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT de la tabla `ventas`
 --

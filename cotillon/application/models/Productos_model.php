@@ -152,4 +152,13 @@ class Productos_model extends MY_Model {
 		$this->db->where('soft_delete', null);
 		return $this->db->get('productos')->result_array();
 	}
+
+	public function top_productos() {
+	// CREATE VIEW digest_top_venta_productos AS
+	// SELECT productos.id_producto, productos.nombre, SUM(detalles_venta.cantidad_venta) AS total_venta
+  // FROM productos JOIN detalles_venta ON productos.id_producto = detalles_venta.id_producto
+  // GROUP BY productos.id_producto ORDER BY total_venta DESC;
+	$this->db->limit(5,0);
+	return $this->db->get('digest_top_venta_productos')->result_array();
+	}
 }

@@ -69,6 +69,8 @@ const labels_1 = <?= json_encode( array_keys($ventas) );?>.map(fecha => moment(f
 const data_1 = <?= json_encode( array_values($ventas) );?>;
 const labels_2 = <?= json_encode( array_keys($datos_ventas_categorias) ); ?>;
 const data_2 = <?= json_encode( array_values($datos_ventas_categorias) ); ?>;
+const labels_3 = <?= json_encode( array_keys($top_productos)); ?>;
+const data_3 = <?= json_encode( array_values($top_productos)); ?>;
 const backgroundColor = [
     'rgba(255, 99, 132, 0.2)',
     'rgba(54, 162, 235, 0.2)',
@@ -102,10 +104,10 @@ var ctx1 = document.getElementById("canvas1");
 var myChart1 = new Chart(ctx1, {
   type: 'bar',
   data: {
-      labels: labels_1,
+      labels: labels_3,
       datasets: [{
-          label: 'Ventas por mes',
-          data: data_1,
+          label: 'Productos más vendidos',
+          data: data_3,
           backgroundColor: backgroundColor,
           borderColor: borderColor,
           borderWidth: 1

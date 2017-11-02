@@ -74,12 +74,15 @@ class Inicio extends CI_Controller {
 			$ventas = $this->ventas_model->ventas_por_mes();
 			$ventas = $this->parsearFecha( $ventas );
 			$ventas = $this->pluck($ventas, 'fecha', 'total');
+			$topProductos = $this->productos_model->top_productos();
+			$topProductos = $this->pluck($topProductos, 'nombre', 'total_venta');
 
 			$data = [
 				'alertas' => $this->productos_model->lista_alertas(),
 				'ventas' => array_reverse($ventas),
 				'caja' => $this->caja->lista_cajas_abiertas(),
-				'datos_ventas_categorias' => $this->categorias_producto_model->cantidad_categoria()
+				'datos_ventas_categorias' => $this->categorias_producto_model->cantidad_categoria(),
+				'top_productos' => $topProductos
 			 ];
 			$this->load->view('includes/header');
 			$this->load->view('pages/inicio/index', $data);
