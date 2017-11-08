@@ -26,15 +26,28 @@
 					</div>
 					<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-6">
 						<ul class="nav navbar-nav">
-							<li><?php echo anchor( base_url("categorias/"), "Categorias"); ?></li>
-							<li><?php echo anchor( base_url("localidades/"), "Localidades"); ?></li>
-							<li><?php echo anchor( base_url("clientes/"), "Clientes"); ?></li>
-							<li><?php echo anchor( base_url("proveedores/"), "Proveedores"); ?></li>
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Información <span class="caret"></span></a>
+								<ul class="dropdown-menu">
+									<li><?php echo anchor( base_url("localidades/"), "Localidades"); ?></li>
+									<li><?php echo anchor( base_url("clientes/"), "Clientes"); ?></li>
+									<li><?php echo anchor( base_url("proveedores/"), "Proveedores"); ?></li>
+									<li><?php echo anchor( base_url("categorias/"), "Categorias"); ?></li>
+									<li><?php echo anchor( base_url("productos/"), "Productos"); ?></li>
+								</ul>
+							</li>
 							<li><?php echo anchor( base_url("productos/"), "Productos"); ?></li>
-							<li><?php echo anchor( base_url("pedidos/"), "Pedidos"); ?></li>
 							<li><?php echo anchor( base_url("ventas/"), "Ventas"); ?></li>
-							<li><?php echo anchor( base_url("arqueos/"), "Arqueos"); ?></li>
-							<li><?php echo anchor( base_url("registros/"), "Registros"); ?></li>
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Contable <span class="caret"></span></a>
+								<ul class="dropdown-menu">
+									<li><?php echo anchor( base_url("arqueos/"), "Arqueos"); ?></li>
+									<li><?php echo anchor( base_url("registros/"), "Registros"); ?></li>
+									<li><?php echo anchor( base_url("movimientos/"), "Movimientos"); ?></li>
+									<li><?php echo anchor( base_url("pedidos/"), "Pedidos"); ?></li>
+									<li><?php echo anchor( base_url("ventas/"), "Ventas"); ?></li>
+								</ul>
+							</li>
 						<?php if($this->session->userdata('es_admin')): ?>
 							<li><?php echo anchor( base_url("usuarios/"), "Usuarios"); ?></li>
 						<?php endif; ?>

@@ -37,11 +37,12 @@
   <div class="modal-dialog modal-sm" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h3>Confirmación</h3>
+        <h3>ATENCION!</h3>
       </div>
       <div class="modal-body">
-        ¿Desea eliminar la categoría `<?php echo $cat['nombre_categoria']; ?>`?
-      </div>
+        <strong>CONFIRMAR:</strong> Si borra la siguiente categoría, los productos relacionados desaparecerán del listado. <br>
+          ¿Desea eliminar la categoría <?php echo $cat['nombre_categoria']; ?>?
+        </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">No</span></button>
         <a href="<?php echo base_url("categorias/eliminar/".$cat['id_categoria']); ?>" class="btn btn-danger">Sí</a>
