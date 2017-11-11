@@ -135,7 +135,18 @@ class Instalar_model extends CI_Model {
 			['id_evento' => 22,	'descripcion' => 'creó un pedido'],
 			['id_evento' => 23,	'descripcion' => 'modificó un pedido'],
 			['id_evento' => 24,	'descripcion' => 'deshabilitó un pedido'],
-			['id_evento' => 25,	'descripcion' => 'recibió un pedido']
+			['id_evento' => 25,	'descripcion' => 'recibió un pedido'],
+			['id_evento' => 26, 'descripcion' => 'abrió la caja'],
+			['id_evento' => 27, 'descripcion' => 'cerró la caja'],
+			['id_evento' => 28, 'descripcion' => 'creó una razón de movimiento'],
+			['id_evento' => 29, 'descripcion' => 'modificó una razón de movimiento'],
+			['id_evento' => 30, 'descripcion' => 'deshabilitó una razón de movimiento'],
+			['id_evento' => 31, 'descripcion' => 'creó un movimiento'],
+			['id_evento' => 32, 'descripcion' => 'modificó un movimiento'],
+			['id_evento' => 33, 'descripcion' => 'deshabilitó un movimiento'],
+			['id_evento' => 34, 'descripcion' => 'creó un tipo de usuario'],
+			['id_evento' => 35, 'descripcion' => 'modificó un tipo de usuario'],
+			['id_evento' => 36, 'descripcion' => 'deshabilitó un tipo de usuario']
 		]);
 	}
 

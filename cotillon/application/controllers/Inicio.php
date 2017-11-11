@@ -44,17 +44,17 @@ class Inicio extends CI_Controller {
 				$this->load->view('includes/footer');
 			} else { // algo salio mal y me muestrar el error
 				$usuario = $this->security->xss_clean( $this->input->post('usuario') );
-				$pass = /*$this->security->xss_clean( */$this->input->post('contrasenia') /*)*/;
-
+				$pass = $this->input->post('contrasenia');
 
 				$aux = $this->usuarios_model->cotejar($usuario, $pass);
 
 				if ( $aux !== FALSE ) {
 					//si coinciden, creo la sesion
 					$data = array(
+							"user" => $aux,
 							"id_usuario" => $aux['id_usuario'],
 							"usuario" => $aux['nombre'],
-							"es_admin" => $aux['es_admin'],
+							"es_admin" => $aux['id_tipo_usuario'] < 3,
 							"esta_logeado" => TRUE
 					);
 					$this->session->set_userdata( $data );

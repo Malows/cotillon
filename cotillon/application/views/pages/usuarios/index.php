@@ -22,7 +22,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
       <td><?php echo $user['nombre']." ".$user['apellido'];?></td>
       <td><?php echo $user['dni'];?></td>
       <td><?php echo $user['email'];?></td>
-      <td><i class="fa <?php echo ( $user['es_admin'] ) ? "fa-check" : "fa-times";?>" aria-hidden="true"></i></td>
+      <td><i class="fa <?php echo ( $user['id_tipo_usuario'] < 3 ) ? "fa-check" : "fa-times";?>" aria-hidden="true"></i></td>
       <?php if( $es_admin_usuario_logueado ): ?>
       <td>
         <div class="btn-group">
