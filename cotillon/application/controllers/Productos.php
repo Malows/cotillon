@@ -1,13 +1,11 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Productos extends CI_Controller {
+class Productos extends MY_Controller {
 
   protected $config_validacion;
   protected $mensajes_validacion;
-  protected $error_delimiter;
 
-  public function __construct()
-  {
+  public function __construct () {
       parent::__construct();
       $this->load->model('productos_model');
       $this->config_validacion = [
@@ -44,180 +42,125 @@ class Productos extends CI_Controller {
         'numeric' => "<strong>%s</strong> es un campo unicamente numérico.",
         'alpha' => '<strong>%s</strong> error de validación'
       ];
-
-      $this->error_delimiter = [
-        '<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>',
-        '</div>'
-      ];
   }
 
-  public function index()
-  {
-    if ( ! $this->session->userdata('esta_logeado') ) {
-      show_404();
-    } else {
-      $data = [
-        'productos' => $this->productos_model->lista(),
-        'alertas' => $this->productos_model->lista_alertas(),
-        'es_admin_usuario_logueado' => $this->session->userdata('es_admin')
-      ];
+  public function index () {
+    $this->logged();
+    $data = [
+      'productos' => $this->productos_model->lista(),
+      'alertas' => $this->productos_model->lista_alertas(),
+      'es_admin_usuario_logueado' => $this->session->userdata('es_admin')];
 
-      $this->load->view('includes/header');
-      $this->load->view('pages/productos/index', $data);
-      $this->load->view('includes/footer');
-    }
+    $this->render([['pages/productos/index', $data]]);
   }
 
   public function crear() {
-    if ( ! $this->session->userdata('esta_logeado') and $this->session->userdata('es_admin') ) {
-      show_404();
-    } else {
-      $this->form_validation->set_rules($this->config_validacion);
-      foreach ($this->mensajes_validacion as $key => $value) {
-        $this->form_validation->set_message($key, $value);
-      }
-      $this->form_validation->set_error_delimiters($this->error_delimiter[0],$this->error_delimiter[1]);
-
-      $this->load->model('proveedores_model');
-      $this->load->model('categorias_producto_model');
-      $data = [
-        'proveedores' => $this->proveedores_model->lista(),
-        'categorias' => $this->categorias_producto_model->lista()
-      ];
-
-      if ( $this->form_validation->run() === FALSE ) {
-        $this->load->view('includes/header');
-        $this->load->view('pages/productos/crear', $data);
-        $this->load->view('includes/footer');
-      } else {
-        $payload = [
-          'id_proveedor' => $this->security->xss_clean( $this->input->post('id_proveedor')),
-          'nombre' => $this->security->xss_clean( $this->input->post('nombre')),
-          'precio' => $this->security->xss_clean( $this->input->post('precio')),
-          'id_categoria' => $this->security->xss_clean( $this->input->post('id_categoria')),
-          'descripcion' => $this->security->xss_clean( $this->input->post('descripcion')),
-          'alerta' => $this->security->xss_clean( $this->input->post('alerta')),
-          'unidad' => $this->security->xss_clean( $this->input->post('unidad')),
-          'cantidad' => $this->security->xss_clean( $this->input->post('cantidad'))
-        ];
-        $last_id = $this->productos_model->crear($payload);
-        if ($last_id) $this->registro->registrar($this->session->userdata('id_usuario'), 11, 'productos', $last_id);
-
-        $data['exito'] = TRUE;
-        $data['producto'] = htmlentities( $this->input->post('nombre'));
-
-        $this->load->view('includes/header');
-        $this->load->view('pages/productos/crear', $data);
-        $this->load->view('includes/footer');
-      }
+    $usuario = $this->loggedAndAdmin();
+    $this->form_validation->set_rules($this->config_validacion);
+    foreach ($this->mensajes_validacion as $key => $value) {
+      $this->form_validation->set_message($key, $value);
     }
+
+    $this->load->model('proveedores_model');
+    $this->load->model('categorias_producto_model');
+    $data = [
+      'proveedores' => $this->proveedores_model->lista(),
+      'categorias' => $this->categorias_producto_model->lista() ];
+
+    if ( $this->form_validation->run()) {
+      $payload = [
+        'id_proveedor' => $this->security->xss_clean( $this->input->post('id_proveedor')),
+        'nombre' => $this->security->xss_clean( $this->input->post('nombre')),
+        'precio' => $this->security->xss_clean( $this->input->post('precio')),
+        'id_categoria' => $this->security->xss_clean( $this->input->post('id_categoria')),
+        'descripcion' => $this->security->xss_clean( $this->input->post('descripcion')),
+        'alerta' => $this->security->xss_clean( $this->input->post('alerta')),
+        'unidad' => $this->security->xss_clean( $this->input->post('unidad')),
+        'cantidad' => $this->security->xss_clean( $this->input->post('cantidad')) ];
+
+      $last_id = $this->productos_model->crear($payload);
+      $this->registrar($last_id, $usuario, 11, 'productos');
+
+      $data['exito'] = TRUE;
+      $data['producto'] = htmlentities( $this->input->post('nombre'));
+    }
+    $this->render([['pages/productos/crear', $data]]);
   }
 
   public function actualizar( $id ) {
-    if ( ! $this->session->userdata('esta_logeado') and $this->session->userdata('es_admin') ) {
-      show_404();
-    } else {
-      $this->form_validation->set_rules($this->config_validacion);
-      foreach ($this->mensajes_validacion as $key => $value) {
-        $this->form_validation->set_message($key,$value);
-      }
-      $this->form_validation->set_error_delimiters($this->error_delimiter[0],$this->error_delimiter[1]);
-
-      $this->load->model('proveedores_model');
-      $this->load->model('categorias_producto_model');
-      $data = [
-        'proveedores' => $this->proveedores_model->lista(),
-        'categorias' => $this->categorias_producto_model->lista(),
-        'producto' => $this->productos_model->leer($id)
-      ];
-      if ( $this->form_validation->run() === FALSE ) {
-        $this->load->view('includes/header');
-        $this->load->view('pages/productos/actualizar', $data);
-        $this->load->view('includes/footer');
-      } else {
-          $payload = [
-            'id_proveedor' => $this->security->xss_clean( $this->input->post('id_proveedor')),
-            'nombre' => $this->security->xss_clean( $this->input->post('nombre')),
-            'precio' => $this->security->xss_clean( $this->input->post('precio')),
-            'id_categoria' => $this->security->xss_clean( $this->input->post('id_categoria')),
-            'descripcion' => $this->security->xss_clean( $this->input->post('descripcion')),
-            'alerta' => $this->security->xss_clean( $this->input->post('alerta')),
-            'unidad' => $this->security->xss_clean( $this->input->post('unidad')),
-            'cantidad' => $this->security->xss_clean( $this->input->post('cantidad'))
-          ];
-          $last_id = $this->productos_model->actualizar($id, $payload);
-          if ($last_id) $this->registro->registrar($this->session->userdata('id_usuario'), 12, 'productos', $last_id);
-
-          $data['exito'] = TRUE;
-          $data['producto']['nombre'] = htmlentities( $this->input->post('nombre'));
-          $data['producto']['precio'] = floatval( $this->input->post('precio'));
-          $data['producto']['id_proveedor'] = intval( $this->input->post('id_proveedor'));
-          $data['producto']['id_categoria'] = intval( $this->input->post('id_categoria'));
-          $data['producto']['descripcion'] = htmlentities( $this->input->post('descripcion'));
-          $data['producto']['alerta'] = floatval( $this->input->post('alerta'));
-          $data['producto']['cantidad'] = floatval( $this->input->post('cantidad'));
-          $data['producto']['unidad'] = htmlentities( $this->input->post('unidad'));
-
-
-          $this->load->view('includes/header');
-          $this->load->view('pages/productos/actualizar', $data);
-          $this->load->view('includes/footer');
-        }
-      }
+    $usuario = $this->loggedAndAdmin();
+    $this->form_validation->set_rules($this->config_validacion);
+    foreach ($this->mensajes_validacion as $key => $value) {
+      $this->form_validation->set_message($key,$value);
     }
+
+    $this->load->model('proveedores_model');
+    $this->load->model('categorias_producto_model');
+    $data = [
+      'proveedores' => $this->proveedores_model->lista(),
+      'categorias' => $this->categorias_producto_model->lista(),
+      'producto' => $this->productos_model->leer($id) ];
+    if ( $this->form_validation->run()) {
+      $payload = [
+        'id_proveedor' => $this->security->xss_clean( $this->input->post('id_proveedor')),
+        'nombre' => $this->security->xss_clean( $this->input->post('nombre')),
+        'precio' => $this->security->xss_clean( $this->input->post('precio')),
+        'id_categoria' => $this->security->xss_clean( $this->input->post('id_categoria')),
+        'descripcion' => $this->security->xss_clean( $this->input->post('descripcion')),
+        'alerta' => $this->security->xss_clean( $this->input->post('alerta')),
+        'unidad' => $this->security->xss_clean( $this->input->post('unidad')),
+        'cantidad' => $this->security->xss_clean( $this->input->post('cantidad'))
+      ];
+      $last_id = $this->productos_model->actualizar($id, $payload);
+      $this->registrar($last_id, $usuario, 12, 'productos');
+
+      $data['exito'] = TRUE;
+      $data['producto']['nombre'] = htmlentities( $this->input->post('nombre'));
+      $data['producto']['precio'] = floatval( $this->input->post('precio'));
+      $data['producto']['id_proveedor'] = intval( $this->input->post('id_proveedor'));
+      $data['producto']['id_categoria'] = intval( $this->input->post('id_categoria'));
+      $data['producto']['descripcion'] = htmlentities( $this->input->post('descripcion'));
+      $data['producto']['alerta'] = floatval( $this->input->post('alerta'));
+      $data['producto']['cantidad'] = floatval( $this->input->post('cantidad'));
+      $data['producto']['unidad'] = htmlentities( $this->input->post('unidad'));
+
+
+    }
+    $this->render([['pages/productos/actualizar', $data]]);
+  }
 
   public function ver( $id ) {
-    if ( ! $this->session->userdata('esta_logeado') ) {
-      show_404();
-    } else {
-      $data = [
-        'producto' => $this->productos_model->leer($id)
-      ];
-
-      $this->load->view('includes/header');
-      $this->load->view('pages/productos/ver', $data);
-      $this->load->view('includes/footer');
-    }
+    $this->logged();
+    $data['producto'] = $this->productos_model->leer($id);
+    $this->render([['pages/productos/ver', $data]]);
   }
 
-  public function eliminar( $id = 0 )
-  {
-    if ( ! $this->session->userdata('esta_logeado') and $this->session->userdata('es_admin') ) {
-      show_404();
-    } else {
-      $this->productos_model->eliminar($id);
-      if ($id) $this->registro->registrar($this->session->userdata('id_usuario'), 13, 'productos', $id);
-      redirect('/productos', 'refresh');
-    }
+  public function eliminar ($id = 0) {
+    $usuario = $this->loggedAndAdmin();
+    $this->productos_model->eliminar($id);
+    $this->registrar($id, $usuario, 13, 'productos');
+    redirect('/productos', 'refresh');
   }
 
-  public function stock( $id = 0 )
-  {
-    if ( ! $this->session->userdata('esta_logeado') and $this->session->userdata('es_admin') ) {
-      show_404();
-    } else {
-      $this->form_validation->set_rules('cantidad', 'Cantidad', 'required|numeric');
-      $this->form_validation->set_rules('opcion', 'Opción', 'required|in_list[incrementar,reducir]');
-      $this->form_validation->set_message('required', '<strong>%s</strong> es un campo obligatio');
-      $this->form_validation->set_message('numeric', '<strong>%s</strong> ingresado incorrectamente');
-      $this->form_validation->set_message('in_list', '<strong>%s</strong> ingresado incorrectamente');
-      $this->form_validation->set_error_delimiters($this->error_delimiter[0],$this->error_delimiter[1]);
+  public function stock ($id = 0) {
+    $usuario = $this->loggedAndAdmin();
+    $this->form_validation->set_rules('cantidad', 'Cantidad', 'required|numeric');
+    $this->form_validation->set_rules('opcion', 'Opción', 'required|in_list[incrementar,reducir]');
+    $this->form_validation->set_message('required', '<strong>%s</strong> es un campo obligatio');
+    $this->form_validation->set_message('numeric', '<strong>%s</strong> ingresado incorrectamente');
+    $this->form_validation->set_message('in_list', '<strong>%s</strong> ingresado incorrectamente');
 
-      if ( $this->form_validation->run() === FALSE ) {
-        redirect( base_url("/productos"), 'refresh' );
+    if ($this->form_validation->run()) {
+      if( $this->input->post('opcion') == 'reducir' ) {
+        $this->productos_model->reducir( $id, $this->input->post('cantidad') );
+        $this->registrar($id, $usuario, 21, 'productos');
       } else {
-        if( $this->input->post('opcion') == 'reducir' ) {
-          $this->productos_model->reducir( $id, $this->input->post('cantidad') );
-          if ($id) $this->registro->registrar($this->session->userdata('id_usuario'), 21, 'productos', $id);
-        } else {
-          if( $this->input->post('opcion') == 'incrementar' ) {
-            $this->productos_model->incrementar( $id, $this->input->post('cantidad') );
-            if ($id) $this->registro->registrar($this->session->userdata('id_usuario'), 20, 'productos', $id);
-
-          }
+        if( $this->input->post('opcion') == 'incrementar' ) {
+          $this->productos_model->incrementar( $id, $this->input->post('cantidad') );
+          $this->registrar($id, $usuario, 20, 'productos');
         }
-        redirect( base_url("/productos"), 'refresh' );
       }
     }
+    redirect( base_url("/productos"), 'refresh' );
   }
 }

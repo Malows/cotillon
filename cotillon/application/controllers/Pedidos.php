@@ -1,80 +1,64 @@
 <?php defined('BASEPATH') || exit('No direct script access allowed');
 
-class Pedidos extends CI_Controller {
+class Pedidos extends MY_Controller {
 
-  public function __construct ()
-  {
+  public function __construct () {
     parent::__construct();
     $this->load->model('pedidos_model');
     $this->load->model('detalles_pedido_model');
   }
 
   public function index () {
-    if ( ! $this->session->userdata('esta_logeado') ) {
-      show_404();
-    } else {
+    $this->logged();
+    $data = [
+      'pedidos' => $this->pedidos_model->lista(),
+      'es_admin_usuario_logueado' => $this->session->userdata('es_admin') ];
 
-      $data = [
-        'pedidos' => $this->pedidos_model->lista(),
-        'es_admin_usuario_logueado' => $this->session->userdata('es_admin')
-      ];
-
-      $this->load->view('includes/header');
-      $this->load->view('pages/pedidos/index', $data);
-      $this->load->view('includes/footer');
-    }
+    $this->render([['pages/pedidos/index', $data]]);
   }
 
   public function eliminar ($id = 0) {
-    if ( ! $this->session->userdata('esta_logeado') ) {
-      show_404();
-    } else {
-      $this->pedidos_model->eliminar($id);
-      redirect('/pedidos', 'refresh');
-    }
+    $usuario = $this->logged();
+    $this->pedidos_model->eliminar($id);
+    // TODO: el registro
+    redirect('/pedidos', 'refresh');
   }
 
   public function crear () {
-    if ( ! $this->session->userdata('esta_logeado') ) {
-      show_404();
-    } else {
-      $this->load->model('productos_model');
-      $this->load->model('proveedores_model');
+    $this->logged();
+    $this->load->model('productos_model');
+    $this->load->model('proveedores_model');
 
-      $data = [
-        'productos' => $this->productos_model->lista_limpia_pedido(),
-        'proveedores' => $this->proveedores_model->lista_limpia()
-      ];
-      $this->load->view('includes/header_modal');
-      $this->load->view('pages/pedidos/crear');
-      $this->load->view('includes/footer_vue1');
-      $this->load->view('pages/pedidos/scripts_crear', $data);
-      $this->load->view('includes/footer_vue2');
-    }
+    $data = [
+      'productos' => $this->productos_model->lista_limpia_pedido(),
+      'proveedores' => $this->proveedores_model->lista_limpia()
+    ];
+
+    $this->render([['pages/pedidos/crear', []], ['includes/footer_vue1', []], ['pages/pedidos/scripts_crear', $data]],
+      [['includes/header_modal', []]],
+      [['includes/footer_vue2', []]]
+    );
   }
 
   public function api_emitir_pedidos($payload = null) {
-    if ( ! $this->session->userdata('esta_logeado') ) {
-      show_404();
-    } else {
-      $proveedor = $this->input->get('proveedor');
-      $productos = $this->input->get('productos');
-      $total = $this->input->get('total');
+    $usuario = $this->logged();
+    $proveedor = $this->input->get('proveedor');
+    $productos = $this->input->get('productos');
+    $total = $this->input->get('total');
 
-      $last_id = $this->pedidos_model->crear(['id_proveedor' => $proveedor['id'], 'precio_total' => $total]);
+    $last_id = $this->pedidos_model->crear(['id_proveedor' => $proveedor['id'], 'precio_total' => $total]);
 
-      $productos = array_map(function ($x) use ($last_id) {
-        $x['cantidad'] = floatval( $x['cantidad'] );
-        $x['precio_unitario'] = floatval( $x['precio'] );
-        $x['id_producto'] = intval( $x['id'] );
-        $x['id_pedido'] = $last_id;
-        unset( $x['precio'], $x['nombre'], $x['id'], $x['id_proveedor'] );
-        return $x;
-      }, $productos);
+    $productos = array_map(function ($x) use ($last_id) {
+      $x['cantidad'] = floatval( $x['cantidad'] );
+      $x['precio_unitario'] = floatval( $x['precio'] );
+      $x['id_producto'] = intval( $x['id'] );
+      $x['id_pedido'] = $last_id;
+      unset( $x['precio'], $x['nombre'], $x['id'], $x['id_proveedor'] );
+      return $x;
+    }, $productos);
 
-      $this->detalles_pedido_model->batch_insertion($productos);
+    $this->detalles_pedido_model->batch_insertion($productos);
 
-      if ($last_id) $this->registro->registrar($this->session->userdata('id_usuario'), 22, 'pedidos', $last_id);
-    }
+    $this->registrar($last_id, $usuario, 22, 'pedidos');
   }
 }

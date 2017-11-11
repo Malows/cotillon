@@ -1,12 +1,11 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Proveedores extends CI_Controller
+class Proveedores extends MY_Controller
 {
 
   protected $config_validacion = null;
 
-  function __construct()
-  {
+  function __construct() {
     parent::__construct();
     $this->load->model('proveedores_model');
 
@@ -27,146 +26,88 @@ class Proveedores extends CI_Controller
     ];
   }
 
-  public function index()
-  {
-    if ( ! $this->session->userdata('esta_logeado') ) {
-      // No esta logeado, mensaje de error
-      show_404();
-    } else {
-      $data = [
-        'proveedores' => $this->proveedores_model->lista(),
-        'es_admin_usuario_logueado' => $this->session->userdata('es_admin'),
-      ];
+  public function index () {
+    $this->logged();
+    $data = [
+      'proveedores' => $this->proveedores_model->lista(),
+      'es_admin_usuario_logueado' => $this->session->userdata('es_admin') ];
 
-      $this->load->view('includes/header');
-      $this->load->view('pages/proveedores/index', $data);
-      $this->load->view('includes/footer');
-    }
+    $this->render([['pages/proveedores/index', $data]]);
   }
 
-  public function crear()
-  {
-    if ( ! $this->session->userdata('esta_logeado') && $this->session->userdata('es_admin') ) {
-      // No esta logeado, mensaje de error
-      show_404();
-    } else {
-      $this->form_validation->set_rules($this->config_validacion);
+  public function crear () {
+    $usuario = $this->loggedAndAdmin();
+    $this->form_validation->set_rules($this->config_validacion);
 
-      //mensajes de validaciones
-      $this->form_validation->set_message('required', "<strong>%s</strong> es un campo obligatorio.");
-      $this->form_validation->set_message('alpha_numeric_spaces', "<strong>%s</strong> solo admite caracteres alfabéticos.");
-      $this->form_validation->set_message('numeric', "<strong>%s</strong> es un campo unicamente numérico.");
-      $this->form_validation->set_error_delimiters('<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>');
+    //mensajes de validaciones
+    $this->form_validation->set_message('required', "<strong>%s</strong> es un campo obligatorio.");
+    $this->form_validation->set_message('alpha_numeric_spaces', "<strong>%s</strong> solo admite caracteres alfabéticos.");
+    $this->form_validation->set_message('numeric', "<strong>%s</strong> es un campo unicamente numérico.");
 
-      $this->load->model('localidades_model');
-      $data = [
-        'localidades' => $this->localidades_model->lista()
-      ];
+    $this->load->model('localidades_model');
+    $data['localidades'] = $this->localidades_model->lista();
 
-      if ( $this->form_validation->run() === FALSE ) {
-        $this->load->view('includes/header');
-        $this->load->view('pages/proveedores/crear', $data);
-        $this->load->view('includes/footer');
-      } else {
+    if ($this->form_validation->run()) {
 
-        $payload = [
-          'nombre_proveedor' => $this->security->xss_clean( $this->input->post('nombre_proveedor')),
-          'contacto' => $this->security->xss_clean( $this->input->post('contacto')),
-          'id_localidad' => $this->security->xss_clean( $this->input->post('localidad'))
-        ];
+      $payload = [
+        'nombre_proveedor' => $this->security->xss_clean( $this->input->post('nombre_proveedor')),
+        'contacto' => $this->security->xss_clean( $this->input->post('contacto')),
+        'id_localidad' => $this->security->xss_clean( $this->input->post('localidad')) ];
 
-        $last_id = $this->proveedores_model->crear($payload);
+      $last_id = $this->proveedores_model->crear($payload);
+      $this->registrar($last_id, $usuario, 5, 'proveedores');
 
-        if ($last_id) $this->registro->registrar($this->session->userdata('id_usuario'), 5, 'proveedores', $last_id);
-
-        $data['exito'] = TRUE;
-        $data['proveedor'] = htmlentities($this->input->post('nombre_proveedor'));
-
-
-        $this->load->view('includes/header');
-				$this->load->view('pages/proveedores/crear', $data);
-				$this->load->view('includes/footer');
-      }
-
+      $data['exito'] = TRUE;
+      $data['proveedor'] = htmlentities($this->input->post('nombre_proveedor'));
     }
+    $this->render([['pages/proveedores/crear', $data]]);
   }
 
-  public function ver( $id )
-  {
-    if ( ! $this->session->userdata('esta_logeado') ) {
-      // No esta logeado, mensaje de error
-      show_404();
-    } else {
-      $this->load->model('productos_model');
-      $data = [
-        'proveedor' => $this->proveedores_model->leer($id),
-        'productos' => $this->productos_model->productos_de_proveedor($id)
-      ];
-        $this->load->view('includes/header');
-        $this->load->view('pages/proveedores/ver', $data);
-        $this->load->view('includes/footer');
-    }
+  public function ver ($id) {
+    $this->logged();
+    $this->load->model('productos_model');
+    $data = [
+      'proveedor' => $this->proveedores_model->leer($id),
+      'productos' => $this->productos_model->productos_de_proveedor($id) ];
+    $this->render([['pages/proveedores/ver', $data]]);
   }
 
-  public function actualizar( $id )
-  {
-    if ( ! $this->session->userdata('esta_logeado') && $this->session->userdata('es_admin') ) {
-      // No esta logeado, mensaje de error
-      show_404();
-    } else {
-      $this->form_validation->set_rules($this->config_validacion);
+  public function actualizar ($id) {
+    $usuario = $this->loggedAndAdmin();
+    $this->form_validation->set_rules($this->config_validacion);
 
-      //mensajes de validaciones
-      $this->form_validation->set_message('required', "<strong>%s</strong> es un campo obligatorio.");
-      $this->form_validation->set_message('alpha_numeric_spaces', "<strong>%s</strong> solo admite caracteres alfabéticos.");
-      $this->form_validation->set_message('numeric', "<strong>%s</strong> es un campo unicamente numérico.");
-      $this->form_validation->set_error_delimiters('<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>');
+    //mensajes de validaciones
+    $this->form_validation->set_message('required', "<strong>%s</strong> es un campo obligatorio.");
+    $this->form_validation->set_message('alpha_numeric_spaces', "<strong>%s</strong> solo admite caracteres alfabéticos.");
+    $this->form_validation->set_message('numeric', "<strong>%s</strong> es un campo unicamente numérico.");
 
-      $this->load->model('localidades_model');
-      $data = [
-        'localidades' => $this->localidades_model->lista(),
-        'proveedor' => $this->proveedores_model->leer($id)
-      ];
+    $this->load->model('localidades_model');
+    $data = [
+      'localidades' => $this->localidades_model->lista(),
+      'proveedor' => $this->proveedores_model->leer($id) ];
 
-      if ( $this->form_validation->run() === FALSE ) {
-        $this->load->view('includes/header');
-        $this->load->view('pages/proveedores/actualizar', $data);
-        $this->load->view('includes/footer');
-      } else {
+    if ($this->form_validation->run()) {
+      $data['proveedor']['id_proveedor'] = $this->security->xss_clean( $id );
+      $data['proveedor']['nombre_proveedor'] = $this->security->xss_clean( $this->input->post('nombre_proveedor'));
+      $data['proveedor']['contacto'] = $this->security->xss_clean( $this->input->post('contacto'));
+      $data['proveedor']['id_localidad'] = $this->security->xss_clean( $this->input->post('localidad'));
+      $data['exito'] = true;
 
-        $data['proveedor']['id_proveedor'] = $this->security->xss_clean( $id );
-        $data['proveedor']['nombre_proveedor'] = $this->security->xss_clean( $this->input->post('nombre_proveedor'));
-        $data['proveedor']['contacto'] = $this->security->xss_clean( $this->input->post('contacto'));
-        $data['proveedor']['id_localidad'] = $this->security->xss_clean( $this->input->post('localidad'));
+      $payload=[
+        'nombre_proveedor'=> $this->security->xss_clean( $this->input->post('nombre_proveedor')),
+        'contacto'=> $this->security->xss_clean( $this->input->post('contacto')),
+        'id_localidad'=> $this->security->xss_clean( $this->input->post('localidad')) ];
 
-        $data['exito'] = true;
-
-        $payload=[
-          'nombre_proveedor'=> $this->security->xss_clean( $this->input->post('nombre_proveedor')),
-          'contacto'=> $this->security->xss_clean( $this->input->post('contacto')),
-          'id_localidad'=> $this->security->xss_clean( $this->input->post('localidad'))
-        ];
-
-        $last_id = $this->proveedores_model->actualizar( $id, $payload );
-
-        if ($last_id) $this->registro->registrar($this->session->userdata('id_usuario'), 6, 'proveedores', $last_id);
-
-        $this->load->view('includes/header');
-        $this->load->view('pages/proveedores/actualizar', $data);
-        $this->load->view('includes/footer');
-      }
+      $last_id = $this->proveedores_model->actualizar( $id, $payload );
+      $this->registrar($last_id, $usuario, 6, 'proveedores');
     }
+    $this->load->view('pages/proveedores/actualizar', $data);
   }
 
-  public function eliminar( $id = 0 )
-  {
-    if ( ! $this->session->userdata('esta_logeado') ) {
-      // No esta logeado, mensaje de error
-      show_404();
-    } else {
-      $this->proveedores_model->eliminar($id);
-      if ($id) $this->registro->registrar($this->session->userdata('id_usuario'), 7, 'proveedores', $id);
-      redirect('/proveedores', 'refresh');
-    }
+  public function eliminar ($id = 0) {
+    $usuario = $this->loggedAndAdmin();
+    $this->proveedores_model->eliminar($id);
+    $this->registrar($id, $usuario, 7, 'proveedores');
+    redirect('/proveedores', 'refresh');
   }
 }
