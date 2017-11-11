@@ -126,8 +126,6 @@ public function lista ($pagina = 1) {
 
       $datoFiltrado = array_values($datoFiltrado);
       $datoFiltrado = $datoFiltrado[0];
-      // var_dump(array_values($datoFiltrado));
-      // var_dump($datoFiltrado);
 
       $nombreCatcheado = $this->tabla_punto_nombre($aux['tabla'], true);
 

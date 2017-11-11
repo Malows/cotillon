@@ -1,26 +1,22 @@
 <?php defined('BASEPATH') || exit('No direct script access allowed');
 
-class Arqueos extends CI_Controller {
+class Arqueos extends MY_Controller {
 
   public function __construct() {
     parent::__construct();
   }
 
   public function index () {
-    if (!$this->session->userdata('esta_logeado')) {
-      show_404();
-    } else {
-      $pagina = intval( $this->input->get('pagina') );
-      $pagina = $pagina !== 0 ? $pagina : 1;
-      $data = [];
-      $data['cantidadTotalDeArqueos'] = $this->caja->contar_total();
-      $data['paginaActual'] = $pagina;
-      $data['arqueos'] = $pagina ? $this->caja->lista($pagina) : $this->caja->lista();
+    $this->logged();
+    $pagina = intval( $this->input->get('pagina') );
+    $pagina = $pagina !== 0 ? $pagina : 1;
+    $data = [
+      'cantidadTotalDeArqueos' => $this->caja->contar_total(),
+      'paginaActual' => $pagina,
+      'arqueos' => $pagina ? $this->caja->lista($pagina) : $this->caja->lista()
+    ];
 
-      $this->load->view('includes/header');
-      $this->load->view('pages/arqueos/index', $data);
-      $this->load->view('pages/arqueos/index_script');
-    }
+    $this->render([['pages/arqueos/index', $data]], null, [['pages/arqueos/index_script', []]]);
   }
 
   public function estimar_caja () {
