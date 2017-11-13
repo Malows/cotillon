@@ -10,6 +10,7 @@ class Registros extends MY_Controller {
   }
 
   private function parseOracion($datos) {
+    if ($datos === '') return '';
     $retorno = $this->parseFecha($datos['fecha'])." - ";
     $retorno .= "El usuario ".$datos['usuario_emisor']." <ID:".$datos['id_usuario']."> ";
     $retorno .= $datos['nombre_evento']." <ID:".$datos['id_objetivo']."> ";

@@ -51,7 +51,7 @@ class Clientes extends MY_Controller {
       'clientes' => $this->clientes_model->lista(),
       'es_admin_usuario_logueado' => $usuario['id_tipo_usuario'] < 3
     ];
-    $this->load->view([['pages/clientes/index', $data]]);
+    $this->render([['pages/clientes/index', $data]]);
   }
 
   public function crear() {

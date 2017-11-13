@@ -26,13 +26,13 @@
         <?php echo form_error('es_admin'); ?>
         <div class="radio">
           <label>
-            <input type="radio" name="es_admin" id="optionsRadios1" value="0"<?php if (! $usuario['es_admin']) echo " checked"; ?>>
+            <input type="radio" name="es_admin" id="optionsRadios1" value="0"<?php if (! $usuario['id_tipo_usuario'] < 3) echo " checked"; ?>>
             No Administrador
           </label>
         </div>
         <div class="radio">
           <label>
-            <input type="radio" name="es_admin" id="optionsRadios2" value="1"<?php if ($usuario['es_admin']) echo " checked"; ?>>
+            <input type="radio" name="es_admin" id="optionsRadios2" value="1"<?php if ($usuario['id_tipo_usuario'] < 3) echo " checked"; ?>>
             Administrador
           </label>
         </div>

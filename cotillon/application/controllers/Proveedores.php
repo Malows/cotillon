@@ -101,7 +101,7 @@ class Proveedores extends MY_Controller
       $last_id = $this->proveedores_model->actualizar( $id, $payload );
       $this->registrar($last_id, $usuario, 6, 'proveedores');
     }
-    $this->load->view('pages/proveedores/actualizar', $data);
+    $this->render([['pages/proveedores/actualizar', $data]]);
   }
 
   public function eliminar ($id = 0) {

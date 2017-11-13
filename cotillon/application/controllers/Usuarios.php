@@ -75,6 +75,8 @@ class Usuarios extends MY_Controller {
     $this->form_validation->set_message('matches', "La <strong>Contraseña</strong> y su <strong>Confirmación</strong> no coinsiden.");
     $this->form_validation->set_message('valid_email', "Ingrese una dirección de <strong>%s</strong> válida.");
 
+    $data = [];
+
     if ($this->form_validation->run()) {
       $payload = [
         'nombre' => $this->security->xss_clean( $this->input->post('nombre') ),
@@ -88,26 +90,23 @@ class Usuarios extends MY_Controller {
       $this->registrar($last_id, $usuario, 2, 'usuarios');
 
       $permiso = $this->security->xss_clean( $this->input->post('es_admin') ) == "1" ? "Administrador" : "No Administrador";
-      $data = [
-        'exito' => TRUE,
-        'usuario' => htmlentities($this->input->post('apellido').', '.$this->input->post('nombre') ),
-        'permisos' => $permiso ];
+      $data['exito'] = TRUE;
+      $data['usuario'] = htmlentities($this->input->post('apellido').', '.$this->input->post('nombre') );
+      $data['permisos'] = $permiso;
     }
     $this->render([['pages/usuarios/crear', $data]]);
   }
 
   public function ver( $id =  0 ) {
     $this->logged();
-    $data = [
-      'accion' => 'ver',
-      'usuarios' =>  $this->usuarios_model->lista(),
-      'mensaje' => "Esta acción requiere de un usuario válido.
-      Seleccione uno por favor." ];
+    $data['accion'] = 'ver';
+    $data['mensaje'] = "Esta acción requiere de un usuario válido. Seleccione uno por favor.";
 
     $data['usuario'] = $this->usuarios_model->leer_por_id( $id );
     if ( $data['usuario'] ) {
       $this->render([['pages/usuarios/ver', $data]]);
     } else {
+      $data['usuarios'] =  $this->usuarios_model->lista();
       $this->render([['pages/usuarios/id_no_valido', $data]]);
     }
   }
@@ -176,7 +175,7 @@ class Usuarios extends MY_Controller {
     $data['usuario'] = $this->usuarios_model->leer_por_id( $id );
 
     if ( $this->form_validation->run() === FALSE ) {
-      if ( $aux ) {
+      if ( $data['usuario'] ) {
         $this->render([['pages/usuarios/eliminar', $data]]);
       } else {
         $data = [
