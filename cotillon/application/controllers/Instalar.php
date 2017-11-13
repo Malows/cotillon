@@ -1,4 +1,4 @@
-<?php define('BASEPATH') || exit('No direct script access allowed');
+<?php defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Instalar extends CI_controller {
 	public function __construct () {
@@ -8,8 +8,7 @@ class Instalar extends CI_controller {
 
 	public function index () {
 		$cantidadDeUsuarios = $this->instalar_model->cantidad_de_usuarios();
-		if ($cantidadDeUsuarios !== 0) redirect('/', 'refresh');
-
+		// if ($cantidadDeUsuarios !== 0) redirect('/', 'refresh');
 		if ($this->form_validation->run()) {
 
 			$this->instalar_model->first_run();
@@ -19,6 +18,7 @@ class Instalar extends CI_controller {
 			$superEmail = $this->security->xss_clean( $this->input->post('superEmail') );
 			$superDNI = $this->security->xss_clean( $this->input->post('superDni') );
 			$superPassword = $this->security->xss_clean( $this->input->post('superPassword') );
+			var_dump($superUser, $superApellido, $superEmail, $superDNI, $superPassword);
 
 			$user = $this->security->xss_clean( $this->input->post('nombre') );
 			$apellido = $this->security->xss_clean( $this->input->post('apellido') );

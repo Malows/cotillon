@@ -37,7 +37,7 @@ class Instalar_model extends CI_Model {
 
 	private function database_creation () {
 		if ($this->dbutil->database_exists('cotillon'))	$this->dbforge->drop_database('cotillon');
-		$this->dbforge->create_database('cotillon');
+		return $this->dbforge->create_database('cotillon');
 	}
 
 	private function seed_database () {
