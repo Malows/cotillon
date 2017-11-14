@@ -17,20 +17,20 @@
         <div class="form-group">
           <h2>Super usuario</h2>
           <!-- Super Usuario -->
-          <label for="nombre">Nombre<?php echo form_error("nombre");?></label>
+          <label for="nombre">Nombre<?php echo form_error("superNombre");?></label>
           <input type="text" class="form-control" name="superNombre" value="">
 
-          <label for="apellido">Apellido<?php echo form_error("apellido");?></label>
+          <label for="apellido">Apellido<?php echo form_error("superApellido");?></label>
           <input type="text" class="form-control" name="superApellido" value="">
 
-          <label for="email">Email<?php echo form_error("email");?></label>
+          <label for="email">Email<?php echo form_error("superEmail");?></label>
           <input type="text" class="form-control" name="superEmail" value="">
 
-          <label for="dni">DNI<?php echo form_error("dni");?></label>
+          <label for="dni">DNI<?php echo form_error("superDni");?></label>
           <input type="text" class="form-control" name="superDni" value="">
 
           <div class="form-group">
-            <label for="password">Contraseña<?php echo form_error("password");?></label>
+            <label for="password">Contraseña<?php echo form_error("superPassword");?></label>
             <div class="input-group">
               <input type="password" id="password-form" class="form-control" name="superPassword" value="">
               <div id="show-me" class="input-group-addon"><i class="fa fa-lg fa-eye"></i></div>
@@ -38,7 +38,7 @@
           </div>
 
           <div class="form-group">
-            <label for="re-password">Confirmación de Contraseña<?php echo form_error("re-password");?></label>
+            <label for="re-password">Confirmación de Contraseña<?php echo form_error("super-re-password");?></label>
             <div class="input-group">
               <input type="password" id="password-form" class="form-control" name="super-re-password" value="">
               <div id="show-me" class="input-group-addon"><i class="fa fa-lg fa-eye"></i></div>
