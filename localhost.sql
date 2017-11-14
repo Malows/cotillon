@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3307
--- Tiempo de generación: 02-11-2017 a las 12:41:33
+-- Tiempo de generación: 14-11-2017 a las 10:12:57
 -- Versión del servidor: 5.6.33
 -- Versión de PHP: 5.6.26
 
@@ -247,7 +247,18 @@ INSERT INTO `eventos` (`id_evento`, `descripcion`) VALUES
 (22, 'creó un pedido'),
 (23, 'modificó un pedido'),
 (24, 'deshabilitó un pedido'),
-(25, 'recibió un pedido');
+(25, 'recibió un pedido'),
+(26, 'abrió la caja'),
+(27, 'cerró la caja'),
+(28, 'creó una razón de movimiento'),
+(29, 'modificó una razón de movimiento'),
+(30, 'deshabilitó una razón de movimiento'),
+(31, 'creó un movimiento'),
+(32, 'modificó un movimiento'),
+(33, 'deshabilitó un movimiento'),
+(34, 'creó un tipo de usuario'),
+(35, 'modificó un tipo de usuario'),
+(36, 'deshabilitó un tipo de usuario');
 
 -- --------------------------------------------------------
 
@@ -272,6 +283,27 @@ INSERT INTO `localidades` (`id_localidad`, `nombre_localidad`, `barrio`) VALUES
 (11, 'Santa Fe', 'Maria Selva'),
 (12, 'Venado Tuerto', 'Barrio Tuerto'),
 (13, 'Venado Tuerto', 'Mar Chiquita');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `movimientos`
+--
+
+CREATE TABLE `movimientos` (
+  `id_movimiento` int(11) NOT NULL,
+  `monto` float NOT NULL,
+  `id_razon_movimiento` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `movimientos`
+--
+
+INSERT INTO `movimientos` (`id_movimiento`, `monto`, `id_razon_movimiento`) VALUES
+(1, 10, 1),
+(2, 12, 3),
+(3, 20, 4);
 
 -- --------------------------------------------------------
 
@@ -356,6 +388,28 @@ INSERT INTO `proveedores` (`id_proveedor`, `nombre_proveedor`, `id_localidad`, `
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `razones_movimientos`
+--
+
+CREATE TABLE `razones_movimientos` (
+  `id_razon_movimiento` int(11) NOT NULL,
+  `descripcion` varchar(255) NOT NULL,
+  `multiplicador` smallint(6) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `razones_movimientos`
+--
+
+INSERT INTO `razones_movimientos` (`id_razon_movimiento`, `descripcion`, `multiplicador`) VALUES
+(1, 'pago a proveedores', -1),
+(2, 'pago impuesto inmoviliario', -1),
+(3, 'cobro de deuda', 1),
+(4, 'pago de sueldos', -1);
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `registros`
 --
 
@@ -368,39 +422,25 @@ CREATE TABLE `registros` (
   `fecha` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- --------------------------------------------------------
+
 --
--- Volcado de datos para la tabla `registros`
+-- Estructura de tabla para la tabla `tipos_usuarios`
 --
 
-INSERT INTO `registros` (`id_registro`, `id_usuario`, `id_evento`, `id_objetivo`, `tabla`, `fecha`) VALUES
-(1, 1, 14, 5, 'clientes', '2017-09-26 01:26:41'),
-(2, 1, 2, 6, 'usuarios', '2017-09-26 01:43:13'),
-(3, 1, 17, 12, 'localidades', '2017-10-11 00:53:30'),
-(4, 1, 14, 6, 'clientes', '2017-10-11 01:19:55'),
-(5, 1, 8, 6, 'categorias_producto', '2017-10-11 01:36:50'),
-(6, 1, 9, 6, 'categorias_producto', '2017-10-11 01:37:05'),
-(7, 1, 11, 10, 'productos', '2017-10-11 02:04:51'),
-(8, 1, 20, 1, 'productos', '2017-10-11 02:09:05'),
-(9, 1, 21, 1, 'productos', '2017-10-11 02:10:14'),
-(10, 1, 5, 3, 'proveedores', '2017-10-11 02:45:41'),
-(11, 1, 9, 1, 'categorias_producto', '2017-10-16 23:05:41'),
-(12, 1, 9, 1, 'categorias_producto', '2017-10-16 23:05:46'),
-(13, 1, 17, 13, 'localidades', '2017-10-17 01:20:51'),
-(14, 1, 1, 30, 'ventas', '2017-10-24 00:43:21'),
-(15, 1, 2, 7, 'usuarios', '2017-10-25 22:39:23'),
-(16, 1, 4, 7, 'usuarios', '2017-10-25 22:39:30'),
-(17, 1, 4, 4, 'usuarios', '2017-10-25 22:43:29'),
-(18, 1, 4, 3, 'usuarios', '2017-10-25 22:43:35'),
-(19, 1, 4, 4, 'usuarios', '2017-10-25 23:49:51'),
-(20, 1, 4, 3, 'usuarios', '2017-10-25 23:49:57'),
-(21, 1, 8, 7, 'categorias_producto', '2017-10-25 23:51:28'),
-(22, 1, 10, 7, 'categorias_producto', '2017-10-25 23:51:40'),
-(23, 1, 16, 6, 'clientes', '2017-10-25 23:53:27'),
-(24, 1, 5, 4, 'proveedores', '2017-10-25 23:55:09'),
-(25, 1, 7, 4, 'proveedores', '2017-10-25 23:55:33'),
-(26, 1, 13, 2, 'productos', '2017-10-25 23:57:40'),
-(27, 1, 1, 31, 'ventas', '2017-10-26 00:18:49'),
-(28, 1, 22, 1, 'pedidos', '2017-10-26 03:10:59');
+CREATE TABLE `tipos_usuarios` (
+  `id_tipo_usuario` int(11) NOT NULL,
+  `nombre` varchar(45) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `tipos_usuarios`
+--
+
+INSERT INTO `tipos_usuarios` (`id_tipo_usuario`, `nombre`) VALUES
+(1, 'super usuario'),
+(2, 'administrador'),
+(3, 'empleado');
 
 -- --------------------------------------------------------
 
@@ -415,7 +455,7 @@ CREATE TABLE `usuarios` (
   `dni` int(11) NOT NULL,
   `email` varchar(255) CHARACTER SET utf16 DEFAULT NULL,
   `password` varchar(255) CHARACTER SET utf16 NOT NULL,
-  `es_admin` tinyint(1) NOT NULL DEFAULT '0',
+  `id_tipo_usuario` int(11) NOT NULL,
   `fecha_inicio` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `fecha_fin` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -424,13 +464,13 @@ CREATE TABLE `usuarios` (
 -- Volcado de datos para la tabla `usuarios`
 --
 
-INSERT INTO `usuarios` (`id_usuario`, `nombre`, `apellido`, `dni`, `email`, `password`, `es_admin`, `fecha_inicio`, `fecha_fin`) VALUES
+INSERT INTO `usuarios` (`id_usuario`, `nombre`, `apellido`, `dni`, `email`, `password`, `id_tipo_usuario`, `fecha_inicio`, `fecha_fin`) VALUES
 (1, 'Juan Manuel', 'Cruz', 35448975, 'juancho_1210@hotmail.com', '$2y$10$IzOBA5HxNUMdiX96FxLbv.TCUxCR7g8rUgl2Xw1rh37/tMENChMK6', 1, '2016-10-14 21:48:21', NULL),
 (2, 'Milton', 'Wery', 34828118, 'milton_st@hotmail.com', '$2y$10$xwTAWv.MV/dBVM9MXewBiebBCnL6zI/4rDXRRSSnjrxSUffuNe.zu', 1, '2016-11-22 05:30:03', NULL),
-(3, 'Random', 'Random', 123456789, 'random@mail.com', '$2y$10$IJEYN2bHkVKy2jg6xiCoJOTX6BMtxP6JXTOztNTHVYlv.ApWTSD/O', 0, '2017-01-12 04:47:04', '2017-10-26 02:49:57'),
-(4, 'Ramdos', 'SeedTime', 23456789, 'otro_mail@mail.com', '$2y$10$bBniFrNPkWae1aQuyUoTXeaNHN6hviLMpkzV0P6TRZfqtwX9iagmK', 0, '2017-01-26 03:08:03', '2017-10-26 02:49:51'),
-(5, 'user', 'user', 12345678, 'user@example.com', '$2y$10$sIOXUrWJYNrnycLzkyzte.9AGeSsKXA9jsl5APGuTkv3/ngY9ktD6', 0, '2017-05-09 01:15:57', NULL),
-(6, 'Administrador', 'Administrador', 111222333, 'administrador@mail.com', '$2y$10$dE2h1/GKOj7oh0fmrjX5oOVNnwCrs1mny7OkF7DSxjZh040GOSQEW', 1, '2017-09-26 04:43:13', NULL);
+(3, 'Random', 'Random', 123456789, 'random@mail.com', '$2y$10$IJEYN2bHkVKy2jg6xiCoJOTX6BMtxP6JXTOztNTHVYlv.ApWTSD/O', 3, '2017-01-12 04:47:04', '2017-10-26 02:49:57'),
+(4, 'Ramdos', 'SeedTime', 23456789, 'otro_mail@mail.com', '$2y$10$bBniFrNPkWae1aQuyUoTXeaNHN6hviLMpkzV0P6TRZfqtwX9iagmK', 3, '2017-01-26 03:08:03', '2017-10-26 02:49:51'),
+(5, 'user', 'user', 12345678, 'user@example.com', '$2y$10$sIOXUrWJYNrnycLzkyzte.9AGeSsKXA9jsl5APGuTkv3/ngY9ktD6', 3, '2017-05-09 01:15:57', NULL),
+(6, 'Administrador', 'Administrador', 111222333, 'administrador@mail.com', '$2y$10$dE2h1/GKOj7oh0fmrjX5oOVNnwCrs1mny7OkF7DSxjZh040GOSQEW', 2, '2017-09-26 04:43:13', NULL);
 
 -- --------------------------------------------------------
 
@@ -545,6 +585,13 @@ ALTER TABLE `localidades`
   ADD KEY `nombre_localidad` (`nombre_localidad`,`barrio`);
 
 --
+-- Indices de la tabla `movimientos`
+--
+ALTER TABLE `movimientos`
+  ADD PRIMARY KEY (`id_movimiento`),
+  ADD KEY `id_razon_movimiento` (`id_razon_movimiento`);
+
+--
 -- Indices de la tabla `pedidos`
 --
 ALTER TABLE `pedidos`
@@ -566,6 +613,12 @@ ALTER TABLE `proveedores`
   ADD KEY `idlocalidad` (`id_localidad`);
 
 --
+-- Indices de la tabla `razones_movimientos`
+--
+ALTER TABLE `razones_movimientos`
+  ADD PRIMARY KEY (`id_razon_movimiento`);
+
+--
 -- Indices de la tabla `registros`
 --
 ALTER TABLE `registros`
@@ -574,10 +627,17 @@ ALTER TABLE `registros`
   ADD KEY `id_evento` (`id_evento`);
 
 --
+-- Indices de la tabla `tipos_usuarios`
+--
+ALTER TABLE `tipos_usuarios`
+  ADD PRIMARY KEY (`id_tipo_usuario`);
+
+--
 -- Indices de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  ADD PRIMARY KEY (`id_usuario`);
+  ADD PRIMARY KEY (`id_usuario`),
+  ADD KEY `id_tipo_usuario` (`id_tipo_usuario`);
 
 --
 -- Indices de la tabla `ventas`
@@ -609,12 +669,17 @@ ALTER TABLE `clientes`
 -- AUTO_INCREMENT de la tabla `eventos`
 --
 ALTER TABLE `eventos`
-  MODIFY `id_evento` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id_evento` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 --
 -- AUTO_INCREMENT de la tabla `localidades`
 --
 ALTER TABLE `localidades`
   MODIFY `id_localidad` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+--
+-- AUTO_INCREMENT de la tabla `movimientos`
+--
+ALTER TABLE `movimientos`
+  MODIFY `id_movimiento` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT de la tabla `pedidos`
 --
@@ -631,10 +696,20 @@ ALTER TABLE `productos`
 ALTER TABLE `proveedores`
   MODIFY `id_proveedor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
+-- AUTO_INCREMENT de la tabla `razones_movimientos`
+--
+ALTER TABLE `razones_movimientos`
+  MODIFY `id_razon_movimiento` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+--
 -- AUTO_INCREMENT de la tabla `registros`
 --
 ALTER TABLE `registros`
-  MODIFY `id_registro` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `id_registro` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT de la tabla `tipos_usuarios`
+--
+ALTER TABLE `tipos_usuarios`
+  MODIFY `id_tipo_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
@@ -663,6 +738,12 @@ ALTER TABLE `detalles_venta`
   ADD CONSTRAINT `fk_detalles_ventas_ventas_2` FOREIGN KEY (`id_producto`) REFERENCES `productos` (`id_producto`);
 
 --
+-- Filtros para la tabla `movimientos`
+--
+ALTER TABLE `movimientos`
+  ADD CONSTRAINT `fk_movimientos_razon_movimientos` FOREIGN KEY (`id_razon_movimiento`) REFERENCES `razones_movimientos` (`id_razon_movimiento`);
+
+--
 -- Filtros para la tabla `productos`
 --
 ALTER TABLE `productos`
@@ -681,6 +762,12 @@ ALTER TABLE `proveedores`
 ALTER TABLE `registros`
   ADD CONSTRAINT `fk_id_evento` FOREIGN KEY (`id_evento`) REFERENCES `eventos` (`id_evento`),
   ADD CONSTRAINT `fk_id_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`);
+
+--
+-- Filtros para la tabla `usuarios`
+--
+ALTER TABLE `usuarios`
+  ADD CONSTRAINT `fk_usuarios_tipos_usuarios` FOREIGN KEY (`id_tipo_usuario`) REFERENCES `tipos_usuarios` (`id_tipo_usuario`);
 
 --
 -- Filtros para la tabla `ventas`
