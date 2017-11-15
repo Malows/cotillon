@@ -44,6 +44,8 @@ class Registros extends MY_Controller {
       case "ventas":
         $retorno .= "con un monto total de $".$datos['datos']['total'];
         break;
+      case "movimientos":
+        $retorno .= "con un monto de $". $datos['datos']['multiplicador'] * $datos['datos']['monto'] ." en concepto de ". $datos['datos']['descripcion'];
       default:
         break;
     }

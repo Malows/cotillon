@@ -53,6 +53,9 @@
   <div>
     <canvas id="canvas3" width="300" height="300"></canvas>
   </div>
+  <div>
+    <canvas id="canvas4" width="300" height="300"></canvas>
+  </div>
 </div>
 <?php $replacement = '/cotillon/index.php'; ?>
 <script src="<?php echo str_replace($replacement, '', base_url('assets/js/Chart.min.js'));?>"></script>
@@ -71,6 +74,8 @@ const labels_2 = <?= json_encode( array_keys($datos_ventas_categorias) ); ?>;
 const data_2 = <?= json_encode( array_values($datos_ventas_categorias) ); ?>;
 const labels_3 = <?= json_encode( array_keys($top_productos)); ?>;
 const data_3 = <?= json_encode( array_values($top_productos)); ?>;
+const labels_4 = <?= json_encode( array_keys($top_clientes)); ?>;
+const data_4 = <?= json_encode( array_values($top_clientes)); ?>;
 const backgroundColor = [
     'rgba(255, 99, 132, 0.2)',
     'rgba(54, 162, 235, 0.2)',
@@ -145,6 +150,23 @@ var myChart3 = new Chart(ctx3, {
           data: data_1,
           backgroundColor: backgroundColor[randomIndex],
           borderColor: borderColor[randomIndex],
+          borderWidth: 1
+      }]
+  },
+  options: {
+    responsive: true,
+  }
+});
+var ctx4 = document.getElementById("canvas4");
+var myChart4 = new Chart(ctx4, {
+  type: 'horizontalBar',
+  data: {
+      labels: labels_4,
+      datasets: [{
+          label: 'Top clientes',
+          data: data_4,
+          backgroundColor: backgroundColor,
+          borderColor: borderColor,
           borderWidth: 1
       }]
   },

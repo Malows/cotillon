@@ -66,13 +66,16 @@ class Inicio extends MY_Controller {
 			$ventas = $this->pluck($ventas, 'fecha', 'total');
 			$topProductos = $this->productos_model->top_productos();
 			$topProductos = $this->pluck($topProductos, 'nombre', 'total_venta');
+			$topClientes = $this->ventas_model->top_3_clientes();
+			$topClientes = $this->pluck($topClientes, 'nombre', 'total');
 
 			$data = [
 				'alertas' => $this->productos_model->lista_alertas(),
 				'ventas' => array_reverse($ventas),
 				'caja' => $this->caja->lista_cajas_abiertas(),
 				'datos_ventas_categorias' => $this->categorias_producto_model->cantidad_categoria(),
-				'top_productos' => $topProductos
+				'top_productos' => $topProductos,
+				'top_clientes' => $topClientes
 			 ];
 			$this->render([['pages/inicio/index', $data]]);
 		}

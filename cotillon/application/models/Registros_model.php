@@ -38,6 +38,8 @@ private function tabla_punto_id ($tabla, $quitarPrefijo = false) {
       return "$prefix"."id_usuario";
     case "ventas":
       return "$prefix"."id_venta";
+    case "movimientos":
+      return "$prefix"."id_movimiento";
     default:
       return "$prefix"."id";
   }
@@ -56,6 +58,8 @@ private function tabla_punto_nombre ($tabla, $quitarPrefijo = false) {
       return "$prefix"."nombre";
     case "proveedores":
       return "$prefix"."nombre_proveedor";
+    case "movimientos":
+      return "$prefix"."descripcion";
     default:
       return false;
   }
@@ -108,6 +112,7 @@ public function lista ($pagina = 1) {
 
     $datosObjetivosOrdenados = array_map(function ($elem){
       $this->db->where_in($this->tabla_punto_id($elem['tabla']), $elem['ids']);
+      if ($elem['tabla'] === 'movimientos') $this->db->join('razones_movimientos', 'movimientos.id_razon_movimiento = razones_movimientos.id_razon_movimiento ');
       $elem['datos'] = $this->db->get($elem['tabla'])->result_array();
       return $elem;
     }, $datosObjetivosOrdenados);
@@ -117,7 +122,8 @@ public function lista ($pagina = 1) {
         return $x['tabla'] == $elem['tabla'];
       });
 
-      $aux = array_values($aux)[0];
+      $aux = array_values($aux);
+      $aux = $aux[0];
 
       $datoFiltrado = array_filter($aux['datos'], function($x) use($elem, $aux) {
         $nombre_id = $this->tabla_punto_id( $aux['tabla'], true);

@@ -17,10 +17,21 @@ class Caja_model extends MY_Model {
 		return $datos;
 	}
 
-	private function ventasEntreFechas ($desde, $hasta) {
+	private function entreFechas ($tabla, $desde, $hasta) {
 		$this->db->where("fecha >=", $desde);
 		$this->db->where("fecha <=", $hasta);
-		return $this->db->get('ventas')->result_array();
+		return $this->db->get($tabla);
+	}
+
+	private function ventasEntreFechas ($desde, $hasta) {
+		$this->db->select('SUM(total) as `total`');
+		return $this->entreFechas('ventas', $desde, $hasta)->row_array();
+	}
+
+	private function movimientosEntreFechas ($desde, $hasta) {
+		$this->db->join('razones_movimientos', 'movimientos.id_razon_movimiento = razones_movimientos.id_razon_movimiento');
+		$this->db->select('SUM(razones_movimientos.multiplicador * movimientos.monto) as `total`');
+		return $this->entreFechas('movimientos', $desde, $hasta)->row_array();
 	}
 
 	public function lista ($pagina = 1) {
@@ -55,12 +66,11 @@ class Caja_model extends MY_Model {
 		}
 
 		$ventas = $this->ventasEntreFechas( $cajas['fecha_apertura'], $this->now() );
+		$ventas = floatval($ventas['total']);
+		$movimientos = $this->movimientosEntreFechas( $cajas['fecha_apertura'], $this->now() );
+		$movimientos = floatval($movimientos['total']);
 
-		$totalDeVenta = array_reduce($ventas, function ($carry, $element) {
-			return $carry + $element['total'];
-		}, $cajas['monto_apertura']);
-
-		$cajas['monto_estimado_cierre'] = $totalDeVenta;
+		$cajas['monto_estimado_cierre'] = $cajas['monto_apertura'] +  $ventas + $movimientos;
 
 		$this->db->where('id_caja', $cajas['id_caja']);
 		$this->db->update('caja', $cajas);
