@@ -1,6 +1,6 @@
 <?php defined('BASEPATH') || exit('No direct script access allowed');
 $ultima_pagina = ( intval($cantidad/100)+1);
-$rango =  range(1, $ultima_pagina); 
+$rango =  range(1, $ultima_pagina);
 
 $items = array_map( function ($x) use ($pagina_actual) {
 	$clases =  ($pagina_actual === $x) ? ' class="active"' : '';
@@ -25,6 +25,20 @@ echo $siguiente;
 ?>
 	</ul>
 </nav>
-<ul>
-<?php foreach ($oraciones as $oracion) echo "<li>$oracion</li>\n"; ?>
-</ul>
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>Fecha</th>
+			<th>Evento</th>
+		</tr>
+	</thead>
+	<tbody>
+		<?php foreach ($oraciones as $oracion): ?>
+			<tr>
+			<?php $separado = explode(' - ', $oracion); ?>
+			<td><?php echo $separado[0]; ?></td>
+			<td><?php echo $separado[1]; ?></td>
+		</tr>
+		<?php endforeach; ?>
+	</tbody>
+</table>
