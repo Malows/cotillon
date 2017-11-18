@@ -73,13 +73,13 @@ class MY_Model extends CI_Model {
 
 	public function actualizar ( $id, Array $data ) {
 		$this->update($id, $data);
-		return $this->_return();
+		return $this->_return($id);
 	}
 
 	public function eliminar ( $key, $erase = false ) {
 		if ($erase) $this->destroy($key);
 		else $this->delete($key);
-		return $this->_return();
+		return $this->_return($id);
 	}
 
 	public function leer ( $id, $trash = false ) {

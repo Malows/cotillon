@@ -95,23 +95,17 @@ class Ventas extends MY_Controller {
   }
 
   public function pdf($id) {
-    if ( ! $this->session->userdata('esta_logeado') ) {
-      show_404();
-    } else {
-      // $this->load->library('pdf');
-      $data = [
-        'venta' => $this->ventas_model->leer($id),
-        'detalles' => $this->detalles_venta_model->buscar_por_venta($id)
-      ];
-      $html = $this->load->view('includes/header', [], true);
-      $html .= $this->load->view('pages/ventas/ver', $data, true);
-      $html .= $this->load->view('includes/footer', [], true);
+    $this->logged();
+    $this->load->library('pdf');
 
-      $this->load->library('pdf');
-      $fecha = date('dmYHis');
-  		// Convert to PDF
-  		$this->pdf->pdf->WriteHtml($html);
-  		$this->pdf->pdf->Output("venta-$fecha.pdf", 'D');
-    }
+    $data['venta'] = $this->ventas_model->leer($id);
+    $data['detalles'] = $this->detalles_venta_model->buscar_por_venta($id);
+
+    $html = $this->load->view('includes/recibo', $data, true);
+    $fecha = $data['venta']['fecha'];
+
+		// Convert to PDF
+		$this->pdf->pdf->WriteHtml($html);
+		$this->pdf->pdf->Output("venta-$fecha.pdf", 'D');
   }
 }

@@ -9,9 +9,9 @@ $items = array_map( function ($x) use ($paginaActual) {
 
 $previo = '';
 $siguiente = '';
-if ($paginaActual === 1) $previo = '<li class="disabled"><a href="#" aria-label="Previo"><span aria-hidden="true">&laquo;</span></a></li>';      
+if ($paginaActual === 1) $previo = '<li class="disabled"><a href="#" aria-label="Previo"><span aria-hidden="true">&laquo;</span></a></li>';
 else $previo = '<li><a href="'. base_url("/arqueos/?pagina=" . ($paginaActual + 1)) .'" aria-label="Previo"><span aria-hidden="true">&laquo;</span></a></li>';
-if ($paginaActual === $ultimaPagina) $siguiente = '<li class="disabled"><a href="#" aria-label="Siguiente"><span aria-hidden="true">&raquo;</span></a></li>';      
+if ($paginaActual === $ultimaPagina) $siguiente = '<li class="disabled"><a href="#" aria-label="Siguiente"><span aria-hidden="true">&raquo;</span></a></li>';
 else $siguiente = '<li><a href="'. base_url("/arqueos/?pagina=" . ($paginaActual - 1)) .'" aria-label="Siguiente"><span aria-hidden="true">&raquo;</span></a></li>';
 ?>
 <h2>Arqueos</h2>
@@ -47,7 +47,7 @@ else $siguiente = '<li><a href="'. base_url("/arqueos/?pagina=" . ($paginaActual
       <tr>
 	<td><?=$caja['fecha_apertura']?></td>
 	<td><?= $caja['fecha_cierre'] ? $caja['fecha_cierre'] : ''?></td>
-	<td><?= $caja['monto_apertura'] ? '$'.$caja['monto_apertura'] : ''?></td>
+	<td><?= $caja['monto_apertura'] !== null ? '$'.$caja['monto_apertura'] : ''?></td>
 	<td><?= $caja['monto_estimado_cierre'] ? '$'.$caja['monto_estimado_cierre'] : ''?></td>
 	<td><?= $caja['monto_real_cierre'] ? '$'.$caja['monto_real_cierre'] : ''?></td>
 	<td><strong><?php

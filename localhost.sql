@@ -24,7 +24,8 @@ INSERT INTO `caja` (`id_caja`, `fecha_apertura`, `monto_apertura`, `fecha_cierre
 (2, '2017-10-19 23:02:20', 200, '2017-10-19 23:02:30', 200, 300),
 (3, '2017-10-19 23:02:47', 100, '2017-10-19 23:02:55', 100, 50),
 (4, '2017-10-26 00:09:13', 100, '2017-10-26 00:36:16', 220, 220),
-(5, '2017-11-14 23:50:22', 100, '2017-11-15 00:03:10', 110, 110);
+(5, '2017-11-14 23:50:22', 100, '2017-11-15 00:03:10', 110, 110),
+(6, '2017-11-18 03:17:11', 0, '2017-11-18 03:18:49', -100, -100);
 
 
 
@@ -77,7 +78,9 @@ CREATE TABLE `detalles_pedido` (
 
 
 INSERT INTO `detalles_pedido` (`id_pedido`, `id_producto`, `cantidad`, `precio_unitario`) VALUES
-(1, 1, 10, 10);
+(1, 1, 10, 10),
+(2, 10, 2, 10),
+(3, 7, 1, 100);
 
 
 
@@ -230,7 +233,10 @@ INSERT INTO `movimientos` (`id_movimiento`, `monto`, `id_razon_movimiento`, `fec
 (3, 20, 4, '2017-11-13 23:53:54'),
 (4, 1, 1, '2017-11-13 23:53:54'),
 (5, 100, 1, '2017-11-14 23:53:54'),
-(6, 10, 1, '2017-11-14 23:53:54');
+(6, 10, 1, '2017-11-14 23:53:54'),
+(7, 100, 1, '2017-11-18 02:49:15'),
+(8, 25, 1, '2017-11-18 03:04:22'),
+(9, 100, 1, '2017-11-18 03:18:26');
 
 
 
@@ -240,12 +246,15 @@ CREATE TABLE `pedidos` (
   `fecha_creacion` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `fecha_recepcion` datetime DEFAULT NULL,
   `precio_total` float NOT NULL,
+  `precio_real` float DEFAULT NULL,
   `soft_delete` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-INSERT INTO `pedidos` (`id_pedido`, `id_proveedor`, `fecha_creacion`, `fecha_recepcion`, `precio_total`, `soft_delete`) VALUES
-(1, 1, '2017-10-26 03:10:59', NULL, 100, NULL);
+INSERT INTO `pedidos` (`id_pedido`, `id_proveedor`, `fecha_creacion`, `fecha_recepcion`, `precio_total`, `precio_real`, `soft_delete`) VALUES
+(1, 1, '2017-10-26 03:10:59', '2017-11-18 02:49:15', 100, 100, NULL),
+(2, 2, '2017-11-18 03:04:00', '2017-11-18 03:04:22', 20, 25, NULL),
+(3, 1, '2017-11-18 03:18:15', '2017-11-18 03:18:26', 100, 100, NULL);
 
 
 
@@ -322,7 +331,15 @@ INSERT INTO `registros` (`id_registro`, `id_usuario`, `id_evento`, `id_objetivo`
 (1, 1, 31, 4, 'movimientos', '2017-11-14 23:24:45'),
 (2, 1, 31, 5, 'movimientos', '2017-11-14 23:50:40'),
 (3, 1, 31, 6, 'movimientos', '2017-11-14 23:50:46'),
-(4, 1, 1, 32, 'ventas', '2017-11-14 23:51:08');
+(4, 1, 1, 32, 'ventas', '2017-11-14 23:51:08'),
+(5, 1, 1, 7, 'movimientos', '2017-11-18 02:49:15'),
+(6, 1, 25, 1, 'pedidos', '2017-11-18 02:49:15'),
+(7, 1, 22, 2, 'pedidos', '2017-11-18 03:04:00'),
+(8, 1, 28, 8, 'movimientos', '2017-11-18 03:04:22'),
+(9, 1, 25, 2, 'pedidos', '2017-11-18 03:04:22'),
+(10, 1, 22, 3, 'pedidos', '2017-11-18 03:18:15'),
+(11, 1, 28, 9, 'movimientos', '2017-11-18 03:18:26'),
+(12, 1, 25, 3, 'pedidos', '2017-11-18 03:18:26');
 
 
 
@@ -472,7 +489,7 @@ ALTER TABLE `ventas`
 
 
 ALTER TABLE `caja`
-  MODIFY `id_caja` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_caja` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 ALTER TABLE `categorias_producto`
   MODIFY `id_categoria` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 ALTER TABLE `clientes`
@@ -482,9 +499,9 @@ ALTER TABLE `eventos`
 ALTER TABLE `localidades`
   MODIFY `id_localidad` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 ALTER TABLE `movimientos`
-  MODIFY `id_movimiento` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_movimiento` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 ALTER TABLE `pedidos`
-  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 ALTER TABLE `productos`
   MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 ALTER TABLE `proveedores`
@@ -492,7 +509,7 @@ ALTER TABLE `proveedores`
 ALTER TABLE `razones_movimientos`
   MODIFY `id_razon_movimiento` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 ALTER TABLE `registros`
-  MODIFY `id_registro` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_registro` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 ALTER TABLE `tipos_usuarios`
   MODIFY `id_tipo_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 ALTER TABLE `usuarios`

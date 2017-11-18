@@ -61,4 +61,19 @@ class Pedidos extends MY_Controller {
 
     $this->registrar($last_id, $usuario, 22, 'pedidos');
   }
+
+  public function recibir($id) {
+    $usuario = $this->logged();
+
+    // if ($this->form_validation->run()) {
+      $payload['precio_real'] = $this->input->post('precio_real');
+      var_dump('antes del modelo', $payload);
+      $last_id = $this->pedidos_model->recibir_pedido($id, $payload, $usuario);
+
+      $this->registrar($last_id, $usuario, 25, 'pedidos');
+    // } else {
+      // redirect( base_url('/pedidos'), 'refresh');
+    // }
+
+  }
 }
