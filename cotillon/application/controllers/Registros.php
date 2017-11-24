@@ -56,7 +56,10 @@ class Registros extends MY_Controller {
     $this->loggedAndAdmin();
 		$pagina = intval($this->input->get('pagina'));
 		$pagina = $pagina === 0 ? 1 : $pagina;
-		$datos = $this->registro->lista();
+    $idUsuarioFiltrado = intval($this->input->get('usuario'));
+    $idUsuarioFiltrado = $idUsuarioFiltrado ? $idUsuarioFiltrado : null;
+
+    $datos = $this->registro->lista($pagina, $idUsuarioFiltrado);
 
 		$data['oraciones'] = array_map(function ($x){return $this->parseOracion($x);}, $datos);
 		$data['pagina_actual'] = $pagina;

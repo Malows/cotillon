@@ -2,6 +2,11 @@
   display: none;
 }
 
+.select2 {
+  margin: 20px 0;
+  width: 50%;
+}
+
 .grid-2-col {
   padding: 0 10vw;
   display: grid;

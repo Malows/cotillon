@@ -45,13 +45,12 @@ class Ventas_model extends MY_Model {
 		return $this->db->get('ventas')->result_array();
 	}
 
-	public function hasta($fecha = '') {
-		if ( $fecha ) {
-			$this->db->order_by('fecha', 'DESC');
-			$this->db->join('clientes', 'clientes.id_cliente = ventas.id_cliente');
-			$this->db->where( 'fecha >=', $fecha->format('Y-m-d H:i:S') ); // $hasta - $desde = 1*100 = 100 siempre
-			return $this->db->get('ventas')->result_array();
-		} else return $this->lista();
+	public function hasta($desde = '', $hasta = '') {
+		$this->db->order_by('fecha', 'DESC');
+		$this->db->join('clientes', 'clientes.id_cliente = ventas.id_cliente');
+		if ($desde) $this->db->where( 'fecha >=', $desde->format('Y-m-d H:i:s') );
+		if ($hasta) $this->db->where( 'fecha <=', $hasta->format('Y-m-d H:i:s') );
+		return $this->db->get('ventas')->result_array();
 	}
 
 	public function last_id() {

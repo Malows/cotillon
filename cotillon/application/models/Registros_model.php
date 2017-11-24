@@ -94,8 +94,10 @@ public function registrar ($usuario, $evento, $tabla, $objetivo) {
     $this->db->insert('registros', $data);
   }
 
-public function lista ($pagina = 1) {
+public function lista ($pagina = 1, $id_usuario = null) {
     $desde = ($pagina - 1) * 100;
+    if ($id_usuario) $this->db->where('registros.id_usuario', $id_usuario);
+
     $this->db->join('usuarios', 'usuarios.id_usuario = registros.id_usuario');
     $this->db->join('eventos', 'eventos.id_evento = registros.id_evento');
     $this->db->order_by('fecha', 'DESC');

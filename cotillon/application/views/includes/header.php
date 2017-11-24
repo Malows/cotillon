@@ -7,7 +7,11 @@
 		<link rel="stylesheet" href="<?php echo str_replace($replacement, '', base_url('assets/css/bootstrap.min.css'));?>">
 		<link rel="stylesheet" href="<?php echo str_replace($replacement, '', base_url('assets/css/font-awesome.min.css'));?>">
 		<link rel="stylesheet" href="<?php echo str_replace($replacement, '', base_url('assets/css/datatables.min.css'));?>">
+		<link rel="stylesheet" href="<?php echo str_replace($replacement, '', base_url('assets/css/jquery-ui.min.css'));?>">
+		<link rel="stylesheet" href="<?php echo str_replace($replacement, '', base_url('assets/css/select2.min.css'));?>">
 		<link rel="stylesheet" href="<?php echo str_replace($replacement, '', base_url('assets/css/style.css'));?>">
+		<script src="<?php echo str_replace($replacement, '', base_url('/assets/js/jquery-3.1.1.min.js'));?>"></script>
+		<script src="<?php echo str_replace($replacement, '', base_url('/assets/js/jquery-ui.min.js'));?>"></script>
 		<title>Cotillon FTW</title>
 	</head>
 	<body>
