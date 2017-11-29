@@ -9,35 +9,32 @@ class Ventas extends MY_Controller {
     $this->load->model('detalles_venta_model');
   }
 
-  private function timeSet($arr)
-  {
-    $desde = $arr[0] ? $arr[0]->setTime(0, 0, 0) : false;
-    $hasta = $arr[1] ? $arr[1]->setTime(23, 59, 59) : false;
-    return [$desde, $hasta];
-  }
-
-  private function hoy()
-  {
-    $now = (new DateTime('now', new DateTimeZone('America/Argentina/Buenos_Aires')));
-    return $this->timeSet([$now, $now]);
-  }
-
-  private function semana()
-  {
-    $unaSemanaAtras = new DateTime();
-    $unaSemanaAtras->setTimeZone(new DateTimeZone('America/Argentina/Buenos_Aires'));
-    $unaSemanaAtras->modify('-7days');
-
-    $hasta = new DateTime('now', new DateTimeZone('America/Argentina/Buenos_Aires'));
-    return $this->timeSet([$unaSemanaAtras, $hasta]);
-  }
-
-  private function desdeHasta ($desde, $hasta)
-  {
+  private function dateInput ($input, $zero = true) {
     $argentina = new DateTimeZone('America/Argentina/Buenos_Aires');
-    $desde = $desde === '_' ? false : DateTime::createFromFormat('Y-m-d', $desde, $argentina);
-    $hasta = $hasta === '_' ? false : DateTime::createFromFormat('Y-m-d', $hasta, $argentina);
-    return $this->timeSet([$desde, $hasta]);
+    if ($input === '_') $input = false;
+
+    if ($input === 'hoy' || $input === 'semana') $input = new DateTime('now', $argentina);
+
+    if ($input === 'semana') $input->modify('-7days');
+
+    if (strpos($input, '-') !== false) $input = DateTime::createFromFormat('Y-m-d', $input, $argentina);
+
+    if ($zero) $input->setTime(0, 0, 0);
+    else $input->setTime(23, 59, 59);
+
+    return $input;
+  }
+
+  private function hoy() {
+    return [$this->dateInput('hoy'), $this->dateInput('hoy', false)];
+  }
+
+  private function semana() {
+    return [$this->dateInput('semana'), $this->dateInput('hoy', false)];
+  }
+
+  private function desdeHasta ($desde, $hasta) {
+    return [$this->dateInput($desde), $this->dateInput($hasta, false)];
   }
 
   public function index($desde = null, $hasta = null) {
@@ -49,7 +46,7 @@ class Ventas extends MY_Controller {
     if ($desde === 'hoy') $arr = $this->hoy();
     else if ($desde === 'ultima_semana' || !$desde || ($desde === '_' && $hasta === '_')) $arr = $this->semana();
     else $arr = $this->desdeHasta($desde, $hasta);
-
+    var_dump($arr);
     $data['ventas'] = $this->ventas_model->hasta($arr[0], $arr[1]);
 
     $this->render([['pages/ventas/index', $data]]);

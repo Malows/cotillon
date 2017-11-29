@@ -102,7 +102,7 @@ public function lista ($pagina = 1, $id_usuario = null) {
     $this->db->join('eventos', 'eventos.id_evento = registros.id_evento');
     $this->db->order_by('fecha', 'DESC');
     $this->db->limit( 100, $desde );
-    $this->db->select('usuarios.nombre as usuario_emisor, registros.id_usuario, eventos.descripcion as nombre_evento, id_objetivo, tabla, fecha');
+    $this->db->select("concat(usuarios.nombre, ' ', usuarios.apellido) as usuario_emisor, registros.id_usuario, eventos.descripcion as nombre_evento, id_objetivo, tabla, fecha");
 		$respuestas = $this->db->get('registros')->result_array();
 
     $tablas = $this->purge_tablas($respuestas);

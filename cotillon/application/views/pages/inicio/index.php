@@ -43,6 +43,13 @@
   </div>
 <?php endif; ?>
 </div>
+<div class="row">
+  <select class="form-control" id="periodo-de-tiempo">
+    <option value="0">asdasdasdas</option>
+    <option value="1">qweqweqwrwe</option>
+    <option value="2">zxcvzxcvx</option>
+  </select>
+</div>
 <div class="contenedor-de-graficos">
   <div>
     <canvas id="canvas1" width="300" height="300"></canvas>
@@ -61,13 +68,8 @@
 <script src="<?php echo str_replace($replacement, '', base_url('assets/js/Chart.min.js'));?>"></script>
 <script src="<?php echo str_replace($replacement, '', base_url('assets/js/moment.min.js'));?>"></script>
 <script src="<?php echo str_replace($replacement, '', base_url('assets/js/moment.es.js'));?>"></script>
-<!-- <script>
-  document.querySelectorAll('canvas').forEach(canvas => {
-    let padre = canvas.parentNode;
-    canvas.width = padre.offsetWidth;
-  })
-</script> -->
 <script>
+const selectPeriodo = document.getElementById('periodo-de-tiempo');
 const labels_1 = <?= json_encode( array_keys($ventas) );?>.map(fecha => moment(fecha).format('MMMM'));
 const data_1 = <?= json_encode( array_values($ventas) );?>;
 const labels_2 = <?= json_encode( array_keys($datos_ventas_categorias) ); ?>;
@@ -105,73 +107,40 @@ const borderColor = [
     'rgba(255, 159, 64, 1)'
 ];
 
-var ctx1 = document.getElementById("canvas1");
-var myChart1 = new Chart(ctx1, {
-  type: 'bar',
-  data: {
-      labels: labels_3,
+let randomIndex = parseInt(Math.random() * (borderColor.length));
+var ctx1 = document.getElementById("canvas1").getContext('2d');
+var ctx2 = document.getElementById("canvas3").getContext('2d');
+var ctx3 = document.getElementById("canvas2").getContext('2d');
+var ctx4 = document.getElementById("canvas4").getContext('2d');
+
+function parseDataGrafico (tipoGrafico, labels, data, datasetLabel, colorIndex = null) {
+  return {
+      labels: labels,
       datasets: [{
-          label: 'Productos más vendidos',
-          data: data_3,
-          backgroundColor: backgroundColor,
-          borderColor: borderColor,
-          borderWidth: 1
+          label: datasetLabel, data: data, borderWidth: 1,
+          backgroundColor: typeof colorIndex === 'number' ? backgroundColor[colorIndex] : backgroundColor,
+          borderColor: typeof colorIndex === 'number' ? borderColor[colorIndex] : borderColor
       }]
-  },
-  options: {
-    responsive: true,
-  }
-});
-var ctx2 = document.getElementById("canvas2");
-var myChart2 = new Chart(ctx2, {
-  type: 'pie',
-  data: {
-      labels: labels_2,
-      datasets: [{
-          label: '# de ventas',
-          data: data_2,
-          backgroundColor: backgroundColor,
-          borderColor: borderColor,
-          borderWidth: 1
-      }]
-  },
-  options: {
-    responsive: true,
-  }
-});
-const randomIndex = parseInt(Math.random() * (borderColor.length));
-var ctx3 = document.getElementById("canvas3");
-var myChart3 = new Chart(ctx3, {
-  type: 'line',
-  data: {
-      labels: labels_1,
-      datasets: [{
-          label: 'Ventas por mes',
-          data: data_1,
-          backgroundColor: backgroundColor[randomIndex],
-          borderColor: borderColor[randomIndex],
-          borderWidth: 1
-      }]
-  },
-  options: {
-    responsive: true,
-  }
-});
-var ctx4 = document.getElementById("canvas4");
-var myChart4 = new Chart(ctx4, {
-  type: 'horizontalBar',
-  data: {
-      labels: labels_4,
-      datasets: [{
-          label: 'Top clientes',
-          data: data_4,
-          backgroundColor: backgroundColor,
-          borderColor: borderColor,
-          borderWidth: 1
-      }]
-  },
-  options: {
-    responsive: true,
-  }
-});
+    }
+}
+
+function renderGrafico (ctx, tipoGrafico, labels, data, datasetLabel, colorIndex = null) {
+  return new Chart(ctx, {
+    type: tipoGrafico,
+    data: parseDataGrafico(tipoGrafico, labels, data, datasetLabel, colorIndex),
+    options: { responsive: true }
+  })
+}
+var myChart1 = renderGrafico(ctx1, 'bar', labels_3, data_3, 'Productos más vendidos')
+var myChart2 = renderGrafico(ctx2, 'pie', labels_2, data_2, '# de ventas')
+var myChart3 = renderGrafico(ctx3, 'line', labels_1.slice(labels_1.length - 13), data_1.slice(data_1.length - 13), 'Ventas por mes', randomIndex)
+var myChart4 = renderGrafico(ctx4, 'horizontalBar', labels_4, data_4, 'Top clientes')
+
+selectPeriodo.addEventListener('change', e => {
+  randomIndex = parseInt(Math.random() * (borderColor.length));
+  const newLabels1 = labels_1.slice(selectPeriodo.value, selectPeriodo.value + 12)
+  const newData1 = data_1.slice(selectPeriodo.value, selectPeriodo.value + 12)
+  myChart3 = renderGrafico(ctx3, 'line', newLabels1, newData1, 'Ventas por mes', randomIndex)
+  myChart3.update()
+})
 </script>

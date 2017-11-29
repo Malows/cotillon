@@ -45,7 +45,13 @@
 </div>
 <script>
   $('#datepicker-desde').datepicker();
-  $('#datepicker-hasta').datepicker();
+//   $.datepicker.formatDate( "DD, MM d, yy", new Date( 2007, 7 - 1, 14 ), {
+//   dayNamesShort: $.datepicker.regional["es"].dayNamesShort,
+//   dayNames: $.datepicker.regional["es"].dayNames,
+//   monthNamesShort: $.datepicker.regional["es"].monthNamesShort,
+//   monthNames: $.datepicker.regional["es"].monthNames
+// })
+  $('#datepicker-hasta').datepicker( $.datepicker.regional["es"] );
 </script>
 <script>
   const button = document.getElementById('enviar-filtro')

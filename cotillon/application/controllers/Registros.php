@@ -54,6 +54,7 @@ class Registros extends MY_Controller {
 
 	public function index () {
     $this->loggedAndAdmin();
+    $this->load->model('usuarios_model');
 		$pagina = intval($this->input->get('pagina'));
 		$pagina = $pagina === 0 ? 1 : $pagina;
     $idUsuarioFiltrado = intval($this->input->get('usuario'));
@@ -64,6 +65,7 @@ class Registros extends MY_Controller {
 		$data['oraciones'] = array_map(function ($x){return $this->parseOracion($x);}, $datos);
 		$data['pagina_actual'] = $pagina;
 		$data['cantidad'] = $this->registro->cantidad_total();
+    $data['usuarios'] = $this->usuarios_model->lista(true);
 
 		$this->render([['pages/registros/index', $data]]);
 	}

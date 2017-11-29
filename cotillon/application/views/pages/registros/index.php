@@ -30,12 +30,11 @@ else $siguiente =  '<li><a href="'. base_url("/registros/?pagina=". ($pagina_act
 	</div>
 	<div class="col-md-6 pull-left">
 		<select class="select2" id="select-usuarios">
-			<option value="0">Sin filtro</option>
-			<option value="1">Usuario 1</option>
-			<option value="2">Usuario 2</option>
-			<option value="3">Usuario 3</option>
-			<option value="4">Usuario 4</option>
-			<option value="5">Usuario 5</option>
+			<?php foreach ($usuarios as $usuario) {
+				$id = $usuario['id_usuario'];
+				$nombre = $usuario['nombre'].' '.$usuario['apellido'];
+				echo "<option value=\"$id\">$nombre</option>";
+			} ?>
 		</select>
 	</div>
 </div>
