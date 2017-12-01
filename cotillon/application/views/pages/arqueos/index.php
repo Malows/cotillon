@@ -40,6 +40,7 @@ else $siguiente = '<li><a href="'. base_url("/arqueos/?pagina=" . ($paginaActual
       <th>Monto estimado</th>
       <th>Monto final</th>
       <th>Fluctuación</th>
+			<th>Opciones</th>
     </tr>
   </thead>
   <tbody>
@@ -60,6 +61,9 @@ if ($caja['monto_estimado_cierre'] != null && $caja['monto_real_cierre'] != null
 	if ($movimiento == 0) { $color = 'text-muted'; $icono = 'fa fa-minus'; }
 	echo "<span class='$color'><i class='$icono'></i> $movimiento</span>";
 }?></strong></td>
+				<td><a href="<?= base_url('arqueos/ver/'.$caja['id_caja'])?>" class="btn btn-primary">
+					<i class="fa fa-eye"></i>
+				</a></td>
       </tr>
     <?php endforeach; ?>
   </tbody>

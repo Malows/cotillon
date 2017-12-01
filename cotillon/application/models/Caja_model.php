@@ -17,9 +17,9 @@ class Caja_model extends MY_Model {
 		return $datos;
 	}
 
-	private function entreFechas ($tabla, $desde, $hasta) {
-		$this->db->where("fecha >=", $desde);
-		$this->db->where("fecha <=", $hasta);
+	private function entreFechas($tabla, $desde, $hasta) {
+		$this->db->where('fecha >=', $desde);
+		$this->db->where('fecha <=', $hasta);
 		return $this->db->get($tabla);
 	}
 
@@ -90,7 +90,31 @@ class Caja_model extends MY_Model {
 		$caja['fecha_cierre'] = $this->now();
 
 		$this->update($caja['id_caja'], $caja);
+		var_dump($this->db->last_query());
 		return $caja;
+	}
+
+	public function leer($id, $trash = false)	{
+		$caja = $this->get($id)->row_array();
+
+		$desde = $caja['fecha_apertura'];
+		$hasta = $caja['fecha_cierre'] ? $caja['fecha_cierre'] : $this->now();
+
+		$query = $this->db->query("
+		SELECT descripcion, (multiplicador * monto) AS monto, fecha FROM movimientos
+		JOIN razones_movimientos ON razones_movimientos.id_razon_movimiento = movimientos.id_razon_movimiento
+		WHERE fecha BETWEEN '$desde' AND '$hasta'
+
+		UNION
+
+		SELECT CONCAT('Venta a ', clientes.nombre_cliente) as descripcion, total as monto, fecha FROM ventas
+		JOIN clientes ON clientes.id_cliente = ventas.id_cliente
+		WHERE fecha BETWEEN '$desde' AND '$hasta' ORDER BY fecha ASC
+		");
+		return [
+			'detalles' => $query->result_array(),
+			'caja' => $caja
+		];
 	}
 
 }

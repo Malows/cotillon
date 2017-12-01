@@ -38,4 +38,11 @@ class Arqueos extends MY_Controller {
       echo json_encode(['success' => false, 'message' => 'Existen cajas abiertas.']);
     echo json_encode(['success' => true, 'caja' => $this->caja->abrir_caja($monto)]);
   }
+
+  public function ver($id)
+  {
+    $this->logged();
+    $data = $this->caja->leer($id);
+    $this->render([['pages/arqueos/ver', $data]]);
+  }
 }
