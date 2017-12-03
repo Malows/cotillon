@@ -193,4 +193,25 @@ class Usuarios extends MY_Controller {
       $this->render([['pages/usuarios/eliminar', $data]]);
     }
   }
+
+  public function restaurar( $id ) {
+    $usuario = $this->loggedAndAdmin();
+    $this->usuarios_model->restaurar($id);
+    redirect(base_url('/usuarios'), 'refresh');
+  }
+
+  public function configuraciones() {
+    $data['usuario'] = $this->loggedAndAdmin();
+
+    $this->form_validation->set_rules('submit', 'Submit', 'required');
+    $this->form_validation->set_message('required', 'Es necesario');
+
+    if ($this->form_validation->run()) {
+      // manejar las configuraciones
+      $data['usuario']['modo_restore'] = $this->input->post('modo-restore') == 1 ? true : false;
+      $this->usuarios_model->actualizar($data['usuario']['id_usuario'], $data['usuario']);
+      $_SESSION['user'] = $data['usuario'];
+    }
+    $this->render([['pages/usuarios/configuraciones', $data]]);
+  }
 }

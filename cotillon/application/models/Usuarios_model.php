@@ -10,11 +10,12 @@ class Usuarios_model extends MY_Model {
 	}
 
 	protected function sanitizar( Array $data ) {
-		$data['nombre'] = htmlentities($data['nombre']);
-		$data['apellido'] = htmlentities($data['apellido']);
-		$data['email'] = htmlentities($data['email']);
-		$data['dni'] = intval($data['dni']);
-		$data['es_admin'] = boolval($data['es_admin']);
+		if (array_key_exists('nombre', $data)) $data['nombre'] = htmlentities($data['nombre']);
+		if (array_key_exists('apellido', $data)) $data['apellido'] = htmlentities($data['apellido']);
+		if (array_key_exists('email', $data)) $data['email'] = htmlentities($data['email']);
+		if (array_key_exists('dni', $data)) $data['dni'] = intval($data['dni']);
+		if (array_key_exists('id_tipo_usuario', $data)) $data['id_tipo_usuario'] = intval($data['id_tipo_usuario']);
+		if (array_key_exists('modo_restore', $data)) $data['modo_restore'] = boolval($data['modo_restore']);
 		return $data;
 	}
 
@@ -44,6 +45,10 @@ class Usuarios_model extends MY_Model {
 		if ( !$verificacion ) return FALSE; // contraseña incorrecta
 		if ( $user['fecha_fin'] ) return FALSE; // usuario no habilitado
 
+		$user['modo_restore'] = false;
+		$this->where($user['id_usuario']);
+		$this->db->update($this->nombre_tabla, $user);
+		
 		return $user; // usuario ok
 	}
 }

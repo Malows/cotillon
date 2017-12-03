@@ -66,6 +66,13 @@ class MY_Model extends CI_Model {
 			$this->db->where( $this->clave_primaria, intval($key) );
 	}
 
+	protected function restore( $key ) {
+		$this->where($key);
+		$data = [];
+		$data[$this->soft_delete] = null;
+		return $this->db->update($this->nombre_tabla, $data);
+	}
+
 	public function crear ( Array $data ) {
 		$this->insert($data);
 		return $this->_return();
@@ -90,5 +97,10 @@ class MY_Model extends CI_Model {
 	public function lista ( $trash = false ) {
 		if (!$trash) $this->withTrashed();
 		return $this->get()->result_array();
+	}
+
+	public function restaurar ( $id ) {
+		$this->restore($id);
+		return $this->_return($id);
 	}
 }

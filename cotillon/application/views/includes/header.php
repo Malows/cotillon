@@ -57,6 +57,9 @@
 						<?php endif; ?>
 						</ul>
 						<ul class="nav navbar-nav navbar-right">
+							<?php if($this->session->userdata('es_admin')): ?>
+								<li><a href="<?= base_url('usuarios/configuraciones')?>">Configuraciones</a></li>
+							<?php endif; ?>
 							<li><a href="<?php echo base_url("inicio/salir");?>">Salir</a></li>
 						</ul>
 					</div>

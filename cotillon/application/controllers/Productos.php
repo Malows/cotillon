@@ -163,4 +163,10 @@ class Productos extends MY_Controller {
     }
     redirect( base_url("/productos"), 'refresh' );
   }
+
+  public function restaurar( $id ) {
+    $usuario = $this->loggedAndAdmin();
+    $this->productos_model->restaurar($id);
+    redirect(base_url('/productos'), 'refresh');
+  }
 }

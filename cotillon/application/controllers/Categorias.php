@@ -18,13 +18,14 @@ class Categorias extends MY_Controller {
 
     public function index() {
       $usuario = $this->logged();
+      $modoRestore = boolval($usuario['modo_restore']);
       $data = [
-        'categorias' => $this->categorias_producto_model->lista(),
+        'categorias' => $this->categorias_producto_model->lista($modoRestore),
         'id_usuario_logueado' => $usuario['id_usuario'],
         'es_admin_usuario_logueado' => $usuario['id_tipo_usuario'] < 3
       ];
 
-      $this->render([['pages/categorias/index', $data]]);
+      $this->render([[$modoRestore ? 'pages/categorias/index_restore' : 'pages/categorias/index', $data]]);
     }
 
   public function crear(){
@@ -79,5 +80,11 @@ class Categorias extends MY_Controller {
       'productos' => $this->categorias_producto_model->productos_correspondientes($id)
     ];
     $this->render([['pages/categorias/ver_productos', $data]]);
+  }
+
+  public function restaurar( $id ) {
+    $usuario = $this->loggedAndAdmin();
+    $this->categorias_producto_model->restaurar($id);
+    redirect(base_url('/categorias'), 'refresh');
   }
 }

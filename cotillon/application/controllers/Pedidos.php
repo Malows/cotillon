@@ -76,4 +76,10 @@ class Pedidos extends MY_Controller {
     // }
 
   }
+
+  public function restaurar( $id ) {
+    $usuario = $this->loggedAndAdmin();
+    $this->pedidos_model->restaurar($id);
+    redirect(base_url('/pedidos'), 'refresh');
+  }
 }

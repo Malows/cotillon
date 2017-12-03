@@ -110,4 +110,10 @@ class Proveedores extends MY_Controller
     $this->registrar($id, $usuario, 7, 'proveedores');
     redirect('/proveedores', 'refresh');
   }
+
+  public function restaurar( $id ) {
+    $usuario = $this->loggedAndAdmin();
+    $this->proveedores_model->restaurar($id);
+    redirect(base_url('/proveedores'), 'refresh');
+  }
 }

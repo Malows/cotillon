@@ -126,4 +126,10 @@ class Clientes extends MY_Controller {
     $this->registro($id, $usuario, 15, 'clientes');
     redirect( base_url('/clientes'), 'refresh' );
   }
+
+  public function restaurar( $id ) {
+    $usuario = $this->loggedAndAdmin();
+    $this->clientes_model->restaurar($id);
+    redirect(base_url('/clientes'), 'refresh');
+  }
 }
