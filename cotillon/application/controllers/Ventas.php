@@ -17,7 +17,7 @@ class Ventas extends MY_Controller {
 
     if ($input === 'semana') $input->modify('-7days');
 
-    if (strpos($input, '-') !== false) $input = DateTime::createFromFormat('Y-m-d', $input, $argentina);
+    if (is_string($input) && strpos($input, '-') !== false) $input = DateTime::createFromFormat('Y-m-d', $input, $argentina);
 
     if ($zero) $input->setTime(0, 0, 0);
     else $input->setTime(23, 59, 59);
@@ -46,7 +46,6 @@ class Ventas extends MY_Controller {
     if ($desde === 'hoy') $arr = $this->hoy();
     else if ($desde === 'ultima_semana' || !$desde || ($desde === '_' && $hasta === '_')) $arr = $this->semana();
     else $arr = $this->desdeHasta($desde, $hasta);
-    var_dump($arr);
     $data['ventas'] = $this->ventas_model->hasta($arr[0], $arr[1]);
 
     $this->render([['pages/ventas/index', $data]]);
