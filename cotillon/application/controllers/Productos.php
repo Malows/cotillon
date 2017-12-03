@@ -45,13 +45,14 @@ class Productos extends MY_Controller {
   }
 
   public function index () {
-    $this->logged();
+    $usuario = $this->logged();
+    $modoRestore = boolval($usuario['modo_restore']);
     $data = [
-      'productos' => $this->productos_model->lista(),
+      'productos' => $this->productos_model->lista($modoRestore),
       'alertas' => $this->productos_model->lista_alertas(),
       'es_admin_usuario_logueado' => $this->session->userdata('es_admin')];
 
-    $this->render([['pages/productos/index', $data]]);
+    $this->render([[$modoRestore ? 'pages/productos/index_restore' : 'pages/productos/index', $data]]);
   }
 
   public function crear() {

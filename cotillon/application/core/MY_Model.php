@@ -86,7 +86,7 @@ class MY_Model extends CI_Model {
 	public function eliminar ( $key, $erase = false ) {
 		if ($erase) $this->destroy($key);
 		else $this->delete($key);
-		return $this->_return($id);
+		return $this->_return($key);
 	}
 
 	public function leer ( $id, $trash = false ) {

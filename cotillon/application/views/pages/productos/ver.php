@@ -1,4 +1,5 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+<?php var_dump($producto); ?>
 <h2 class="text-center">Productos</h2>
 <hr>
 <h3 class="text-center"><?php echo $producto['nombre'];?></h3>

@@ -52,12 +52,13 @@ class Usuarios extends MY_Controller {
   public function index() {
     $usuario = $this->logged();
     //obtenes datos
+    $modoRestore = boolval($usuario['modo_restore']);
     $data = [
-      'usuarios' => $this->usuarios_model->lista(),
+      'usuarios' => $this->usuarios_model->lista($modoRestore),
       'id_usuario_logueado' => $usuario['id_usuario'],
       'es_admin_usuario_logueado' => $usuario['id_tipo_usuario'] < 3
     ];
-    $this->render([['pages/usuarios/index', $data]]);
+    $this->render([[$modoRestore ? 'pages/usuarios/index_restore' : 'pages/usuarios/index', $data]]);
   }
 
   public function crear() {

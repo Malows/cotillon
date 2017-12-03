@@ -47,11 +47,14 @@ class Clientes extends MY_Controller {
 
   public function index() {
     $usuario = $this->logged();
+    $modoRestore = boolval($usuario['modo_restore']);
     $data = [
-      'clientes' => $this->clientes_model->lista(),
+      'clientes' => $this->clientes_model->lista($modoRestore),
+      'id_usuario_logueado' => $usuario['id_usuario'],
       'es_admin_usuario_logueado' => $usuario['id_tipo_usuario'] < 3
     ];
-    $this->render([['pages/clientes/index', $data]]);
+
+    $this->render([[$modoRestore ? 'pages/clientes/index_restore' : 'pages/clientes/index', $data]]);
   }
 
   public function crear() {

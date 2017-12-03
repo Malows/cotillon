@@ -27,12 +27,13 @@ class Proveedores extends MY_Controller
   }
 
   public function index () {
-    $this->logged();
+    $usuario = $this->logged();
+    $modoRestore = boolval($usuario['modo_restore']);
     $data = [
-      'proveedores' => $this->proveedores_model->lista(),
+      'proveedores' => $this->proveedores_model->lista($modoRestore),
       'es_admin_usuario_logueado' => $this->session->userdata('es_admin') ];
 
-    $this->render([['pages/proveedores/index', $data]]);
+    $this->render([[$modoRestore ? 'pages/proveedores/index_restore' : 'pages/proveedores/index', $data]]);
   }
 
   public function crear () {

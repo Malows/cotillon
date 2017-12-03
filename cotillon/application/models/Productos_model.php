@@ -68,9 +68,15 @@ class Productos_model extends MY_Model {
 		$this->db->where_in('productos.id_categoria', $categoriasHabilitadas);
 		$this->db->where_in('productos.id_proveedor', $proveedoresHabilitados);
 
+		if (!$trash) $this->withTrashed();
+		else $this->db->select('productos.id_producto, productos.id_proveedor,
+			productos.nombre, productos.precio, productos.id_categoria,
+			productos.descripcion, productos.cantidad, productos.unidad,
+			productos.alerta, productos.soft_delete,
+			nombre_proveedor, nombre_categoria, contacto, id_localidad
+		');
 		$this->db->join('proveedores', 'proveedores.id_proveedor = productos.id_proveedor');
 		$this->db->join('categorias_producto', 'categorias_producto.id_categoria = productos.id_categoria');
-		if (!$trash) $this->withTrashed();
 		return $this->get()->result_array();
 	}
 
@@ -82,7 +88,7 @@ class Productos_model extends MY_Model {
 		$this->db->where_in('productos.id_categoria', $categoriasHabilitadas);
 		$this->db->where_in('productos.id_proveedor', $proveedoresHabilitados);
 
-		$this->db->where('soft_delete',null);
+		$this->db->where('soft_delete', null);
 		$this->db->select('id_producto AS `id`, nombre, cantidad AS `stock`, precio');
 		return $this->get()->result_array();
 	}
@@ -116,9 +122,17 @@ class Productos_model extends MY_Model {
 
 
 	public function leer( $id, $trash = false ) {
-		if ($trash) $this->withTrashed();
+		if (!$trash) {
+			$this->withTrashed();
+			$this->db->select('productos.id_producto, productos.id_proveedor,
+			productos.nombre, productos.precio, productos.id_categoria,
+			productos.descripcion, productos.cantidad, productos.unidad,
+			productos.alerta, productos.soft_delete,
+			nombre_proveedor, nombre_categoria, contacto');
+		}
 		$this->db->join('proveedores', 'proveedores.id_proveedor = productos.id_proveedor');
 		$this->db->join('categorias_producto', 'categorias_producto.id_categoria = productos.id_categoria');
+
 		return $this->get( $id )->row_array();
 	}
 
