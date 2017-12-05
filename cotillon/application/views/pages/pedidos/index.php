@@ -42,14 +42,16 @@
       ?>
       <td><?= $ped['precio_real'] === null ? '' : "<p class=\"$color\"><i class=\"$direccion\"></i> $$fluctuacion</p>"?></td>
       <td>
-        <button class="btn btn-primary" title="recibir pedido" data-toggle="modal" data-target="#modal-recibir-<?php echo $ped['id_pedido']; ?>" ><i class="fa fa-truck"></i></button>
+        <?php  if($ped['fecha_recepcion'] == null):?>
+          <button class="btn btn-primary" title="recibir pedido" data-toggle="modal" data-target="#modal-recibir-<?php echo $ped['id_pedido']; ?>" ><i class="fa fa-truck"></i></button>
+        <?php endif; ?>
         <div class="btn-group">
           <a class="btn btn-primary" href="<?php echo base_url("pedidos/ver/".$ped['id_pedido']); ?>"><i class="fa fa-eye" aria-hidden="true"></i></a>
-          
+
           <?php if($es_admin_usuario_logueado): ?>
-            <button data-toggle="modal" data-target="#modal-eliminar-<?php echo $ped['id_pedido']; ?>" class="btn btn-primary">
+            <!-- <button data-toggle="modal" data-target="#modal-eliminar-<?php echo $ped['id_pedido']; ?>" class="btn btn-primary">
               <i class="fa fa-trash"></i>
-            </button>
+            </button> -->
           <?php endif; ?>
         </div>
       </td>

@@ -37,7 +37,6 @@ class Pedidos_model extends MY_Model {
 
 		$payloadMotivo['id_razon_movimiento'] = 1;
 		$payloadMotivo['monto'] = floatval($payload['precio_real']);
-		var_dump('payload motivo', $payloadMotivo);
 
 		$this->db->insert('movimientos', $payloadMotivo);
 		$id_movimiento = $this->db->insert_id();
@@ -46,10 +45,8 @@ class Pedidos_model extends MY_Model {
 		$payloadRegistro['id_objetivo'] = $id_movimiento;
 		$payloadRegistro['tabla'] = 'movimientos';
 
-		var_dump('payload registro', $payloadRegistro);
 		$this->db->insert('registros', $payloadRegistro);
 
-		var_dump('payload pedido', $payload);
 		$payload['fecha_recepcion'] = $this->now();
 		return $this->actualizar($id, $payload);
 	}

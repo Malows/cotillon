@@ -79,7 +79,7 @@
     </thead>
     <tbody>
 
-      <?php var_dump($pedido); foreach ($pedido as $p): ?>
+      <?php foreach ($pedido as $p): ?>
         <tr>
           <td class="bottom nombre-producto" ><?= $p['nombre']?></td>
           <td class="bottom cantidad" ><?= $p['cantidad']?></td>

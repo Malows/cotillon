@@ -130,9 +130,11 @@ class Productos extends MY_Controller {
     $this->render([['pages/productos/actualizar', $data]]);
   }
 
-  public function ver( $id ) {
+  public function ver ($id) {
     $this->logged();
     $data['producto'] = $this->productos_model->leer($id);
+    $data['consultac'] = $this->productos_model->rankingc($id);
+    $data['consultap'] = $this->productos_model->rankingp($id);
     $this->render([['pages/productos/ver', $data]]);
   }
 

@@ -175,4 +175,37 @@ class Productos_model extends MY_Model {
 	$this->db->limit(5,0);
 	return $this->db->get('digest_top_venta_productos')->result_array();
 	}
+
+	public function rankingc($id){
+		$this->db->select('clientes.nombre_cliente');
+		$this->db->select_sum('detalles_venta.cantidad_venta');
+
+		$this->db->from('clientes');
+		$this->db->join('ventas', 'ventas.id_cliente = clientes.id_cliente');
+		$this->db->join('detalles_venta', 'detalles_venta.id_venta = ventas.id_venta');
+
+		$this->db->where('detalles_venta.id_producto', $id);
+
+		$this->db->group_by("clientes.nombre_cliente");
+		$this->db->order_by("detalles_venta.cantidad_venta", "DESC");
+		$query = $this->db->get();
+		return $query->result_array();
+	}
+
+	public function rankingp($id){
+		$this->db->select('proveedores.nombre_proveedor');
+		$this->db->select_sum('detalles_pedido.cantidad');
+
+		$this->db->from('proveedores');
+		$this->db->join('pedidos', 'pedidos.id_proveedor = proveedores.id_proveedor');
+		$this->db->join('detalles_pedido', 'detalles_pedido.id_pedido = pedidos.id_pedido');
+
+		$this->db->where('detalles_pedido.id_producto', $id);
+
+		$this->db->group_by('proveedores.nombre_proveedor');
+		$this->db->order_by('detalles_pedido.cantidad', 'DESC');
+		$query = $this->db->get();
+		return $query->result_array();
+
+	}
 }

@@ -72,13 +72,13 @@ class Pedidos extends MY_Controller {
     $this->registrar($last_id, $usuario, 25, 'pedidos');
   }
 
-  public function ver( $id ) {
+  public function ver ($id) {
     $this->logged();
     $data['consulta'] = $this->pedidos_model->listap($id);
     $this->render([['pages/pedidos/ver', $data]]);
   }
 
-  public function restaurar( $id ) {
+  public function restaurar ($id) {
     $usuario = $this->loggedAndAdmin();
     $this->pedidos_model->restaurar($id);
     redirect(base_url('/pedidos'), 'refresh');
