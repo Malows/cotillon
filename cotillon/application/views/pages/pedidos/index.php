@@ -44,7 +44,8 @@
       <td>
         <button class="btn btn-primary" title="recibir pedido" data-toggle="modal" data-target="#modal-recibir-<?php echo $ped['id_pedido']; ?>" ><i class="fa fa-truck"></i></button>
         <div class="btn-group">
-          <a href="<?php echo base_url("pedidos/actualizar/".$ped['id_pedido']); ?>" class="btn btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+          <a class="btn btn-primary" href="<?php echo base_url("pedidos/ver/".$ped['id_pedido']); ?>"><i class="fa fa-eye" aria-hidden="true"></i></a>
+          
           <?php if($es_admin_usuario_logueado): ?>
             <button data-toggle="modal" data-target="#modal-eliminar-<?php echo $ped['id_pedido']; ?>" class="btn btn-primary">
               <i class="fa fa-trash"></i>

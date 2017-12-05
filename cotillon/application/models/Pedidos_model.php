@@ -53,4 +53,19 @@ class Pedidos_model extends MY_Model {
 		$payload['fecha_recepcion'] = $this->now();
 		return $this->actualizar($id, $payload);
 	}
+
+	public function listap ($id) {
+  	$this->db->select('pedidos.id_pedido, proveedores.nombre_proveedor, productos.nombre');
+		$this->db->select('detalles_pedido.cantidad, detalles_pedido.precio_unitario');
+		$this->db->select('DATE_FORMAT(pedidos.fecha_creacion, "%d.%m.%Y  %H:%i:%s") AS fecha_creation');
+    $this->db->select('DATE_FORMAT(pedidos.fecha_recepcion, "%d.%m.%Y  %H:%i:%s") AS fecha_reception');
+    $this->db->select('pedidos.precio_total');
+
+  	$this->db->join('detalles_pedido', 'detalles_pedido.id_pedido = pedidos.id_pedido');
+    $this->db->join('productos', 'productos.id_producto = detalles_pedido.id_producto');
+    $this->db->join('proveedores', 'proveedores.id_proveedor = pedidos.id_proveedor');
+
+    $this->db->where('pedidos.id_pedido', $id);
+    return $this->get()->result_array();
+	}
 }

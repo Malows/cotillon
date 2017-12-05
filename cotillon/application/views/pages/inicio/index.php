@@ -44,10 +44,29 @@
 <?php endif; ?>
 </div>
 <div class="row">
+  <?php
+    $fechasVentas = array_keys($ventas);
+    $añoPrimero = intval(substr($fechasVentas[0], 0, 4));
+    $mesPrimero = intval(substr($fechasVentas[0], 5, 2));
+
+    $añoUltimo = intval(substr(end($fechasVentas), 0, 4));
+    $mesUltimo = intval(substr(end($fechasVentas), 5, 2));
+
+    $datosSelect = [];
+    for ($añoPrimero; $añoPrimero <= $añoUltimo; $añoPrimero++) {
+      for ($mesPrimero; $mesPrimero <= $mesUltimo && $añoPrimero <= $añoUltimo ; $mesPrimero++) {
+        $datosSelect[] = "$añoPrimero / $mesPrimero";
+      }
+    }
+
+    $longitud = count($datosSelect);
+    $seleccionado = $longitud < 13 ? $datosSelect[0] : $datosSelect[ $longitud - 13 ];
+   ?>
   <select class="form-control" id="periodo-de-tiempo">
-    <option value="0">asdasdasdas</option>
-    <option value="1">qweqweqwrwe</option>
-    <option value="2">zxcvzxcvx</option>
+    <?php foreach ($datosSelect as $key => $value) {
+      if ($seleccionado !== $value) echo "<option value='$key'>$value</option>\s";
+      else echo "<option value='$key' selected>$value</option>\s";
+    } ?>
   </select>
 </div>
 <div class="contenedor-de-graficos">

@@ -11,7 +11,7 @@ class Ventas extends MY_Controller {
 
   private function dateInput ($input, $zero = true) {
     $argentina = new DateTimeZone('America/Argentina/Buenos_Aires');
-    if ($input === '_') $input = false;
+    if ($input === '_') return false;
 
     if ($input === 'hoy' || $input === 'semana') $input = new DateTime('now', $argentina);
 

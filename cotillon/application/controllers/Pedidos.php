@@ -65,21 +65,35 @@ class Pedidos extends MY_Controller {
   public function recibir($id) {
     $usuario = $this->logged();
 
-    // if ($this->form_validation->run()) {
-      $payload['precio_real'] = $this->input->post('precio_real');
-      var_dump('antes del modelo', $payload);
-      $last_id = $this->pedidos_model->recibir_pedido($id, $payload, $usuario);
+    $payload['precio_real'] = $this->input->post('precio_real');
+    var_dump('antes del modelo', $payload);
+    $last_id = $this->pedidos_model->recibir_pedido($id, $payload, $usuario);
 
-      $this->registrar($last_id, $usuario, 25, 'pedidos');
-    // } else {
-      // redirect( base_url('/pedidos'), 'refresh');
-    // }
+    $this->registrar($last_id, $usuario, 25, 'pedidos');
+  }
 
+  public function ver( $id ) {
+    $this->logged();
+    $data['consulta'] = $this->pedidos_model->listap($id);
+    $this->render([['pages/pedidos/ver', $data]]);
   }
 
   public function restaurar( $id ) {
     $usuario = $this->loggedAndAdmin();
     $this->pedidos_model->restaurar($id);
     redirect(base_url('/pedidos'), 'refresh');
+  }
+
+  public function pdf ($id) {
+    $this->logged();
+    $this->load->library('pdf');
+
+    $data['pedido'] = $this->pedidos_model->listap($id);
+    $html = $this->load->view('includes/pedido', $data, true);
+    $fecha = $data['pedido'][0]['fecha_creation'];
+
+		// Convert to PDF
+		$this->pdf->pdf->WriteHtml($html);
+		$this->pdf->pdf->Output("pedido-$fecha.pdf", 'D');
   }
 }
