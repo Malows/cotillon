@@ -25,7 +25,8 @@ INSERT INTO `caja` (`id_caja`, `fecha_apertura`, `monto_apertura`, `fecha_cierre
 (3, '2017-10-19 23:02:47', 100, '2017-10-19 23:02:55', 100, 50),
 (4, '2017-10-26 00:09:13', 100, '2017-10-26 00:36:16', 220, 220),
 (5, '2017-11-14 23:50:22', 100, '2017-11-15 00:03:10', 110, 110),
-(6, '2017-11-18 03:17:11', 0, '2017-11-18 03:18:49', -100, -100);
+(6, '2017-11-18 03:17:11', 0, '2017-11-18 03:18:49', -100, -100),
+(7, '2017-12-01 02:56:22', 200, '2017-12-01 03:34:32', 170, 130);
 
 
 
@@ -43,7 +44,7 @@ INSERT INTO `categorias_producto` (`id_categoria`, `nombre_categoria`, `soft_del
 (4, 'Disfraces', NULL),
 (5, 'Cotillon', NULL),
 (6, 'Pirotecnia', NULL),
-(7, 'eliminable', '2017-10-25 23:51:40');
+(7, 'eliminable', NULL);
 
 
 
@@ -113,6 +114,8 @@ INSERT INTO `detalles_venta` (`id_producto`, `id_venta`, `cantidad_venta`, `prec
 (4, 28, 1, 120),
 (4, 31, 1, 120),
 (4, 32, 1, 120),
+(4, 33, 1, 120),
+(4, 34, 1, 120),
 (5, 3, 1, 50),
 (5, 17, 10, 50),
 (5, 20, 5, 50),
@@ -236,7 +239,9 @@ INSERT INTO `movimientos` (`id_movimiento`, `monto`, `id_razon_movimiento`, `fec
 (6, 10, 1, '2017-11-14 23:53:54'),
 (7, 100, 1, '2017-11-18 02:49:15'),
 (8, 25, 1, '2017-11-18 03:04:22'),
-(9, 100, 1, '2017-11-18 03:18:26');
+(9, 100, 1, '2017-11-18 03:18:26'),
+(10, 150, 1, '2017-12-01 02:56:05'),
+(11, 150, 1, '2017-12-01 02:56:34');
 
 
 
@@ -274,9 +279,9 @@ CREATE TABLE `productos` (
 
 INSERT INTO `productos` (`id_producto`, `id_proveedor`, `nombre`, `precio`, `id_categoria`, `descripcion`, `cantidad`, `unidad`, `alerta`, `soft_delete`) VALUES
 (1, 1, 'Manguera de nafta', 150, 4, '', 0, 'metro', 10, NULL),
-(2, 1, 'Producto eliminable', 10000, 2, 'Se va a eliminar para no ser mostrado', NULL, NULL, 0, '2017-10-25 23:57:40'),
+(2, 1, 'Producto eliminable', 10000, 2, 'Se va a eliminar para no ser mostrado', NULL, NULL, 0, '2017-12-03 04:54:13'),
 (3, 2, 'Torta de cumplea&ntilde;os CARA', 100, 1, '', 0, 'unidades', 5, NULL),
-(4, 2, 'Bizcochos', 120, 1, 'Bizcochos recreativos', 2, 'kilogramos', 2.5, NULL),
+(4, 2, 'Bizcochos', 120, 1, 'Bizcochos recreativos', 0, 'kilogramos', 2.5, NULL),
 (5, 1, 'Regadores', 50, 4, 'Es la que va para el pasto', 0, 'unidades', 0, NULL),
 (6, 1, 'Guantes', 20, 2, 'Guantes, para golpear como caballero', 1, 'unidades', 0, NULL),
 (7, 1, 'Enrollador de mangueras', 256, 5, 'La gilada que enrolla', 1, 'unidades', 0, NULL),
@@ -298,7 +303,7 @@ INSERT INTO `proveedores` (`id_proveedor`, `nombre_proveedor`, `id_localidad`, `
 (1, 'La Goma Argentina', 1, 'Con verdadero olor a hule\r\ntel: 4555555', NULL),
 (2, 'panaderia la nueva estrella', 1, '168476', NULL),
 (3, 'Cientifuegos', 1, '123123123454545', NULL),
-(4, 'Eliminable', 2, '46847897878456123123', '2017-10-25 23:55:33');
+(4, 'Eliminable', 2, '46847897878456123123', NULL);
 
 
 
@@ -339,7 +344,16 @@ INSERT INTO `registros` (`id_registro`, `id_usuario`, `id_evento`, `id_objetivo`
 (9, 1, 25, 2, 'pedidos', '2017-11-18 03:04:22'),
 (10, 1, 22, 3, 'pedidos', '2017-11-18 03:18:15'),
 (11, 1, 28, 9, 'movimientos', '2017-11-18 03:18:26'),
-(12, 1, 25, 3, 'pedidos', '2017-11-18 03:18:26');
+(12, 1, 25, 3, 'pedidos', '2017-11-18 03:18:26'),
+(13, 1, 1, 33, 'ventas', '2017-11-28 23:49:16'),
+(14, 1, 31, 10, 'movimientos', '2017-12-01 02:56:05'),
+(15, 1, 31, 11, 'movimientos', '2017-12-01 02:56:34'),
+(16, 1, 1, 34, 'ventas', '2017-12-01 02:57:01'),
+(17, 1, 10, 3, 'categorias_producto', '2017-12-03 03:18:12'),
+(18, 1, 7, 2, 'proveedores', '2017-12-03 03:59:35'),
+(19, 1, 7, 2, 'proveedores', '2017-12-03 04:00:17'),
+(20, 1, 13, 2, 'productos', '2017-12-03 04:22:09'),
+(21, 1, 13, 2, 'productos', '2017-12-03 04:54:13');
 
 
 
@@ -364,18 +378,19 @@ CREATE TABLE `usuarios` (
   `email` varchar(255) CHARACTER SET utf16 DEFAULT NULL,
   `password` varchar(255) CHARACTER SET utf16 NOT NULL,
   `id_tipo_usuario` int(11) NOT NULL,
+  `modo_restore` tinyint(1) NOT NULL DEFAULT '0',
   `fecha_inicio` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `fecha_fin` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-INSERT INTO `usuarios` (`id_usuario`, `nombre`, `apellido`, `dni`, `email`, `password`, `id_tipo_usuario`, `fecha_inicio`, `fecha_fin`) VALUES
-(1, 'Juan Manuel', 'Cruz', 35448975, 'juancho_1210@hotmail.com', '$2y$10$IzOBA5HxNUMdiX96FxLbv.TCUxCR7g8rUgl2Xw1rh37/tMENChMK6', 1, '2016-10-14 21:48:21', NULL),
-(2, 'Milton', 'Wery', 34828118, 'milton_st@hotmail.com', '$2y$10$xwTAWv.MV/dBVM9MXewBiebBCnL6zI/4rDXRRSSnjrxSUffuNe.zu', 1, '2016-11-22 05:30:03', NULL),
-(3, 'Random', 'Random', 123456789, 'random@mail.com', '$2y$10$IJEYN2bHkVKy2jg6xiCoJOTX6BMtxP6JXTOztNTHVYlv.ApWTSD/O', 3, '2017-01-12 04:47:04', '2017-10-26 02:49:57'),
-(4, 'Ramdos', 'SeedTime', 23456789, 'otro_mail@mail.com', '$2y$10$bBniFrNPkWae1aQuyUoTXeaNHN6hviLMpkzV0P6TRZfqtwX9iagmK', 3, '2017-01-26 03:08:03', '2017-10-26 02:49:51'),
-(5, 'user', 'user', 12345678, 'user@example.com', '$2y$10$sIOXUrWJYNrnycLzkyzte.9AGeSsKXA9jsl5APGuTkv3/ngY9ktD6', 3, '2017-05-09 01:15:57', NULL),
-(6, 'Administrador', 'Administrador', 111222333, 'administrador@mail.com', '$2y$10$dE2h1/GKOj7oh0fmrjX5oOVNnwCrs1mny7OkF7DSxjZh040GOSQEW', 2, '2017-09-26 04:43:13', NULL);
+INSERT INTO `usuarios` (`id_usuario`, `nombre`, `apellido`, `dni`, `email`, `password`, `id_tipo_usuario`, `modo_restore`, `fecha_inicio`, `fecha_fin`) VALUES
+(1, 'Juan Manuel', 'Cruz', 35448975, 'juancho_1210@hotmail.com', '$2y$10$IzOBA5HxNUMdiX96FxLbv.TCUxCR7g8rUgl2Xw1rh37/tMENChMK6', 1, 0, '2016-10-14 21:48:21', NULL),
+(2, 'Milton', 'Wery', 34828118, 'milton_st@hotmail.com', '$2y$10$xwTAWv.MV/dBVM9MXewBiebBCnL6zI/4rDXRRSSnjrxSUffuNe.zu', 1, 0, '2016-11-22 05:30:03', NULL),
+(3, 'Random', 'Random', 123456789, 'random@mail.com', '$2y$10$IJEYN2bHkVKy2jg6xiCoJOTX6BMtxP6JXTOztNTHVYlv.ApWTSD/O', 3, 0, '2017-01-12 04:47:04', '2017-10-26 02:49:57'),
+(4, 'Ramdos', 'SeedTime', 23456789, 'otro_mail@mail.com', '$2y$10$bBniFrNPkWae1aQuyUoTXeaNHN6hviLMpkzV0P6TRZfqtwX9iagmK', 3, 0, '2017-01-26 03:08:03', '2017-10-26 02:49:51'),
+(5, 'user', 'user', 12345678, 'user@example.com', '$2y$10$sIOXUrWJYNrnycLzkyzte.9AGeSsKXA9jsl5APGuTkv3/ngY9ktD6', 3, 0, '2017-05-09 01:15:57', NULL),
+(6, 'Administrador', 'Administrador', 111222333, 'administrador@mail.com', '$2y$10$dE2h1/GKOj7oh0fmrjX5oOVNnwCrs1mny7OkF7DSxjZh040GOSQEW', 2, 0, '2017-09-26 04:43:13', NULL);
 
 
 
@@ -404,7 +419,9 @@ INSERT INTO `ventas` (`id_venta`, `id_cliente`, `fecha`, `total`) VALUES
 (28, 1, '2017-09-20 04:51:55', 120),
 (30, 3, '2017-10-24 03:43:21', 100),
 (31, 1, '2017-10-26 03:18:49', 120),
-(32, 1, '2017-11-15 02:51:08', 120);
+(32, 1, '2017-11-15 02:51:08', 120),
+(33, 1, '2017-11-29 02:49:16', 120),
+(34, 1, '2017-12-01 05:57:00', 120);
 
 
 DROP TABLE IF EXISTS `digest_categorias_ventas`;
@@ -489,7 +506,7 @@ ALTER TABLE `ventas`
 
 
 ALTER TABLE `caja`
-  MODIFY `id_caja` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_caja` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 ALTER TABLE `categorias_producto`
   MODIFY `id_categoria` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 ALTER TABLE `clientes`
@@ -499,7 +516,7 @@ ALTER TABLE `eventos`
 ALTER TABLE `localidades`
   MODIFY `id_localidad` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 ALTER TABLE `movimientos`
-  MODIFY `id_movimiento` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id_movimiento` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 ALTER TABLE `pedidos`
   MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 ALTER TABLE `productos`
@@ -509,13 +526,13 @@ ALTER TABLE `proveedores`
 ALTER TABLE `razones_movimientos`
   MODIFY `id_razon_movimiento` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 ALTER TABLE `registros`
-  MODIFY `id_registro` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id_registro` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 ALTER TABLE `tipos_usuarios`
   MODIFY `id_tipo_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 ALTER TABLE `usuarios`
   MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 ALTER TABLE `ventas`
-  MODIFY `id_venta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `id_venta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 ALTER TABLE `clientes`
   ADD CONSTRAINT `fk_clientes_localidades` FOREIGN KEY (`id_localidad`) REFERENCES `localidades` (`id_localidad`);
