@@ -141,7 +141,7 @@ public function registrar ($usuario, $evento, $tabla, $objetivo) {
     $this->db->join('eventos', 'eventos.id_evento = registros.id_evento');
     $this->db->order_by('fecha', 'DESC');
     if ($id_usuario) $this->db->where('registros.id_usuario', $id_usuario);
-    $this->db->limit(10, 0);
+    $this->db->limit(50, 0);
     $this->db->select("concat(usuarios.nombre, ' ', usuarios.apellido) as usuario_emisor");
     $this->db->select("registros.id_usuario, eventos.descripcion as nombre_evento, id_objetivo, tabla, fecha");
     $respuestas = $this->db->get('registros')->result_array();
