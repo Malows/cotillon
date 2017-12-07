@@ -55,7 +55,8 @@
     $datosSelect = [];
     for ($añoPrimero; $añoPrimero <= $añoUltimo; $añoPrimero++) {
       for ($mesPrimero; $mesPrimero <= $mesUltimo && $añoPrimero <= $añoUltimo ; $mesPrimero++) {
-        $datosSelect[] = "$añoPrimero / $mesPrimero";
+        $valor = $mesPrimero % 12 ? $mesPrimero % 12 : 12;
+        $datosSelect[] = "$añoPrimero / $valor";
       }
     }
 

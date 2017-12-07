@@ -1,41 +1,21 @@
-<?php defined('BASEPATH') || exit('No direct script access allowed');
-$ultima_pagina = ( intval($cantidad/100)+1);
-$rango =  range(1, $ultima_pagina);
-
-$items = array_map(function ($x) use ($pagina_actual) {
-	$clases =  ($pagina_actual === $x) ? ' class="active"' : '';
-	return "<li$clases><a href=\"".base_url("/registros/?pagina=$x"). "\">$x</a></li>\n";
-}, $rango);
-
-$previo = '';
-$siguiente = '';
-if ($pagina_actual === 1) $previo = '<li class="disabled"><a href="#" aria-label="Previo"><span aria-hidden="true">&laquo;</span></a></li>';
-else $previo =  '<li><a href="'. base_url("/registros/?pagina=". ($pagina_actual - 1)) .'" aria-label="Previo"><span aria-hidden="true">&laquo;</span></a></li>';
-
-if ($pagina_actual === $ultima_pagina) $siguiente = '<li class="disabled"><a href="#" aria-label="Siguiente"><span aria-hidden="true">&raquo;</span></a></li>';
-else $siguiente =  '<li><a href="'. base_url("/registros/?pagina=". ($pagina_actual + 1)) .'" aria-label="Siguiente"><span aria-hidden="true">&raquo;</span></a></li>';
-?>
+<?php defined('BASEPATH') || exit('No direct script access allowed');?>
 
 <div class="row">
-	<div class="col-md-6 pull-right">
-		<nav aria-label="Page navigation" class="pull-right">
-			<ul class="pagination">
-				<?php
-				echo $previo;
-				foreach ($items as $item) echo $item;
-				echo $siguiente;
-				?>
-			</ul>
-		</nav>
-	</div>
+	<div class="form-inline pull-left" style="margin-top: 2rem;">
+    Desde <input type="text" class="form-control" id="datepicker-desde" style="width: 10rem;">
+    Hasta <input type="text" class="form-control" id="datepicker-hasta" style="width: 10rem;">
+  </div>
 	<div class="col-md-6 pull-left">
 		<select class="select2" id="select-usuarios">
+			<option value="0">Todos los usuarios</option>
 			<?php foreach ($usuarios as $usuario) {
 				$id = $usuario['id_usuario'];
 				$nombre = $usuario['nombre'].' '.$usuario['apellido'];
-				echo "<option value=\"$id\">$nombre</option>";
+				$selected = $usuarioSeleccionado == $id ? ' selected' : '';
+				echo "<option value=\"$id\"$selected>$nombre</option>";
 			} ?>
 		</select>
+		<button id="enviar-filtro" class="btn btn-primary">Filtrar</button>
 	</div>
 </div>
 
@@ -57,12 +37,36 @@ else $siguiente =  '<li><a href="'. base_url("/registros/?pagina=". ($pagina_act
 	</tbody>
 </table>
 <script>
-	$('#select-usuarios').on('select2:select', function (e) {
-		var currentUrl = '' + window.location
-		console.log(currentUrl);
+	$('#datepicker-desde').datepicker();
+	$('#datepicker-hasta').datepicker( $.datepicker.regional["es"] );
 
-		if (currentUrl.includes('?')) currentUrl += '&usuario=' + e.params.data.id;
-		else currentUrl += '/?usuario=' + e.params.data.id;
-		window.location.assign(currentUrl)
+	const button = document.getElementById('enviar-filtro')
+	button.addEventListener('click', (e) => {
+		let fechaDesde = $('#datepicker-desde').datepicker('getDate')
+		let fechaHasta = $('#datepicker-hasta').datepicker('getDate')
+		fechaDesde = fechaDesde ? fechaDesde.toISOString() : '_'
+		fechaHasta = fechaHasta ? fechaHasta.toISOString() : '_'
+		let idRequested = $('#select-usuarios').val()
+
+		let url = "<?= base_url('/registros/index'); ?>/"
+
+		// console.log(idRequested)
+
+		url += fechaDesde === '_' ? '_/' : fechaDesde.substring(0,fechaDesde.indexOf('T')) + '/'
+		url += fechaHasta === '_' ? '_/' : fechaHasta.substring(0,fechaHasta.indexOf('T')) + '/'
+		url += idRequested
+
+			window.location.assign(url)
 	})
+
+	// $('#select-usuarios').on('select2:select', function (e) {
+	// 	const idRequested = parseInt(e.params.data.id)
+	// 	let currentUrl = '' + window.location
+  //
+	// 	const indexOf = currentUrl.indexOf('?')
+  //
+	// 	const antes = idRequested ? currentUrl.substring(0, indexOf) : indexOf === -1 ? currentUrl : currentUrl.substring(0, indexOf)
+	// 	const despues = idRequested ? '?usuario=' + idRequested : ''
+	// 	window.location.assign(antes + despues)
+	// })
 </script>

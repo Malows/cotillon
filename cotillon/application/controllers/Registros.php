@@ -6,7 +6,27 @@ class Registros extends MY_Controller {
   }
 
   private function parseFecha($fecha) {
-    return DateTime::createFromFormat('Y-m-d H:i:s', $fecha)->format('d/m/Y H:i:s');
+    return DateTime::createFromFormat('Y-m-d H:i:s', $fecha)->format('Y/m/d H:i:s');
+  }
+
+  private function dateInput ($input, $zero = true) {
+    $argentina = new DateTimeZone('America/Argentina/Buenos_Aires');
+    if ($input === '_' || !$input) return false;
+
+    if ($input === 'hoy' || $input === 'semana') $input = new DateTime('now', $argentina);
+
+    if ($input === 'semana') $input->modify('-7days');
+
+    if (is_string($input) && strpos($input, '-') !== false) $input = DateTime::createFromFormat('Y-m-d', $input, $argentina);
+
+    if ($zero) $input->setTime(0, 0, 0);
+    else $input->setTime(23, 59, 59);
+
+    return $input;
+  }
+
+  private function desdeHasta ($desde, $hasta) {
+    return [$this->dateInput($desde), $this->dateInput($hasta, false)];
   }
 
   private function parseOracion($datos) {
@@ -52,19 +72,20 @@ class Registros extends MY_Controller {
     return $retorno.'.';
   }
 
-	public function index () {
+	public function index ($desde = null, $hasta = null, $idUsuario = null) {
     $this->loggedAndAdmin();
     $this->load->model('usuarios_model');
-		$pagina = intval($this->input->get('pagina'));
-		$pagina = $pagina === 0 ? 1 : $pagina;
-    $idUsuarioFiltrado = intval($this->input->get('usuario'));
-    $idUsuarioFiltrado = $idUsuarioFiltrado ? $idUsuarioFiltrado : null;
 
-    $datos = $this->registro->lista($pagina, $idUsuarioFiltrado);
+    $idUsuario = intval($idUsuario);
+    $arr = $this->desdeHasta($desde, $hasta);
+
+    $datos = $desde === '_' && $hasta === '_'
+    ? $this->registro->ultimos_50_elementos(intval($idUsuario))
+    : $this->registro->desde_hasta($arr[0], $arr[1], intval($idUsuario));
+
+    if ($idUsuario) $data['usuarioSeleccionado'] = $idUsuario;
 
 		$data['oraciones'] = array_map(function ($x){return $this->parseOracion($x);}, $datos);
-		$data['pagina_actual'] = $pagina;
-		$data['cantidad'] = $this->registro->cantidad_total();
     $data['usuarios'] = $this->usuarios_model->lista(true);
 
 		$this->render([['pages/registros/index', $data]]);

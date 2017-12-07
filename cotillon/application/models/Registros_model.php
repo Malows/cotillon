@@ -94,17 +94,8 @@ public function registrar ($usuario, $evento, $tabla, $objetivo) {
     $this->db->insert('registros', $data);
   }
 
-public function lista ($pagina = 1, $id_usuario = null) {
-    $desde = ($pagina - 1) * 100;
-    if ($id_usuario) $this->db->where('registros.id_usuario', $id_usuario);
-
-    $this->db->join('usuarios', 'usuarios.id_usuario = registros.id_usuario');
-    $this->db->join('eventos', 'eventos.id_evento = registros.id_evento');
-    $this->db->order_by('fecha', 'DESC');
-    $this->db->limit( 100, $desde );
-    $this->db->select("concat(usuarios.nombre, ' ', usuarios.apellido) as usuario_emisor, registros.id_usuario, eventos.descripcion as nombre_evento, id_objetivo, tabla, fecha");
-		$respuestas = $this->db->get('registros')->result_array();
-
+  protected function hidratar ($respuestas) {
+    // ['ventas', 'usuarios', ...]
     $tablas = $this->purge_tablas($respuestas);
 
     $datosObjetivosOrdenados = array_map(function ($elem) use ($respuestas) {
@@ -144,8 +135,32 @@ public function lista ($pagina = 1, $id_usuario = null) {
     }, $respuestas);
   }
 
+  public function ultimos_50_elementos ($id_usuario) {
+    $id_usuario = intval($id_usuario);
+    $this->db->join('usuarios', 'usuarios.id_usuario = registros.id_usuario');
+    $this->db->join('eventos', 'eventos.id_evento = registros.id_evento');
+    $this->db->order_by('fecha', 'DESC');
+    if ($id_usuario) $this->db->where('registros.id_usuario', $id_usuario);
+    $this->db->limit(10, 0);
+    $this->db->select("concat(usuarios.nombre, ' ', usuarios.apellido) as usuario_emisor");
+    $this->db->select("registros.id_usuario, eventos.descripcion as nombre_evento, id_objetivo, tabla, fecha");
+    $respuestas = $this->db->get('registros')->result_array();
+    return $this->hidratar($respuestas);
+  }
 
-  public function cantidad_total () {
-    return $this->db->count_all($this->nombre_tabla);
+  public function desde_hasta ($desde, $hasta, $id_usuario) {
+    $id_usuario = intval($id_usuario);
+    $this->db->join('usuarios', 'usuarios.id_usuario = registros.id_usuario');
+    $this->db->join('eventos', 'eventos.id_evento = registros.id_evento');
+    $this->db->order_by('fecha', 'DESC');
+    if ($id_usuario) $this->db->where('registros.id_usuario', $id_usuario);
+    if ($desde)
+      $this->db->where('registros.fecha >=', $desde->format('Y-m-d H:i:s'));
+    if ($hasta)
+      $this->db->where('registros.fecha <=', $hasta->format('Y-m-d H:i:s'));
+    $this->db->select("concat(usuarios.nombre, ' ', usuarios.apellido) as usuario_emisor");
+    $this->db->select("registros.id_usuario, eventos.descripcion as nombre_evento, id_objetivo, tabla, fecha");
+    $respuestas = $this->db->get('registros')->result_array();
+    return $this->hidratar($respuestas);
   }
 }
