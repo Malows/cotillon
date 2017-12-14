@@ -9,11 +9,4 @@
   <p>Correo Electrónico: <strong><?php echo $cliente['email']; ?></strong></p>
   <p>Teléfono: <strong><?php echo $cliente['telefono'] ?></strong></p>
   <p>Tipo de cliente: <strong><?php echo $cliente['tipo_cliente']; ?></strong></p>
-  <hr>
-  <h4>Operaciones realizadas</h4>
-  <ul>
-    <?php foreach ($ops as $value) {
-      echo "<li><a href='#'>$value - es una fecha<i class='fa fa-calendar'></i></a></li>\n";
-    } ?>
-  </ul>
 </div>

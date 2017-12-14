@@ -84,8 +84,8 @@ class Usuarios extends MY_Controller {
         'apellido' => $this->security->xss_clean( $this->input->post('apellido') ),
         'email' => $this->security->xss_clean( $this->input->post('email') ),
         'dni' => $this->security->xss_clean( $this->input->post('dni') ),
-        'password' => $this->input->post('password'),
-        'es_admin' => $this->security->xss_clean( $this->input->post('es_admin') ) ];
+        'password' => $this->input->post('password')];
+      $payload['id_tipo_usuario'] = $this->security->xss_clean( $this->input->post('es_admin') ) == 0 ? 3 : 2;
 
       $last_id = $this->usuarios_model->crear($payload);
       $this->registrar($last_id, $usuario, 2, 'usuarios');
@@ -154,7 +154,7 @@ class Usuarios extends MY_Controller {
       $aux['apellido'] = $this->security->xss_clean($this->input->post('apellido'));
       $aux['email'] = $this->security->xss_clean($this->input->post('email'));
       $aux['dni'] = $this->security->xss_clean($this->input->post('dni'));
-      $aux['es_admin'] = $this->security->xss_clean($this->input->post('es_admin'));
+      $aux['id_tipo_usuario'] = $this->security->xss_clean($this->input->post('es_admin')) == 0 ? 3 : 2;
 
       $payload = $aux;
       unset($payload['id_usuario']);
@@ -187,7 +187,7 @@ class Usuarios extends MY_Controller {
         $this->render([['pages/usuarios/id_no_valido', $data]]);
       }
     } else {
-      $last_id = $this->usuarios_model->eliminar( $aux['id_usuario'] );
+      $last_id = $this->usuarios_model->eliminar( $id );
       $this->registrar($last_id, $usuario, 4, 'usuarios');
       $data['exito'] = true;
 

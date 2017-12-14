@@ -57,7 +57,7 @@ class Categorias extends MY_Controller {
       $data['categoria']['nombre_categoria'] = htmlentities( $this->input->post('nombre_categoria') );
 
       $payload['nombre_categoria'] = $this->security->xss_clean( $this->input->post('nombre_categoria') );
-      $this->Categorias_producto_model->actualizar( $id, $payload );
+      $this->categorias_producto_model->actualizar( $id, $payload );
 
       $this->registrar($id, $usuario, 9, 'categorias_producto');
     }
