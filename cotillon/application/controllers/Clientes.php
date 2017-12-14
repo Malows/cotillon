@@ -107,7 +107,7 @@ class Clientes extends MY_Controller {
 
       $last_id = $this->clientes_model->actualizar( $id, $data['cliente'] );
       $data['exito'] = TRUE;
-      $this->registro($last_id, $usuario, 15, 'clientes');
+      $this->registrar($last_id, $usuario, 15, 'clientes');
     } else {
       unset($data['exito']);
     }
